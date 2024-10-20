@@ -1,0 +1,103 @@
+<template>
+  <q-page>
+    <q-card>
+      <q-card-section>
+        <h1>Menu</h1>
+      </q-card-section>
+      <q-card-section>
+        <q-btn color="primary" @click="showAddMenuDialog">Add Menu</q-btn>
+      </q-card-section>
+      <q-card-section>
+        <q-list bordered>
+          <q-item v-for="menu in menus" :key="menu.id" clickable @click="navigateToIngredients(menu.id)">
+            <q-item-section>
+              {{ menu.name }}
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-card-section>
+    </q-card>
+
+    <q-dialog v-model="isAddMenuDialogOpen">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Add Menu</div>
+        </q-card-section>
+        <q-card-section>
+          <q-form @submit.prevent="handleAddMenu">
+            <q-input v-model="newMenuName" label="Menu Name" required />
+            <div v-for="(ingredient, index) in newIngredients" :key="index">
+              <q-input v-model="ingredient.name" label="Ingredient Name" required />
+              <q-input v-model="ingredient.weight" label="Weight" type="number" required />
+              <q-input v-model="ingredient.tolerance" label="Tolerance" type="number" required />
+            </div>
+            <q-btn type="button" label="Add Another Ingredient" color="secondary" @click="addAnotherIngredient" />
+            <q-btn type="submit" label="Add Menu" color="primary" />
+          </q-form>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+  </q-page>
+</template>
+
+<script>
+import { fetchMenu, createMenu } from '~/api/menuService';
+import { createIngredient } from '~/api/ingredientService';
+
+export default {
+  data() {
+    return {
+      menus: [],
+      isAddMenuDialogOpen: false,
+      newMenuName: '',
+      newIngredients: [
+        { name: '', weight: '', tolerance: '' }
+      ]
+    };
+  },
+  async mounted() {
+    await this.loadMenu();
+  },
+  methods: {
+    async loadMenu() {
+      try {
+        const data = await fetchMenu();
+        this.menus = data.data;
+      } catch (error) {
+        console.error('Error fetching menu:', error);
+        this.menus = [];
+      }
+    },
+    navigateToIngredients(menuId) {
+      this.$router.push({ path: '/ingredients', query: { menu_id: menuId } });
+    },
+    showAddMenuDialog() {
+      this.isAddMenuDialogOpen = true;
+    },
+    addAnotherIngredient() {
+      this.newIngredients.push({ name: '', weight: '', tolerance: '' });
+    },
+    async handleAddMenu() {
+      try {
+        const response = await createMenu({ name: this.newMenuName });
+        const menuId = response.data.id;
+
+        for (const ingredient of this.newIngredients) {
+          await createIngredient({ ...ingredient, menu_id: menuId });
+        }
+
+        this.menus.push(response.data);
+        this.isAddMenuDialogOpen = false;
+        this.newMenuName = '';
+        this.newIngredients = [{ name: '', weight: '', tolerance: '' }];
+      } catch (error) {
+        console.error('Error adding menu:', error);
+      }
+    }
+  }
+};
+</script>
+
+<style scoped>
+/* Add any scoped styles here */
+</style>

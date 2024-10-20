@@ -1,0 +1,8 @@
+/* assets/global.css */
+
+/* Import Noto Sans Thai font */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100;300;400;500;700;900&display=swap');
+/* Set Noto Sans Thai as the default font */
+body {
+  font-family: 'Noto Sans Thai', sans-serif;
+}
