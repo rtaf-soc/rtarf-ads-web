@@ -146,9 +146,9 @@ async function updateDriver(driverPath: String) {
         <!-- <q-btn class="q-ml-sm" icon="refresh" outlined rounded full-width @click="getDriver">
 
         </q-btn> -->
-        <q-btn dense icon="refresh" rounded full-width @click="getDriver()">
+        <!-- <q-btn dense icon="refresh" rounded full-width @click="getDriver()">
 
-        </q-btn>
+        </q-btn> -->
         <!-- <q-select class="q-pa-sm" outlined v-model="selectedDriver" :options="drivers" option-label="path"
           option-value="path" label="Drivers" emit-value map-options @update:model-value="onDriverSelect"
           @add="onDriverSelect"> -->
