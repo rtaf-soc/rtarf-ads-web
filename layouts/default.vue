@@ -132,7 +132,7 @@ async function updateDriver(driverPath: String) {
         <q-btn flat dense round icon="menu" aria-label="Menu" :glossy="false" @click="toggleLeftDrawer" />
 
         <q-toolbar-title>
-          ระบบตรวจจับภัยคุกคามทางไซเบอร์
+          Military Rule Detection Joint Sharing
         </q-toolbar-title>
 
         <!-- <div>Quasar v{{ $q.version }}</div> -->

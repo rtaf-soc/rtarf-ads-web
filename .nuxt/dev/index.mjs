@@ -624,7 +624,7 @@ const _HnR49qFQMo = (function(nitro) {
 
 const rootDir = "/Users/macbook2020/Documents/pjame/rtarf-ads-web";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"favicon.ico"}],"style":[],"script":[],"noscript":[]};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"Military Rule Detection Joint Sharing"};
 
 const appRootTag = "div";
 

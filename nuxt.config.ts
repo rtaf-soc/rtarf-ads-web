@@ -6,6 +6,7 @@ import materialIconsRound from 'quasar/icon-set/svg-material-icons-round'
 export default defineNuxtConfig({
   app:{
     head:{
+      title:'Military Rule Detection Joint Sharing',
       link:[
         {rel:'icon',type:'image/x-icon',href:'favicon.ico'}
       ]
