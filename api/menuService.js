@@ -1,18 +1,18 @@
 export async function fetchMenu() {
-    const { public: { baseURL } } = useRuntimeConfig();
-    const response = await fetch(`${baseURL}/menu`);
+    // const { public: { baseURL } } = useRuntimeConfig();
+    // const response = await fetch(`${baseURL}/menu`);
     return response.json();
   }
   
   export async function createMenu(menu) {
     const { public: { baseURL } } = useRuntimeConfig();
-    const response = await fetch(`${baseURL}/menu/create`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(menu)
-    });
+    // const response = await fetch(`${baseURL}/menu/create`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(menu)
+    // });
     return response.json();
   }
 
@@ -21,14 +21,14 @@ export async function fetchMenu() {
     try {
       Loading.show()
   
-      const response = await fetch(`${baseURL}/menu/update/${id}`, {
-        // timeout: api_timeout,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
+      // const response = await fetch(`${baseURL}/menu/update/${id}`, {
+      //   // timeout: api_timeout,
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify(data)
+      // });
       // console.log(response.status)
       if (response.status === 200) {
         Notify.create({

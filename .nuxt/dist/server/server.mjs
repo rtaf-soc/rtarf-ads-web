@@ -1,0 +1,1 @@
+export { default } from "file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/@nuxt/vite-builder/dist/runtime/vite-node.mjs"

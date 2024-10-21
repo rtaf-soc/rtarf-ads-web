@@ -4,6 +4,13 @@ import materialIconsRound from 'quasar/icon-set/svg-material-icons-round'
 
 
 export default defineNuxtConfig({
+  app:{
+    head:{
+      link:[
+        {rel:'icon',type:'image/x-icon',href:'favicon.ico'}
+      ]
+    }
+  },
   plugins: [
     '~/plugins/websocket.js',
   

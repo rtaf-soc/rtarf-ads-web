@@ -14,10 +14,10 @@ export async function fetchStableWeight() {
   const { public: { scaleURL } } = useRuntimeConfig();
 
   try {
-    const response = await withTimeout(() =>
-      fetch(`${scaleURL}/get`), 2000); // Timeout after 5 seconds
+    // const response = await withTimeout(() =>
+    //   fetch(`${scaleURL}/get`), 2000); // Timeout after 5 seconds
 
-    return await response.json();
+    // return await response.json();
   } catch (error) {
     console.error('Request timed out or failed:', error);
     throw error;
@@ -29,10 +29,10 @@ export async function getClientDriver() {
   const { public: { scaleURL } } = useRuntimeConfig();
 
   try {
-    const response = await withTimeout(() =>
-      fetch(`${scaleURL}/getSerialPort`), 2000); // Timeout after 5 seconds
+    // const response = await withTimeout(() =>
+    //   fetch(`${scaleURL}/getSerialPort`), 2000); // Timeout after 5 seconds
 
-    return await response.json();
+    // return await response.json();
   } catch (error) {
     console.error('Request timed out or failed:', error);
     throw error;

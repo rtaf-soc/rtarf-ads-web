@@ -23,11 +23,17 @@ const menuInsetLevel = 0.3
 // ];
 const hotelLink: MenuRedirectProps[] = [
   {
-    title: 'หน้าหลัก',
+    title: 'Source IP Address',
     // caption: 'จัดหา',
     icon: 'table_chart',
-    link: "/"
-  }
+    link: "/source"
+  },
+  {
+    title: 'Destination IP Address',
+    // caption: 'จัดหา',
+    icon: 'table_chart',
+    link: "/destination"
+  },
 ];
 
 const leftDrawerOpen = ref(false)
@@ -82,7 +88,7 @@ function toggleLeftDrawer() {
 async function getDriver() {
   try {
     drivers.value = []
-    drivers.value = await getClientDriver();
+    // drivers.value = await getClientDriver();
     // console.log('get driver2')
     console.log(drivers.value)
   } catch (error) {
@@ -126,7 +132,7 @@ async function updateDriver(driverPath: String) {
         <q-btn flat dense round icon="menu" aria-label="Menu" :glossy="false" @click="toggleLeftDrawer" />
 
         <q-toolbar-title>
-          Scale Demo App
+          ระบบตรวจจับภัยคุกคามทางไซเบอร์
         </q-toolbar-title>
 
         <!-- <div>Quasar v{{ $q.version }}</div> -->
@@ -143,17 +149,17 @@ async function updateDriver(driverPath: String) {
         <q-btn dense icon="refresh" rounded full-width @click="getDriver()">
 
         </q-btn>
-        <q-select class="q-pa-sm" outlined v-model="selectedDriver" :options="drivers" option-label="path"
+        <!-- <q-select class="q-pa-sm" outlined v-model="selectedDriver" :options="drivers" option-label="path"
           option-value="path" label="Drivers" emit-value map-options @update:model-value="onDriverSelect"
-          @add="onDriverSelect">
-          <!-- <template v-slot:prepend>
+          @add="onDriverSelect"> -->
+        <!-- <template v-slot:prepend>
 
 
             <q-btn dense icon="refresh" rounded full-width @click="getDriver">
 
             </q-btn>
           </template> -->
-        </q-select>
+        <!-- </q-select> -->
         <!-- <p>{{ drivers }}</p> -->
         <!-- <div>
           <label for="driver-select">Select a Driver:</label>
@@ -176,13 +182,17 @@ async function updateDriver(driverPath: String) {
           <!-- <MenuRedirect v-for=" link  in  menuLink " :key="link.title" v-bind="link" /> -->
         </q-card>
         <!-- <q-expansion-item expand-separator icon="settings_ethernet" label="หน้าแรก" caption="วัดน้ำหนัก">
-          <q-expansion-item :header-inset-level="menuInsetLevel" expand-separator icon="tune"
-            caption="Operation things">
+          <q-expansion-item :header-inset-level="menuInsetLevel" expand-separator icon="tune" caption="รายการตรวจจับ">
             <q-card>
-              <MenuRedirect v-for=" link  in  hotelLink " :key="link.title" v-bind="link" />
+              <MenuRedirect v-for=" link in hotelLink " :key="link.title" v-bind="link" />
             </q-card>
           </q-expansion-item>
         </q-expansion-item> -->
+        <q-expansion-item expand-separator icon="visibility" caption="รายการตรวจจับ">
+          <q-card>
+            <MenuRedirect v-for=" link in hotelLink " :key="link.title" v-bind="link" />
+          </q-card>
+        </q-expansion-item>
         <!-- <q-expansion-item expand-separator icon="apartment" label="จัดการโรงแรม" default-opened>
 
           <q-card>
@@ -202,7 +212,33 @@ async function updateDriver(driverPath: String) {
     </q-drawer>
 
     <q-page-container>
-      <NuxtPage />
+
+      <!-- <NuxtPage /> -->
+
+      <div class="layout-wrapper">
+        <div class="background-overlay"></div>
+        <NuxtPage />
+      </div>
     </q-page-container>
   </q-layout>
 </template>
+
+
+<style scoped lang="sass">
+.layout-wrapper
+  position: relative
+  min-height: 100vh
+  overflow: hidden
+
+.background-overlay
+  position: fixed
+  top: 5%
+  width: 100vw // 100% - 20% on each side, using viewport width for consistency
+  height: 100vh // 100% - 20% on top and bottom, using viewport height for consistency
+  background-image: url('/background.png') // Make sure the image is in the public directory
+  background-size: contain
+  background-position: center
+  background-repeat: no-repeat
+  z-index: -1
+  opacity: 0.2 // Optional: Adjust transparency if needed
+</style>
