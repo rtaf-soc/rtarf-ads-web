@@ -7,8 +7,8 @@ export async function fetchIngredients(menuId) {
   try {
 
 
-    const response = await fetch(`${baseURL}/ingredient?menu_id=${menuId}`);
-    return response.json();
+    // const response = await fetch(`${baseURL}/ingredient?menu_id=${menuId}`);
+    // return response.json();
   } catch (error) {
    
   } finally {
@@ -18,14 +18,14 @@ export async function fetchIngredients(menuId) {
 
 export async function createIngredient(ingredient) {
   const { public: { baseURL } } = useRuntimeConfig();
-  const response = await fetch(`${baseURL}/ingredient/create`, {
-    // timeout: api_timeout,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(ingredient)
-  });
+  // const response = await fetch(`${baseURL}/ingredient/create`, {
+  //   // timeout: api_timeout,
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json'
+  //   },
+  //   body: JSON.stringify(ingredient)
+  // });
   return response.json();
 }
 
