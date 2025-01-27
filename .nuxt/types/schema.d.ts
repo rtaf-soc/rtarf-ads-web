@@ -27,6 +27,10 @@ declare module 'nuxt/schema' {
    baseURL: string,
 
    scaleURL: string,
+
+   geoIpURL: string,
+
+   machineStatusURL: string,
   }
 }
 declare module 'vue' {
