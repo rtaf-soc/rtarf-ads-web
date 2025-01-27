@@ -36,6 +36,21 @@ const hotelLink: MenuRedirectProps[] = [
   },
 ];
 
+const webviewLink: MenuRedirectProps[] = [
+  {
+    title: 'Geo-IP Attack Map',
+    // caption: 'จัดหา',
+    icon: 'table_chart',
+    link: "/geo_ip_attack"
+  },
+  {
+    title: 'สถานะอุปกรณ์เครือข่าย',
+    // caption: 'จัดหา',
+    icon: 'table_chart',
+    link: "/numa_status"
+  },
+];
+
 const leftDrawerOpen = ref(false)
 const initUsername = ref(false)
 const username = ref('NaN')
@@ -191,6 +206,12 @@ async function updateDriver(driverPath: String) {
         <q-expansion-item expand-separator icon="visibility" caption="รายการตรวจจับ">
           <q-card>
             <MenuRedirect v-for=" link in hotelLink " :key="link.title" v-bind="link" />
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item expand-separator icon="visibility" caption="ระบบงานทั่วไป">
+          <q-card>
+            <MenuRedirect v-for=" link in webviewLink " :key="link.title" v-bind="link" />
           </q-card>
         </q-expansion-item>
         <!-- <q-expansion-item expand-separator icon="apartment" label="จัดการโรงแรม" default-opened>

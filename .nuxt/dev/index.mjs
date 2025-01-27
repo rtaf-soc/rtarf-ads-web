@@ -102,8 +102,10 @@ const _inlineRuntimeConfig = {
     }
   },
   "public": {
-    "baseURL": "https://api.example.com/",
-    "scaleURL": "https://api.example.com/"
+    "baseURL": "https://api.example.com",
+    "scaleURL": "https://api.example.com",
+    "geoIpURL": "https://www.google.com/webhp?igu=1",
+    "machineStatusURL": "https://nuxtjs.org/"
   }
 };
 const envOptions = {
