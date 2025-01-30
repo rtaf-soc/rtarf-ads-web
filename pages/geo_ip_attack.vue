@@ -5,7 +5,8 @@
         <h5 class="q-mt-none q-pt-none">Geo-IP Attack Map</h5>
       </q-card-section>
       <q-card-section>
-        <iframe sandbox="allow-scripts allow-same-origin" :src="geoIpURL" width="100%" height="800" style="border: none;"></iframe>
+        <iframe sandbox="allow-scripts allow-same-origin" :src="urlGeoipAttackMap" width="100%" height="800"
+          style="border: none;"></iframe>
 
       </q-card-section>
     </q-card>
@@ -16,13 +17,18 @@
 <script>
 import moment from 'moment';
 
-const { public: { geoIpURL } } = useRuntimeConfig();
+// const { public: { geoIpURL } } = useRuntimeConfig();
 export default {
-  data() {
+  setup() {
+    const { public: { urlGeoipAttackMap } } = useRuntimeConfig();
+
+    // Debugging in the console
+    console.log('Geo-IP URL:', urlGeoipAttackMap);
+
     return {
-      geoIpURL
+      urlGeoipAttackMap,
     };
-  }
-}
-console.log(geoIpURL)
+  },
+};
+// console.log(geoIpURL)
 </script>

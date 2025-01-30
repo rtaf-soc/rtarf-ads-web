@@ -104,8 +104,8 @@ const _inlineRuntimeConfig = {
   "public": {
     "baseURL": "https://api.example.com",
     "scaleURL": "https://api.example.com",
-    "geoIpURL": "https://www.google.com/webhp?igu=1",
-    "machineStatusURL": "https://nuxtjs.org/"
+    "urlGeoipAttackMap": "https://www.google.com/webhp?igu=1",
+    "urlMachineStatus": "https://nuxtjs.org/"
   }
 };
 const envOptions = {
@@ -549,9 +549,9 @@ function normalizeCookieHeaders(headers) {
   return outgoingHeaders;
 }
 
-const config = useRuntimeConfig();
+const config$2 = useRuntimeConfig();
 const _routeRulesMatcher = toRouteMatcher(
-  createRouter({ routes: config.nitro.routeRules })
+  createRouter({ routes: config$2.nitro.routeRules })
 );
 function createRouteRulesHandler(ctx) {
   return eventHandler((event) => {
@@ -844,9 +844,15 @@ const errorHandler = (async function errorhandler(error, event) {
   return send(event, html);
 });
 
+const _lazy_WEX9Er = () => Promise.resolve().then(function () { return config$1; });
+const _lazy_bE3RkL = () => Promise.resolve().then(function () { return hello$1; });
+const _lazy_knL3P9 = () => Promise.resolve().then(function () { return _id_$1; });
 const _lazy_mo9FKP = () => Promise.resolve().then(function () { return renderer$1; });
 
 const handlers = [
+  { route: '/api/config', handler: _lazy_WEX9Er, lazy: true, middleware: false, method: undefined },
+  { route: '/api/hello', handler: _lazy_bE3RkL, lazy: true, middleware: false, method: undefined },
+  { route: '/api/user/:id', handler: _lazy_knL3P9, lazy: true, middleware: false, method: undefined },
   { route: '/__nuxt_error', handler: _lazy_mo9FKP, lazy: true, middleware: false, method: undefined },
   { route: '/**', handler: _lazy_mo9FKP, lazy: true, middleware: false, method: undefined }
 ];
@@ -1041,6 +1047,35 @@ const template$1 = (messages) => {
 const errorDev = /*#__PURE__*/Object.freeze({
   __proto__: null,
   template: template$1
+});
+
+const config = defineEventHandler(() => {
+  const runtimeEnv = process.env.MY_RUNTIME_ENV || "development";
+  return { runtimeEnv };
+});
+
+const config$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: config
+});
+
+const hello = defineEventHandler(() => {
+  return { message: "Hello from the backend!, " + process.env.API_PATH };
+});
+
+const hello$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: hello
+});
+
+const _id_ = defineEventHandler((event) => {
+  const { id } = event.context.params;
+  return { id, name: `User ${id}` };
+});
+
+const _id_$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: _id_
 });
 
 const Vue3 = version[0] === "3";
