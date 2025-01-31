@@ -28,9 +28,9 @@ declare module 'nuxt/schema' {
 
    scaleURL: string,
 
-   geoIpURL: string,
+   urlGeoipAttackMap: string,
 
-   machineStatusURL: string,
+   urlMachineStatus: string,
   }
 }
 declare module 'vue' {

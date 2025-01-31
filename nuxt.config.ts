@@ -43,10 +43,18 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
+      // baseURL: process.env.NUXT_PUBLIC_API_BASE || 'https://api.example.com',
+      // scaleURL: process.env.NUXT_PUBLIC_API_SCALE || 'https://api.example.com',
+      // geoIpURL: process.env.URL_GEOIP_ATTACK_MAP || 'https://www.google.co.th',
+      // machineStatusURL: process.env.URL_MACHINE_STATUS || 'https://www.apple.com',
       baseURL: process.env.NUXT_PUBLIC_API_BASE || 'https://api.example.com',
       scaleURL: process.env.NUXT_PUBLIC_API_SCALE || 'https://api.example.com',
-      geoIpURL: process.env.URL_GEOIP_ATTACK_MAP || 'https://www.google.co.th',
-      machineStatusURL: process.env.URL_MACHINE_STATUS || 'https://www.apple.com',
+      urlGeoipAttackMap: process.env.URL_GEOIP_ATTACK_MAP || 'https://www.google.co.th',
+      urlMachineStatus: process.env.URL_MACHINE_STATUS || 'https://www.apple.com',
+      // baseURL: process.env.NUXT_PUBLIC_API_BASE ,
+      // scaleURL: process.env.NUXT_PUBLIC_API_SCALE ,
+      // geoIpURL: process.env.URL_GEOIP_ATTACK_MAP ,
+      // machineStatusURL: process.env.URL_MACHINE_STATUS ,
       // timeout: process.env.NUXT_API_TIMEOUT || 5000,
     },
   },

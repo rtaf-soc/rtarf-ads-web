@@ -1,0 +1,10 @@
+docker build -t pjame .
+docker run -e NUXT_PUCLIC_URL_MACHINE_STATUS="https://www.google.com/webhp?igu=1" -e NUXT_PUBLIC_GEO_IP_URL="https://www.facebook.com" -dp 3334:3000 pjame
+
+curl  http://localhost:3334/api/hello     
+
+
+docker run -e NUXT_PUCLIC_URL_MACHINE_STATUS="https://www.google.com/webhp?igu=1" \
+-e NUXT_PUBLIC_GEO_IP_URL="https://www.facebook.com" \
+-e API_PATH='test1234' \
+-dp 3334:3000 pjame
