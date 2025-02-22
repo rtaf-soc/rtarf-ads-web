@@ -19,6 +19,16 @@ declare module 'nuxt/schema' {
       cdnURL: string,
    },
 
+   apiPath: string,
+
+   keycloak: {
+      idpEndpoint: string,
+
+      idpClientId: string,
+
+      idpClientSecret: string,
+   },
+
    nitro: {
       envPrefix: string,
    },
@@ -28,9 +38,9 @@ declare module 'nuxt/schema' {
 
    scaleURL: string,
 
-   urlGeoipAttackMap: string,
+   geoIpURL: string,
 
-   urlMachineStatus: string,
+   machineStatusURL: string,
   }
 }
 declare module 'vue' {

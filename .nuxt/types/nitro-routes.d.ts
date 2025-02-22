@@ -6,8 +6,20 @@ declare module 'nitropack' {
     '/api/config': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/config').default>>>>
     }
+    '/api/get-token': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/get-token').default>>>>
+    }
     '/api/hello': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/hello').default>>>>
+    }
+    '/api/login': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/login').default>>>>
+    }
+    '/api/protected': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/protected').default>>>>
+    }
+    '/api/refresh': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/refresh').default>>>>
     }
     '/api/user/:id': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/user/[id]').default>>>>

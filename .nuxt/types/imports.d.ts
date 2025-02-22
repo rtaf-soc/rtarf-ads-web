@@ -182,6 +182,7 @@ declare global {
   const useTimeout: typeof import('../../node_modules/quasar')['useTimeout']
   const useTransitionState: typeof import('../../node_modules/vue')['useTransitionState']
   const useWeightStore: typeof import('../../stores/weight')['useWeightStore']
+  const verifyToken: typeof import('../../utils/verifyToken')['verifyToken']
   const watch: typeof import('../../node_modules/vue')['watch']
   const watchEffect: typeof import('../../node_modules/vue')['watchEffect']
   const watchPostEffect: typeof import('../../node_modules/vue')['watchPostEffect']
@@ -384,6 +385,7 @@ declare module 'vue' {
     readonly useTimeout: UnwrapRef<typeof import('../../node_modules/quasar')['useTimeout']>
     readonly useTransitionState: UnwrapRef<typeof import('../../node_modules/vue')['useTransitionState']>
     readonly useWeightStore: UnwrapRef<typeof import('../../stores/weight')['useWeightStore']>
+    readonly verifyToken: UnwrapRef<typeof import('../../utils/verifyToken')['verifyToken']>
     readonly watch: UnwrapRef<typeof import('../../node_modules/vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('../../node_modules/vue')['watchEffect']>
     readonly watchPostEffect: UnwrapRef<typeof import('../../node_modules/vue')['watchPostEffect']>
