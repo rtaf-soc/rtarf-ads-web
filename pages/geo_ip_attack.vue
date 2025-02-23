@@ -5,7 +5,7 @@
         <h5 class="q-mt-none q-pt-none">Geo-IP Attack Map</h5>
       </q-card-section>
       <q-card-section>
-        <iframe sandbox="allow-scripts allow-same-origin" :src="urlGeoipAttackMap" width="100%" height="800"
+        <iframe sandbox="allow-scripts allow-same-origin" :src="geoIpURL" width="100%" height="800"
           style="border: none;"></iframe>
 
       </q-card-section>
@@ -20,14 +20,19 @@ import moment from 'moment';
 // const { public: { geoIpURL } } = useRuntimeConfig();
 export default {
   setup() {
-    const { public: { urlGeoipAttackMap } } = useRuntimeConfig();
+    const { public: { geoIpURL } } = useRuntimeConfig();
 
     // Debugging in the console
-    console.log('Geo-IP URL:', urlGeoipAttackMap);
+    console.log('Geo-IP URL:', geoIpURL);
 
     return {
-      urlGeoipAttackMap,
+      geoIpURL,
     };
+  },
+  beforeMount() {
+    definePageMeta({
+      middleware: 'auth'
+    })
   },
 };
 // console.log(geoIpURL)

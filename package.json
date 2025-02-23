@@ -17,6 +17,7 @@
     "consola": "^3.2.3",
     "defu": "^6.1.4",
     "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.1.0",
     "moment": "^2.29.4",
     "nuxt": "^3.11.2",
     "nuxt-quasar-ui": "^2.1.2",

@@ -1,29 +1,23 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import materialIcons from 'quasar/icon-set/svg-material-icons'
-import materialIconsRound from 'quasar/icon-set/svg-material-icons-round'
-
+import materialIcons from "quasar/icon-set/svg-material-icons";
+import materialIconsRound from "quasar/icon-set/svg-material-icons-round";
 
 export default defineNuxtConfig({
-  app:{
-    head:{
-      title:'Military Rule Detection Joint Sharing',
-      link:[
-        {rel:'icon',type:'image/x-icon',href:'favicon.ico'}
-      ]
-    }
+  app: {
+    head: {
+      title: "Military Rule Detection Joint Sharing",
+      link: [{ rel: "icon", type: "image/x-icon", href: "favicon.ico" }],
+    },
   },
-  plugins: [
-    '~/plugins/websocket.js',
-  
-  ],
+  plugins: ["~/plugins/websocket.js"],
 
   devtools: { enabled: true },
 
   modules: [
-    '@nuxt/devtools',
-    'nuxt-quasar-ui',
-    '@nuxtjs/google-fonts',
-    '@pinia/nuxt',
+    "@nuxt/devtools",
+    "nuxt-quasar-ui",
+    "@nuxtjs/google-fonts",
+    "@pinia/nuxt",
     // '@nuxtjs/axios',
     // '@nuxtjs/auth-next'
     // '@nuxtjs/dotenv'
@@ -36,21 +30,30 @@ export default defineNuxtConfig({
   googleFonts: {
     families: {
       // Specify the font and its styles
-      'Noto+Sans+Thai': [100, 300, 400, 500, 700, 900],
+      "Noto+Sans+Thai": [100, 300, 400, 500, 700, 900],
     },
-    display: 'swap', // Optional: Use 'swap' to enable font-display: swap
+    display: "swap", // Optional: Use 'swap' to enable font-display: swap
   },
 
   runtimeConfig: {
+    //for backend (secret)
+    apiPath: "xx",
+    keycloak: {
+      idpEndpoint: "xx",
+      idpClientId: "xx",
+      idpClientSecret: "xx",
+    },
+
+    //for frontend (expose)
     public: {
+      baseURL: "https://api.example.com",
+      scaleURL: "https://api.example.com",
+      geoIpURL: "https://www.google.co.th",
+      machineStatusURL: "https://www.apple.com",
       // baseURL: process.env.NUXT_PUBLIC_API_BASE || 'https://api.example.com',
       // scaleURL: process.env.NUXT_PUBLIC_API_SCALE || 'https://api.example.com',
-      // geoIpURL: process.env.URL_GEOIP_ATTACK_MAP || 'https://www.google.co.th',
-      // machineStatusURL: process.env.URL_MACHINE_STATUS || 'https://www.apple.com',
-      baseURL: process.env.NUXT_PUBLIC_API_BASE || 'https://api.example.com',
-      scaleURL: process.env.NUXT_PUBLIC_API_SCALE || 'https://api.example.com',
-      urlGeoipAttackMap: process.env.URL_GEOIP_ATTACK_MAP || 'https://www.google.co.th',
-      urlMachineStatus: process.env.URL_MACHINE_STATUS || 'https://www.apple.com',
+      // urlGeoipAttackMap: process.env.URL_GEOIP_ATTACK_MAP || 'https://www.google.co.th',
+      // urlMachineStatus: process.env.URL_MACHINE_STATUS || 'https://www.apple.com',
       // baseURL: process.env.NUXT_PUBLIC_API_BASE ,
       // scaleURL: process.env.NUXT_PUBLIC_API_SCALE ,
       // geoIpURL: process.env.URL_GEOIP_ATTACK_MAP ,
@@ -63,24 +66,23 @@ export default defineNuxtConfig({
     // ...
     // 'quasar/fonts',
     // Reference the global CSS file
-    './assets/global.css',
-    'quasar/animations',
-    'quasar/icons',
-    'quasar/css',
+    "./assets/global.css",
+    "quasar/animations",
+    "quasar/icons",
+    "quasar/css",
     // 'quasar/brand', // If config.brand is used
     // ...
   ],
 
   quasar: {
-
-    sassVariables: 'assets/quasar-variables.sass',
+    sassVariables: "assets/quasar-variables.sass",
     plugins: [
-      'AppFullscreen',
-      'BottomSheet',
-      'Dialog',
-      'Loading',
-      'LoadingBar',
-      'Notify',
+      "AppFullscreen",
+      "BottomSheet",
+      "Dialog",
+      "Loading",
+      "LoadingBar",
+      "Notify",
     ],
     iconSet: {
       ...materialIcons,
@@ -88,8 +90,8 @@ export default defineNuxtConfig({
     },
     extras: {
       // font: 'roboto-font',
-      fontIcons: ['material-icons'],
-      animations: 'all',
+      fontIcons: ["material-icons"],
+      animations: "all",
     },
     config: {
       dark: true,
@@ -103,5 +105,5 @@ export default defineNuxtConfig({
     },
   },
 
-  compatibilityDate: '2024-09-04',
-})
+  compatibilityDate: "2024-09-04",
+});

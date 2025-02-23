@@ -1,6 +1,8 @@
-
-
 <script setup lang="ts">
+import { useAuthStore } from '~/stores/auth'
+const auth = useAuthStore()
+const router = useRouter()
+
 export interface MenuRedirectProps {
   title: string;
   caption?: string;
@@ -9,7 +11,7 @@ export interface MenuRedirectProps {
   clickable?: boolean;
   disable?: boolean;
 }
-withDefaults(defineProps<MenuRedirectProps>(), {
+const props = withDefaults(defineProps<MenuRedirectProps>(), {
   caption: "",
   link: "#",
   icon: "",
@@ -17,11 +19,26 @@ withDefaults(defineProps<MenuRedirectProps>(), {
   disable: false
 });
 
+async function handleClick() {
+  try {
+    // Attempt to refresh the token before navigating
+    console.log('call token')
+    auth.refreshAuthToken()
+    // If refresh succeeds, redirect to the provided link
+    router.push({ path: props.link })
+  } catch (error) {
+    // If refreshing fails, log out and send user to login page
+    console.log(error)
+    auth.logout()
+    // router.push('/login')
+  }
+}
+
 // const redirect = (link) => clearError({ redirect: link })
 </script>
 <template>
   <q-item :inset-level="0.3" :clickable="clickable" :active="link === $route.path" active-class="bg-primary text-white"
-    target="_blank" :disable="disable" @click="$router.push({ path: link })">
+    target="_blank" :disable="disable" @click="handleClick">
     <q-item-section v-if="icon" avatar>
       <q-icon :name="icon" />
     </q-item-section>
@@ -34,4 +51,3 @@ withDefaults(defineProps<MenuRedirectProps>(), {
     </q-item-section>
   </q-item>
 </template>
-

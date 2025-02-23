@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { mkdirSync } from 'node:fs';
 import { parentPort, threadId } from 'node:worker_threads';
 import { defineEventHandler, handleCacheHeaders, splitCookiesString, isEvent, createEvent, fetchWithEvent, getRequestHeader, eventHandler, setHeaders, sendRedirect, proxyRequest, createError, setResponseHeader, send, getResponseStatus, setResponseStatus, setResponseHeaders, getRequestHeaders, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getRouterParam, getQuery as getQuery$1, readBody, getResponseStatusText } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/h3/dist/index.mjs';
+import { verifyToken } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/utils/verifyToken.js';
 import { getRequestDependencies, getPreloadLinks, getPrefetchLinks, createRenderer } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import { stringify, uneval } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/devalue/index.js';
 import destr from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/destr/dist/index.mjs';
@@ -104,8 +105,14 @@ const _inlineRuntimeConfig = {
   "public": {
     "baseURL": "https://api.example.com",
     "scaleURL": "https://api.example.com",
-    "urlGeoipAttackMap": "https://www.google.com/webhp?igu=1",
-    "urlMachineStatus": "https://nuxtjs.org/"
+    "geoIpURL": "https://www.google.co.th",
+    "machineStatusURL": "https://www.apple.com"
+  },
+  "apiPath": "xx",
+  "keycloak": {
+    "idpEndpoint": "xx",
+    "idpClientId": "xx",
+    "idpClientSecret": "xx"
   }
 };
 const envOptions = {
@@ -845,13 +852,21 @@ const errorHandler = (async function errorhandler(error, event) {
 });
 
 const _lazy_WEX9Er = () => Promise.resolve().then(function () { return config$1; });
+const _lazy_DcHZGk = () => Promise.resolve().then(function () { return getToken; });
 const _lazy_bE3RkL = () => Promise.resolve().then(function () { return hello$1; });
+const _lazy_Rd7FvB = () => Promise.resolve().then(function () { return login$1; });
+const _lazy_5uHFvW = () => Promise.resolve().then(function () { return _protected$1; });
+const _lazy_1dtQVQ = () => Promise.resolve().then(function () { return refresh$1; });
 const _lazy_knL3P9 = () => Promise.resolve().then(function () { return _id_$1; });
 const _lazy_mo9FKP = () => Promise.resolve().then(function () { return renderer$1; });
 
 const handlers = [
   { route: '/api/config', handler: _lazy_WEX9Er, lazy: true, middleware: false, method: undefined },
+  { route: '/api/get-token', handler: _lazy_DcHZGk, lazy: true, middleware: false, method: undefined },
   { route: '/api/hello', handler: _lazy_bE3RkL, lazy: true, middleware: false, method: undefined },
+  { route: '/api/login', handler: _lazy_Rd7FvB, lazy: true, middleware: false, method: undefined },
+  { route: '/api/protected', handler: _lazy_5uHFvW, lazy: true, middleware: false, method: undefined },
+  { route: '/api/refresh', handler: _lazy_1dtQVQ, lazy: true, middleware: false, method: undefined },
   { route: '/api/user/:id', handler: _lazy_knL3P9, lazy: true, middleware: false, method: undefined },
   { route: '/__nuxt_error', handler: _lazy_mo9FKP, lazy: true, middleware: false, method: undefined },
   { route: '/**', handler: _lazy_mo9FKP, lazy: true, middleware: false, method: undefined }
@@ -1059,13 +1074,116 @@ const config$1 = /*#__PURE__*/Object.freeze({
   default: config
 });
 
+const getToken = /*#__PURE__*/Object.freeze({
+  __proto__: null
+});
+
 const hello = defineEventHandler(() => {
-  return { message: "Hello from the backend!, " + process.env.API_PATH };
+  const config = useRuntimeConfig();
+  return { message: "Hello from the backend!, " + config.apiPath };
 });
 
 const hello$1 = /*#__PURE__*/Object.freeze({
   __proto__: null,
   default: hello
+});
+
+const login = defineEventHandler(async (event) => {
+  var _a;
+  const body = await readBody(event);
+  const config = useRuntimeConfig();
+  const form = new URLSearchParams({
+    grant_type: "password",
+    response_type: "token",
+    scope: "openid",
+    client_id: config.keycloak.idpClientId,
+    client_secret: config.keycloak.idpClientSecret,
+    username: body.username,
+    password: body.password
+  });
+  try {
+    const tokenResponse = await $fetch(config.keycloak.idpEndpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: form.toString()
+    });
+    console.log(`${body.username} logged in`);
+    return tokenResponse;
+  } catch (error) {
+    console.log(error);
+    throw createError({
+      statusCode: ((_a = error.response) == null ? void 0 : _a.status) || 500,
+      statusMessage: "Failed to login to Keycloak"
+    });
+  }
+});
+
+const login$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: login
+});
+
+const _protected = defineEventHandler(async (event) => {
+  const authHeader = event.req.headers.authorization;
+  if (!authHeader) {
+    throw createError({ statusCode: 401, statusMessage: "Unauthorized: Missing Authorization header" });
+  }
+  const token = authHeader.split(" ")[1];
+  if (!token) {
+    throw createError({ statusCode: 401, statusMessage: "Unauthorized: Malformed token" });
+  }
+  try {
+    const runtimeConfig = useRuntimeConfig();
+    const decoded = await verifyToken(token, runtimeConfig);
+    return { message: "Access granted", user: decoded };
+  } catch (error) {
+    throw createError({ statusCode: 401, statusMessage: "Unauthorized: Token verification failed" });
+  }
+});
+
+const _protected$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: _protected
+});
+
+const refresh = defineEventHandler(async (event) => {
+  var _a;
+  const body = await readBody(event);
+  if (!body.refreshToken) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Missing refresh token"
+    });
+  }
+  const config = useRuntimeConfig();
+  console.log(config);
+  const form = new URLSearchParams({
+    grant_type: "refresh_token",
+    client_id: config.keycloak.idpClientId,
+    client_secret: config.keycloak.idpClientSecret,
+    refresh_token: body.refreshToken
+  });
+  try {
+    const tokenResponse = await $fetch(config.keycloak.idpEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: form.toString()
+    });
+    return tokenResponse;
+  } catch (error) {
+    console.error("Error refreshing token:", error);
+    throw createError({
+      statusCode: ((_a = error.response) == null ? void 0 : _a.status) || 500,
+      statusMessage: "Failed to refresh token on server"
+    });
+  }
+});
+
+const refresh$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: refresh
 });
 
 const _id_ = defineEventHandler((event) => {

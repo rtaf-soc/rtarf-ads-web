@@ -5,7 +5,7 @@
         <h5 class="q-mt-none q-pt-none">สถานะอุปกรณ์เครือข่าย</h5>
       </q-card-section>
       <q-card-section>
-        <iframe :src="urlMachineStatus" width="100%" height="800" style="border: none;"></iframe>
+        <iframe :src="machineStatusURL" width="100%" height="800" style="border: none;"></iframe>
 
       </q-card-section>
     </q-card>
@@ -16,13 +16,18 @@
 <script>
 import moment from 'moment';
 
-const { public: { urlMachineStatus } } = useRuntimeConfig();
+const { public: { machineStatusURL } } = useRuntimeConfig();
 export default {
   data() {
     return {
-      urlMachineStatus
+      machineStatusURL
     };
-  }
+  },
+  beforeMount() {
+    definePageMeta({
+      middleware: 'auth'
+    })
+  },
 }
-console.log(urlMachineStatus)
+console.log(machineStatusURL)
 </script>
