@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   }
   
   const config = useRuntimeConfig();
-  console.log(config)
+  // console.log(config)
   const form = new URLSearchParams({
     grant_type: 'refresh_token',
     client_id: config.keycloak.idpClientId,

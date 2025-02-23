@@ -36,12 +36,25 @@
 //   }
 // });
 
+// export default defineNuxtRouteMiddleware((to, from) => {
+//   // Only run this check on the client
+//   if (process.client) {
+//     const auth = useAuthStore();
+//     // Ensure the auth store is loaded from localStorage
+//     auth.loadFromLocalStorage();
+//     if (!auth.isAuthenticated && to.path !== '/login') {
+//       return navigateTo('/login');
+//     }
+//   }
+// });
+
 export default defineNuxtRouteMiddleware((to, from) => {
-  // Only run this check on the client
   if (process.client) {
     const auth = useAuthStore();
-    // Ensure the auth store is loaded from localStorage
-    auth.loadFromLocalStorage();
+    if (!auth.isInitialized) {
+      // Optionally, you might wait or force initialization here
+      return;
+    }
     if (!auth.isAuthenticated && to.path !== '/login') {
       return navigateTo('/login');
     }
