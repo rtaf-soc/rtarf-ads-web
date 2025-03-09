@@ -16,7 +16,7 @@
 
 <script>
 import { useAuthStore } from '~/stores/auth'
-Loading.show()
+// Loading.show()
 export default {
   setup() {
     const { public: { geoIpURL } } = useRuntimeConfig();
@@ -32,7 +32,7 @@ export default {
     })
   },
   onMounted(){
-    Loading.hide()
+    // Loading.hide()
   },
 }
 </script>

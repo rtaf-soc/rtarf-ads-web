@@ -222,7 +222,7 @@ const edit_ingredient_detail = {
 
 }
 
-Loading.show()
+// Loading.show()
 
 export default {
   setup() {
@@ -265,6 +265,7 @@ export default {
 
   async mounted() {
     loading.value = false
+    Loading.hide()
     // console.log('load menu');
     // await this.loadMenu();
   },
@@ -274,7 +275,7 @@ export default {
     })
   },
   onMounted(){
-    Loading.hide()
+    // Loading.hide()
   },
   methods: {
     async loadMenu() {

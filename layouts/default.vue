@@ -41,6 +41,16 @@ const webviewLink: MenuRedirectProps[] = [
   },
 ];
 
+const overviewLike: MenuRedirectProps[] = [
+
+  {
+    title: 'ภาพรวม',
+    // caption: 'จัดหา',
+    icon: 'overview',
+    link: "/overview"
+  },
+];
+
 const leftDrawerOpen = ref(false)
 const initUsername = ref(false)
 const username = ref('NaN')
@@ -77,6 +87,7 @@ function handleLogout() {
         <q-item-label header> Menu </q-item-label>
 
         <q-card>
+          <MenuRedirect v-for=" link in overviewLike " :key="link.title" v-bind="link" />
         </q-card>
    
         <q-expansion-item expand-separator icon="visibility" caption="รายการตรวจจับ">

@@ -38,9 +38,9 @@ const error = ref(null)  // to display login errors
 const auth = useAuthStore()
 const router = useRouter()
 onMounted(() => {
-    Loading.hide()
+    // Loading.hide()
     if (auth.isAuthenticated) {
-        router.push('/source')  // Redirect to the main page if token is valid
+        router.push('/overview')  // Redirect to the main page if token is valid
     }
 
 })
@@ -66,6 +66,7 @@ const onSubmit = async (event) => {
     // }
     error.value = null
     try {
+        Loading.show()
         // Updated login logic: call the auth store's login action which now uses Keycloak API (/api/login)
         await auth.login(username.value, password.value)
         // After successful login, navigate to your intended page (e.g., home)
@@ -74,7 +75,7 @@ const onSubmit = async (event) => {
             type: 'positive',
             message: 'Login successful!'
         });
-        router.push('/source')
+        router.push('/overview')
     } catch (err) {
         // Preserve your original error handling
         // error.value = err.message || 'Login failed'
@@ -83,6 +84,8 @@ const onSubmit = async (event) => {
             type: 'negative',
             message: 'Login failed.'
         });
+    } finally {
+        Loading.hide()
     }
 };
 </script>

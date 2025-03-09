@@ -14,7 +14,7 @@
 import { useAuthStore } from '~/stores/auth'
 // import { Loading } from 'quasar'
 
-Loading.show()
+// Loading.show()
 export default {
   setup() {
     const auth = useAuthStore();
@@ -28,7 +28,7 @@ export default {
     })
   },
   onMounted(){
-    Loading.hide()
+    // Loading.hide()
   },
 }
 </script>

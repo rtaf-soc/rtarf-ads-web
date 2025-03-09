@@ -98,7 +98,7 @@ import moment from 'moment';
 
 import { fetchMenu, createMenu } from '~/api/menuService';
 import { createIngredient, fetchIngredients, updateIngredient } from '~/api/ingredientService';
-Loading.show()
+// Loading.show()
 const table_columns_menu = [
 
   { name: 'id', align: 'center', label: 'ลำดับที่', field: 'index', headerStyle: 'width: 30px' },
@@ -261,7 +261,7 @@ export default {
   },
 
   async mounted() {
-    Loading.hide()
+    // Loading.hide()
     // console.log('load menu');
     // await this.loadMenu();
   },
