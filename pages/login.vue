@@ -38,9 +38,11 @@ const error = ref(null)  // to display login errors
 const auth = useAuthStore()
 const router = useRouter()
 onMounted(() => {
-  if (auth.isAuthenticated) {
-    router.push('/source')  // Redirect to the main page if token is valid
-  }
+    Loading.hide()
+    if (auth.isAuthenticated) {
+        router.push('/source')  // Redirect to the main page if token is valid
+    }
+
 })
 const onSubmit = async (event) => {
     event.preventDefault();

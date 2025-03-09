@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page v-if="auth.isAuthenticated">
     <q-card>
       <q-card-section>
         <h5 class="q-mt-none q-pt-none">Source IP</h5>
@@ -95,6 +95,7 @@
 
 <script>
 import moment from 'moment';
+import { useAuthStore } from '~/stores/auth'
 
 import { fetchMenu, createMenu } from '~/api/menuService';
 import { createIngredient, fetchIngredients, updateIngredient } from '~/api/ingredientService';
@@ -212,7 +213,7 @@ const pagination_ingredient = {
   page: 1,
   rowsPerPage: 10
 }
-const loading = ref(false)
+const loading = ref(true)
 const edit_ingredient_detail_isOpen = ref(false)
 const edit_ingredient_detail = {
   name: "",
@@ -221,10 +222,16 @@ const edit_ingredient_detail = {
 
 }
 
-
+Loading.show()
 
 export default {
-
+  setup() {
+    const auth = useAuthStore();
+    return {
+      auth,
+      loading
+    }
+  },
   data() {
     return {
       menus: [],
@@ -257,13 +264,17 @@ export default {
   },
 
   async mounted() {
-    console.log('load menu');
-    await this.loadMenu();
+    loading.value = false
+    // console.log('load menu');
+    // await this.loadMenu();
   },
   beforeMount() {
     definePageMeta({
       middleware: 'auth'
     })
+  },
+  onMounted(){
+    Loading.hide()
   },
   methods: {
     async loadMenu() {

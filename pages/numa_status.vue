@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page v-if="auth.isAuthenticated">
     <q-card>
       <q-card-section>
         <h5 class="q-mt-none q-pt-none">สถานะอุปกรณ์เครือข่าย</h5>
@@ -14,20 +14,24 @@
 </template>
 
 <script>
-import moment from 'moment';
-
-const { public: { machineStatusURL } } = useRuntimeConfig();
+import { useAuthStore } from '~/stores/auth'
+Loading.show()
 export default {
-  data() {
+  setup() {
+    const { public: { machineStatusURL } } = useRuntimeConfig();
+    const auth = useAuthStore();
     return {
-      machineStatusURL
-    };
+      machineStatusURL,
+      auth
+    }
   },
   beforeMount() {
     definePageMeta({
       middleware: 'auth'
     })
   },
+  onMounted() {
+    Loading.hide()
+  },
 }
-console.log(machineStatusURL)
 </script>
