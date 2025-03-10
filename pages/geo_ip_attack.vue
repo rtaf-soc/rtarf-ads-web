@@ -19,6 +19,9 @@ import { useAuthStore } from '~/stores/auth'
 // Loading.show()
 export default {
   setup() {
+    onMounted(() => {
+      // Loading.hide()
+    })
     const { public: { geoIpURL } } = useRuntimeConfig();
     const auth = useAuthStore();
     return {
@@ -31,8 +34,6 @@ export default {
       middleware: 'auth'
     })
   },
-  mounted(){
-    // Loading.hide()
-  },
+
 }
 </script>

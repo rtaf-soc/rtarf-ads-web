@@ -17,6 +17,9 @@ import { useAuthStore } from '~/stores/auth'
 // Loading.show()
 export default {
   setup() {
+    onMounted(() => {
+      // Loading.hide()
+    })
     const auth = useAuthStore();
     return {
       auth,
@@ -27,9 +30,7 @@ export default {
       middleware: 'auth'
     })
   },
-  mounted(){
-    // Loading.hide()
-  },
+
 }
 </script>
 

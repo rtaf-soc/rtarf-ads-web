@@ -52,6 +52,10 @@ import { useAuthStore } from '~/stores/auth';
 
 export default {
   setup() {
+    onMounted(() => {
+      Loading.hide()
+      fetchOverview();
+    })
     const auth = useAuthStore();
     const overviewData = ref(null);
     const overViewArray = ref([
@@ -116,10 +120,10 @@ export default {
         Loading.hide()
       }
     }
-    mounted(() => {
-      Loading.hide()
-      fetchOverview();
-    });
+    // mounted(() => {
+    //   Loading.hide()
+    //   fetchOverview();
+    // });
 
     return {
       overviewData,

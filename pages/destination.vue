@@ -1,5 +1,5 @@
 <template>
-  <q-page  v-if="auth.isAuthenticated">
+  <q-page v-if="auth.isAuthenticated">
     <q-card>
       <q-card-section>
         <h5 class="q-mt-none q-pt-none">Destination IP</h5>
@@ -224,6 +224,10 @@ const edit_ingredient_detail = {
 
 export default {
   setup() {
+    onMounted(() => {
+      // Loading.hide()
+      // await this.loadMenu();
+    })
     const auth = useAuthStore();
     return {
       auth
@@ -260,15 +264,15 @@ export default {
     return formattedDate // Output: 26-12-2023
   },
 
-  async mounted() {
-    // Loading.hide()
-    // console.log('load menu');
-    // await this.loadMenu();
-  },
+  // async onMounted() {
+  // Loading.hide()
+
+  // },
   beforeMount() {
     definePageMeta({
       middleware: 'auth'
     })
+    this.loadMenu();
   },
   methods: {
     async loadMenu() {

@@ -97,8 +97,8 @@
 import moment from 'moment';
 import { useAuthStore } from '~/stores/auth'
 
-import { fetchMenu, createMenu } from '~/api/menuService';
-import { createIngredient, fetchIngredients, updateIngredient } from '~/api/ingredientService';
+// import { fetchMenu, createMenu } from '~/api/menuService';
+// import { createIngredient, fetchIngredients, updateIngredient } from '~/api/ingredientService';
 
 const table_columns_menu = [
 
@@ -226,6 +226,12 @@ const edit_ingredient_detail = {
 
 export default {
   setup() {
+    onMounted(() => {
+      // console.log('onMount1')
+      // this.loadMenu()
+      loading.value = false
+      Loading.hide()
+    })
     const auth = useAuthStore();
     return {
       auth,
@@ -263,20 +269,24 @@ export default {
     return formattedDate // Output: 26-12-2023
   },
 
-  async mounted() {
+  async onMounted() {
+    // console.log('onMount2')
     loading.value = false
     Loading.hide()
     // console.log('load menu');
     // await this.loadMenu();
   },
   beforeMount() {
+    // console.log('beformount')
     definePageMeta({
       middleware: 'auth'
     })
+    this.loadMenu();
   },
-  mounted(){
-    // Loading.hide()
-  },
+  // onMounted() {
+  //   loadMenu()
+  //   // Loading.hide()
+  // },
   methods: {
     async loadMenu() {
       try {
