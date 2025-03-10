@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // import { ref } from 'vue';
 // import type { EssentialLinkProps } from '../components/EssentialLink.vue';
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, nextTick } from 'vue';
 import { useAuthStore } from '~/stores/auth'
 import { type MenuRedirectProps } from "../components/MenuRedirect.vue";
 const router = useRouter()
@@ -41,6 +41,16 @@ const webviewLink: MenuRedirectProps[] = [
   },
 ];
 
+const overviewLike: MenuRedirectProps[] = [
+
+  {
+    title: 'ภาพรวม',
+    // caption: 'จัดหา',
+    icon: 'overview',
+    link: "/overview"
+  },
+];
+
 const leftDrawerOpen = ref(false)
 const initUsername = ref(false)
 const username = ref('NaN')
@@ -77,6 +87,7 @@ function handleLogout() {
         <q-item-label header> Menu </q-item-label>
 
         <q-card>
+          <MenuRedirect v-for=" link in overviewLike " :key="link.title" v-bind="link" />
         </q-card>
    
         <q-expansion-item expand-separator icon="visibility" caption="รายการตรวจจับ">

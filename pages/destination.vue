@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page v-if="auth.isAuthenticated">
     <q-card>
       <q-card-section>
         <h5 class="q-mt-none q-pt-none">Destination IP</h5>
@@ -98,7 +98,7 @@ import moment from 'moment';
 
 import { fetchMenu, createMenu } from '~/api/menuService';
 import { createIngredient, fetchIngredients, updateIngredient } from '~/api/ingredientService';
-
+// Loading.show()
 const table_columns_menu = [
 
   { name: 'id', align: 'center', label: 'ลำดับที่', field: 'index', headerStyle: 'width: 30px' },
@@ -222,9 +222,17 @@ const edit_ingredient_detail = {
 }
 
 
-
 export default {
-
+  setup() {
+    onMounted(() => {
+      // Loading.hide()
+      // await this.loadMenu();
+    })
+    const auth = useAuthStore();
+    return {
+      auth
+    }
+  },
   data() {
     return {
       menus: [],
@@ -256,14 +264,15 @@ export default {
     return formattedDate // Output: 26-12-2023
   },
 
-  async mounted() {
-    console.log('load menu');
-    await this.loadMenu();
-  },
+  // async onMounted() {
+  // Loading.hide()
+
+  // },
   beforeMount() {
     definePageMeta({
       middleware: 'auth'
     })
+    this.loadMenu();
   },
   methods: {
     async loadMenu() {

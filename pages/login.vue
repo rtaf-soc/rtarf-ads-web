@@ -27,10 +27,9 @@
 
 <script setup>
 // (Keep your original imports and comments if any)
-import { ref } from 'vue'
+import { ref , onMounted } from 'vue'
 import { useAuthStore } from '~/stores/auth'
 import { useRouter } from 'vue-router'
-
 // Preserve your original variable names and comments
 const username = ref('') // your username input
 const password = ref('') // your password input
@@ -38,32 +37,17 @@ const error = ref(null)  // to display login errors
 const auth = useAuthStore()
 const router = useRouter()
 onMounted(() => {
-  if (auth.isAuthenticated) {
-    router.push('/source')  // Redirect to the main page if token is valid
-  }
+    // Loading.hide()
+    if (auth.isAuthenticated) {
+        router.push('/overview')  // Redirect to the main page if token is valid
+    }
+
 })
 const onSubmit = async (event) => {
     event.preventDefault();
-    // try {
-    //     await authStore.login(username.value, password.value);
-    //     // Notify user of successful login
-    //     Notify.create({
-    //         position: "top",
-    //         type: 'positive',
-    //         message: 'Login successful!'
-    //     });
-    //     router.push('/source');
-    // } catch (error) {
-    //     console.log(error)
-    //     // Notify user of failed login
-    //     Notify.create({
-    //         position: "top",
-    //         type: 'negative',
-    //         message: 'Invalid username or password.'
-    //     });
-    // }
     error.value = null
     try {
+        Loading.show()
         // Updated login logic: call the auth store's login action which now uses Keycloak API (/api/login)
         await auth.login(username.value, password.value)
         // After successful login, navigate to your intended page (e.g., home)
@@ -72,7 +56,7 @@ const onSubmit = async (event) => {
             type: 'positive',
             message: 'Login successful!'
         });
-        router.push('/source')
+        router.push('/overview')
     } catch (err) {
         // Preserve your original error handling
         // error.value = err.message || 'Login failed'
@@ -81,6 +65,8 @@ const onSubmit = async (event) => {
             type: 'negative',
             message: 'Login failed.'
         });
+    } finally {
+        Loading.hide()
     }
 };
 </script>

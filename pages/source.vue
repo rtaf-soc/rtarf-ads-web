@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page v-if="auth.isAuthenticated">
     <q-card>
       <q-card-section>
         <h5 class="q-mt-none q-pt-none">Source IP</h5>
@@ -95,9 +95,10 @@
 
 <script>
 import moment from 'moment';
+import { useAuthStore } from '~/stores/auth'
 
-import { fetchMenu, createMenu } from '~/api/menuService';
-import { createIngredient, fetchIngredients, updateIngredient } from '~/api/ingredientService';
+// import { fetchMenu, createMenu } from '~/api/menuService';
+// import { createIngredient, fetchIngredients, updateIngredient } from '~/api/ingredientService';
 
 const table_columns_menu = [
 
@@ -212,7 +213,7 @@ const pagination_ingredient = {
   page: 1,
   rowsPerPage: 10
 }
-const loading = ref(false)
+const loading = ref(true)
 const edit_ingredient_detail_isOpen = ref(false)
 const edit_ingredient_detail = {
   name: "",
@@ -221,10 +222,22 @@ const edit_ingredient_detail = {
 
 }
 
-
+// Loading.show()
 
 export default {
-
+  setup() {
+    onMounted(() => {
+      // console.log('onMount1')
+      // this.loadMenu()
+      loading.value = false
+      Loading.hide()
+    })
+    const auth = useAuthStore();
+    return {
+      auth,
+      loading
+    }
+  },
   data() {
     return {
       menus: [],
@@ -256,15 +269,24 @@ export default {
     return formattedDate // Output: 26-12-2023
   },
 
-  async mounted() {
-    console.log('load menu');
-    await this.loadMenu();
+  async onMounted() {
+    // console.log('onMount2')
+    loading.value = false
+    Loading.hide()
+    // console.log('load menu');
+    // await this.loadMenu();
   },
   beforeMount() {
+    // console.log('beformount')
     definePageMeta({
       middleware: 'auth'
     })
+    this.loadMenu();
   },
+  // onMounted() {
+  //   loadMenu()
+  //   // Loading.hide()
+  // },
   methods: {
     async loadMenu() {
       try {
