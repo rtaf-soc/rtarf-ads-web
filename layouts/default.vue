@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // import { ref } from 'vue';
 // import type { EssentialLinkProps } from '../components/EssentialLink.vue';
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, mounted, nextTick } from 'vue';
 import { useAuthStore } from '~/stores/auth'
 import { type MenuRedirectProps } from "../components/MenuRedirect.vue";
 const router = useRouter()

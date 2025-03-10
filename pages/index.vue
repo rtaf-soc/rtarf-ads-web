@@ -27,7 +27,7 @@ export default {
       middleware: 'auth'
     })
   },
-  onMounted(){
+  mounted(){
     // Loading.hide()
   },
 }

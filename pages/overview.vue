@@ -116,7 +116,7 @@ export default {
         Loading.hide()
       }
     }
-    onMounted(() => {
+    mounted(() => {
       Loading.hide()
       fetchOverview();
     });

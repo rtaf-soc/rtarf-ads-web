@@ -37,7 +37,7 @@ const password = ref('') // your password input
 const error = ref(null)  // to display login errors
 const auth = useAuthStore()
 const router = useRouter()
-onMounted(() => {
+mounted(() => {
     // Loading.hide()
     if (auth.isAuthenticated) {
         router.push('/overview')  // Redirect to the main page if token is valid
