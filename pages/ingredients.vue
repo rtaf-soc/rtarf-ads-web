@@ -71,6 +71,7 @@ import { fetchIngredients, createIngredient, updateIngredient, deleteIngredient 
 import { fetchStableWeight } from '~/api/scaleService';
 
 export default {
+  
   data() {
     return {
       ingredients: [],
@@ -82,7 +83,7 @@ export default {
       menuId: null
     };
   },
-  async mounted() {
+  async onMounted() {
     this.menuId = this.$route.query.menu_id;
     await this.loadIngredients();
     await this.getStableWeight()

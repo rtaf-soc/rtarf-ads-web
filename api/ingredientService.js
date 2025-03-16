@@ -32,7 +32,7 @@ export async function createIngredient(ingredient) {
 export async function updateIngredient(id, ingredient) {
   const { public: { baseURL } } = useRuntimeConfig();
   try {
-    Loading.show()
+    // Loading.show()
 
     const response = await fetch(`${baseURL}/ingredient/update/${id}`, {
       // timeout: api_timeout,

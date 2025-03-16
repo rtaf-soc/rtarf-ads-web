@@ -1,0 +1,12 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dark background rectangle -->
+  <rect width="64" height="64" fill="#1c2a1b" />
+  
+  <!-- Polygons in slightly different green/olive shades -->
+  <polygon fill="#273828" points="5,5 25,10 15,25 5,25" />
+  <polygon fill="#2f4429" points="25,5 60,5 40,20 25,15" />
+  <polygon fill="#3b5133" points="10,30 30,40 10,55 0,45" />
+  <polygon fill="#4a5d3c" points="35,25 60,15 60,35 40,30" />
+  <polygon fill="#2c3827" points="20,40 40,50 25,64 0,64" />
+  <polygon fill="#344531" points="50,35 64,25 64,64 35,64" />
+</svg>

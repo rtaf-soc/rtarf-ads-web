@@ -1,8 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@200;400&display=swap')
+// @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@200;400&display=swap')
+@import url('https://fonts.googleapis.com/css2?family=Anuphan:wght@100&family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap')
 
-$typography-font-family : 'Noto Sans Thai', sans-serif !default
+$typography-font-family : 'Sarabun', sans-serif !default
 
-$primary: #1976D2
+$primary: #06402B
 $secondary: #26A69A
 $accent: #9C27B0
 
@@ -13,7 +14,35 @@ $positive: #21BA45
 $negative: #C10015
 $info: #31CCEC
 $warning: #F2C037
- 
+
+.hexagon-camo-button
+  position: relative
+  overflow: hidden
+
+  // Pseudo-elements for hexagon camo decoration
+  &::before,
+  &::after
+    content: ""
+    position: absolute
+    width: 40px  // adjust size as needed
+    height: 40px // adjust size as needed
+    background-image: url('~assets/camo.png')  // ensure the path is correct
+    background-size: cover
+    background-repeat: no-repeat
+
+  // Top-left hexagon
+  &::before
+    top: -10px   // fine-tune these values as needed
+    left: -10px
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)
+
+  // Bottom-right hexagon
+  &::after
+    bottom: -10px
+    right: -10px
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)
+
+
 body
   background-image: url('/background.png')
   background-size: cover

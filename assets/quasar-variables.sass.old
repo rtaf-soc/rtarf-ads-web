@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@200;400&display=swap')
+
+$typography-font-family : 'Noto Sans Thai', sans-serif !default
+
+$primary: #1976D2
+$secondary: #26A69A
+$accent: #9C27B0
+
+$dark: #1D1D1D
+$dark-page: #121212
+
+$positive: #21BA45
+$negative: #C10015
+$info: #31CCEC
+$warning: #F2C037
+ 
+body
+  background-image: url('/background.png')
+  background-size: cover
+  background-position: center
+  background-repeat: no-repeat
+  background-attachment: fixed
+  &::before
+    content: ""
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: rgba(0, 0, 0, 0.5) // Change the transparency here (0 to 1)
+    z-index: -1
+
+
+    

@@ -6,39 +6,47 @@
       </q-card-section> -->
       <q-card-section>
         <div class="row q-ma-none">
-          <div class="col-12 col-md-6" style="height: 400px">
-            <div v-if="overViewOnLoad[0].link" class="loading-container q-pt-lx">
-              <q-spinner size="50px" />
+          <div class="col-12 col-md-6" style="height: 480px">
+            <div class="q-pa-sm">
+              <div v-if="overViewOnLoad[0].link" class="loading-container q-pt-lx">
+                <q-spinner size="50px" />
+              </div>
+              <iframe sandbox="allow-scripts allow-same-origin" :src="overViewArray[0].link" width="100%" height="480"
+                :onLoad="isFrameLoad(0)" style="border: none;">
+              </iframe>
             </div>
-            <iframe sandbox="allow-scripts allow-same-origin" :src="overViewArray[0].link" width="100%" height="800"
-              :onLoad="isFrameLoad(0)" style="border: none;" >
-            </iframe>
           </div>
-          <div class="col-12 col-md-6" style="height: 400px">
-            <div v-if="overViewOnLoad[1].link" class="loading-container q-pt-lx">
-              <q-spinner size="50px" />
+          <div class="col-12 col-md-6" style="height: 480px">
+            <div class="q-pa-sm">
+              <div v-if="overViewOnLoad[1].link" class="loading-container q-pt-lx">
+                <q-spinner size="50px" />
+              </div>
+              <iframe sandbox="allow-scripts allow-same-origin" :src="overViewArray[1].link" width="100%" height="480"
+                :onload="isFrameLoad(1)" style="border: none;">
+              </iframe>
             </div>
-            <iframe sandbox="allow-scripts allow-same-origin" :src="overViewArray[1].link" width="100%" height="800"
-            :onload="isFrameLoad(1)" style="border: none;">
-            </iframe>
           </div>
         </div>
-        <div class="row q-pa-none q-ma-none">
-          <div class="col-12 col-md-6 " style="height: 400px">
-            <div v-if="overViewOnLoad[2].link" class="loading-container q-pt-lx">
-              <q-spinner size="50px" />
+        <div class="row q-pa-none q-ma-none q-pt-md">
+          <div class="col-12 col-md-6" style="height: 480px">
+            <div class="q-pa-sm">
+              <div v-if="overViewOnLoad[2].link" class="loading-container q-pt-lx">
+                <q-spinner size="50px" />
+              </div>
+              <iframe sandbox="allow-scripts allow-same-origin" :src="overViewArray[2].link" width="100%" height="480"
+                :onload="isFrameLoad(2)" style="border: none;">
+              </iframe>
             </div>
-            <iframe sandbox="allow-scripts allow-same-origin" :src="overViewArray[2].link" width="100%" height="800"
-            :onload="isFrameLoad(2)" style="border: none;">
-            </iframe>
           </div>
-          <div class="col-12 col-md-6" style="height: 400px">
-            <div v-if="overViewOnLoad[3].link" class="loading-container q-pt-lx">
-              <q-spinner size="50px" />
+          <div class="col-12 col-md-6" style="height: 480px">
+            <div class="q-pa-sm">
+              <div v-if="overViewOnLoad[3].link" class="loading-container q-pt-lx">
+                <q-spinner size="50px" />
+              </div>
+              <iframe sandbox="allow-scripts allow-same-origin" :src="overViewArray[3].link" width="100%" height="480"
+                :onload="isFrameLoad(3)" style="border: none;">
+              </iframe>
             </div>
-            <iframe sandbox="allow-scripts allow-same-origin" :src="overViewArray[3].link" width="100%" height="800"
-            :onload="isFrameLoad(3)" style="border: none;">
-            </iframe>
           </div>
         </div>
       </q-card-section>
@@ -87,7 +95,7 @@ export default {
         link: true
       }
     ])
-    function isFrameLoad(index){
+    function isFrameLoad(index) {
       overViewOnLoad.value[index].link = false
     }
     async function fetchOverview() {

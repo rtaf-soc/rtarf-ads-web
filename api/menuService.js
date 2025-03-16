@@ -19,7 +19,7 @@ export async function fetchMenu() {
   export async function updateMenu(id, data) {
     const { public: { baseURL } } = useRuntimeConfig();
     try {
-      Loading.show()
+      // Loading.show()
   
       // const response = await fetch(`${baseURL}/menu/update/${id}`, {
       //   // timeout: api_timeout,
