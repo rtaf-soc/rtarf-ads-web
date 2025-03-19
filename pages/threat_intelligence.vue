@@ -1,15 +1,17 @@
 <template>
+  <q-page v-if="auth.isAuthenticated">
+    <q-card>
+      <q-card-section>
+        <h5 class="q-mt-none q-pt-none">Threat Intelligence</h5>
+      </q-card-section>
 
-    <div v-if="auth.isAuthenticated">
+    </q-card>
 
-    </div>
- 
+  </q-page>
 </template>
 
 <script>
 import { useAuthStore } from '~/stores/auth'
-// import { Loading } from 'quasar'
-
 // Loading.show()
 export default {
   setup() {
@@ -18,7 +20,7 @@ export default {
     })
     const auth = useAuthStore();
     return {
-      auth,
+      auth
     }
   },
   beforeMount() {
@@ -26,15 +28,8 @@ export default {
       middleware: 'auth'
     })
   },
-
+  // onMounted() {
+  //   Loading.hide()
+  // },
 }
 </script>
-
-<style scoped>
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-</style>

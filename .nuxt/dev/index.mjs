@@ -3,31 +3,32 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { mkdirSync } from 'node:fs';
 import { parentPort, threadId } from 'node:worker_threads';
-import { defineEventHandler, handleCacheHeaders, splitCookiesString, isEvent, createEvent, fetchWithEvent, getRequestHeader, eventHandler, setHeaders, sendRedirect, proxyRequest, createError, setResponseHeader, send, getResponseStatus, setResponseStatus, setResponseHeaders, getRequestHeaders, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getRouterParam, getQuery as getQuery$1, readBody, getResponseStatusText } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/h3/dist/index.mjs';
-import { verifyToken } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/utils/verifyToken.js';
-import { getRequestDependencies, getPreloadLinks, getPrefetchLinks, createRenderer } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/vue-bundle-renderer/dist/runtime.mjs';
-import { stringify, uneval } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/devalue/index.js';
-import destr from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/destr/dist/index.mjs';
-import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, joinRelativeURL } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/ufo/dist/index.mjs';
-import { renderToString } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/vue/server-renderer/index.mjs';
-import { propsToString, renderSSRHead } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/@unhead/ssr/dist/index.mjs';
-import { createFetch as createFetch$1, Headers as Headers$1 } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/ofetch/dist/node.mjs';
-import { createCall, createFetch } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/unenv/runtime/fetch/index.mjs';
-import { createHooks } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/hookable/dist/index.mjs';
-import { klona } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/klona/dist/index.mjs';
-import { snakeCase } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/scule/dist/index.mjs';
-import defu, { defuFn } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/defu/dist/defu.mjs';
-import { hash } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/ohash/dist/index.mjs';
-import { createStorage, prefixStorage } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/unstorage/dist/index.mjs';
-import unstorage_47drivers_47fs from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/unstorage/drivers/fs.mjs';
-import { toRouteMatcher, createRouter } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/radix3/dist/index.mjs';
+import { defineEventHandler, handleCacheHeaders, splitCookiesString, isEvent, createEvent, fetchWithEvent, getRequestHeader, eventHandler, setHeaders, sendRedirect, proxyRequest, createError, setResponseHeader, send, getResponseStatus, setResponseStatus, setResponseHeaders, getRequestHeaders, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getRouterParam, getQuery as getQuery$1, readBody, getResponseStatusText } from 'file:///root/pj/rtarf-ads-web/node_modules/h3/dist/index.mjs';
+import { Buffer } from 'buffer';
+import { verifyToken } from 'file:///root/pj/rtarf-ads-web/utils/verifyToken.js';
+import { getRequestDependencies, getPreloadLinks, getPrefetchLinks, createRenderer } from 'file:///root/pj/rtarf-ads-web/node_modules/vue-bundle-renderer/dist/runtime.mjs';
+import { stringify, uneval } from 'file:///root/pj/rtarf-ads-web/node_modules/devalue/index.js';
+import destr from 'file:///root/pj/rtarf-ads-web/node_modules/destr/dist/index.mjs';
+import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, joinRelativeURL } from 'file:///root/pj/rtarf-ads-web/node_modules/ufo/dist/index.mjs';
+import { renderToString } from 'file:///root/pj/rtarf-ads-web/node_modules/vue/server-renderer/index.mjs';
+import { propsToString, renderSSRHead } from 'file:///root/pj/rtarf-ads-web/node_modules/@unhead/ssr/dist/index.mjs';
+import { createFetch as createFetch$1, Headers as Headers$1 } from 'file:///root/pj/rtarf-ads-web/node_modules/ofetch/dist/node.mjs';
+import { createCall, createFetch } from 'file:///root/pj/rtarf-ads-web/node_modules/unenv/runtime/fetch/index.mjs';
+import { createHooks } from 'file:///root/pj/rtarf-ads-web/node_modules/hookable/dist/index.mjs';
+import { klona } from 'file:///root/pj/rtarf-ads-web/node_modules/klona/dist/index.mjs';
+import { snakeCase } from 'file:///root/pj/rtarf-ads-web/node_modules/scule/dist/index.mjs';
+import defu, { defuFn } from 'file:///root/pj/rtarf-ads-web/node_modules/defu/dist/defu.mjs';
+import { hash } from 'file:///root/pj/rtarf-ads-web/node_modules/ohash/dist/index.mjs';
+import { createStorage, prefixStorage } from 'file:///root/pj/rtarf-ads-web/node_modules/unstorage/dist/index.mjs';
+import unstorage_47drivers_47fs from 'file:///root/pj/rtarf-ads-web/node_modules/unstorage/drivers/fs.mjs';
+import { toRouteMatcher, createRouter } from 'file:///root/pj/rtarf-ads-web/node_modules/radix3/dist/index.mjs';
 import { AsyncLocalStorage } from 'node:async_hooks';
-import { consola } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/consola/dist/index.mjs';
-import { getContext } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/unctx/dist/index.mjs';
-import { captureRawStackTrace, parseRawStackTrace } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/errx/dist/index.js';
-import { isVNode, version, unref } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/vue/index.mjs';
-import { createServerHead as createServerHead$1, CapoPlugin } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/unhead/dist/index.mjs';
-import { defineHeadPlugin } from 'file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/@unhead/shared/dist/index.mjs';
+import { consola } from 'file:///root/pj/rtarf-ads-web/node_modules/consola/dist/index.mjs';
+import { getContext } from 'file:///root/pj/rtarf-ads-web/node_modules/unctx/dist/index.mjs';
+import { captureRawStackTrace, parseRawStackTrace } from 'file:///root/pj/rtarf-ads-web/node_modules/errx/dist/index.js';
+import { isVNode, version, unref } from 'file:///root/pj/rtarf-ads-web/node_modules/vue/index.mjs';
+import { createServerHead as createServerHead$1, CapoPlugin } from 'file:///root/pj/rtarf-ads-web/node_modules/unhead/dist/index.mjs';
+import { defineHeadPlugin } from 'file:///root/pj/rtarf-ads-web/node_modules/@unhead/shared/dist/index.mjs';
 
 const r=Object.create(null),E=e=>globalThis.process?.env||globalThis._importMeta_.env||globalThis.Deno?.env.toObject()||globalThis.__env__||(e?r:globalThis),s=new Proxy(r,{get(e,o){return E()[o]??r[o]},has(e,o){const i=E();return o in i||o in r},set(e,o,i){const g=E(!0);return g[o]=i,!0},deleteProperty(e,o){if(!o)return !1;const i=E(!0);return delete i[o],!0},ownKeys(){const e=E(!0);return Object.keys(e)}}),t=typeof process<"u"&&process.env&&"development"||"",p=[["APPVEYOR"],["AWS_AMPLIFY","AWS_APP_ID",{ci:!0}],["AZURE_PIPELINES","SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"],["AZURE_STATIC","INPUT_AZURE_STATIC_WEB_APPS_API_TOKEN"],["APPCIRCLE","AC_APPCIRCLE"],["BAMBOO","bamboo_planKey"],["BITBUCKET","BITBUCKET_COMMIT"],["BITRISE","BITRISE_IO"],["BUDDY","BUDDY_WORKSPACE_ID"],["BUILDKITE"],["CIRCLE","CIRCLECI"],["CIRRUS","CIRRUS_CI"],["CLOUDFLARE_PAGES","CF_PAGES",{ci:!0}],["CODEBUILD","CODEBUILD_BUILD_ARN"],["CODEFRESH","CF_BUILD_ID"],["DRONE"],["DRONE","DRONE_BUILD_EVENT"],["DSARI"],["GITHUB_ACTIONS"],["GITLAB","GITLAB_CI"],["GITLAB","CI_MERGE_REQUEST_ID"],["GOCD","GO_PIPELINE_LABEL"],["LAYERCI"],["HUDSON","HUDSON_URL"],["JENKINS","JENKINS_URL"],["MAGNUM"],["NETLIFY"],["NETLIFY","NETLIFY_LOCAL",{ci:!1}],["NEVERCODE"],["RENDER"],["SAIL","SAILCI"],["SEMAPHORE"],["SCREWDRIVER"],["SHIPPABLE"],["SOLANO","TDDIUM"],["STRIDER"],["TEAMCITY","TEAMCITY_VERSION"],["TRAVIS"],["VERCEL","NOW_BUILDER"],["VERCEL","VERCEL",{ci:!1}],["VERCEL","VERCEL_ENV",{ci:!1}],["APPCENTER","APPCENTER_BUILD_ID"],["CODESANDBOX","CODESANDBOX_SSE",{ci:!1}],["STACKBLITZ"],["STORMKIT"],["CLEAVR"],["ZEABUR"],["CODESPHERE","CODESPHERE_APP_ID",{ci:!0}],["RAILWAY","RAILWAY_PROJECT_ID"],["RAILWAY","RAILWAY_SERVICE_ID"]];function B(){if(globalThis.process?.env)for(const e of p){const o=e[1]||e[0];if(globalThis.process?.env[o])return {name:e[0].toLowerCase(),...e[2]}}return globalThis.process?.env?.SHELL==="/bin/jsh"&&globalThis.process?.versions?.webcontainer?{name:"stackblitz",ci:!1}:{name:"",ci:!1}}const l=B(),d=l.name;function n(e){return e?e!=="false":!1}const I=globalThis.process?.platform||"",T=n(s.CI)||l.ci!==!1,R=n(globalThis.process?.stdout&&globalThis.process?.stdout.isTTY);n(s.DEBUG);const C=t==="test"||n(s.TEST);n(s.MINIMAL)||T||C||!R;const a=/^win/i.test(I);!n(s.NO_COLOR)&&(n(s.FORCE_COLOR)||(R||a)&&s.TERM!=="dumb"||T);const _=(globalThis.process?.versions?.node||"").replace(/^v/,"")||null;Number(_?.split(".")[0])||null;const W=globalThis.process||Object.create(null),c={versions:{}};new Proxy(W,{get(e,o){if(o==="env")return s;if(o in e)return e[o];if(o in c)return c[o]}});const A=globalThis.process?.release?.name==="node",L=!!globalThis.Bun||!!globalThis.process?.versions?.bun,D=!!globalThis.Deno,O=!!globalThis.fastly,S=!!globalThis.Netlify,N=!!globalThis.EdgeRuntime,u=globalThis.navigator?.userAgent==="Cloudflare-Workers",b=!!globalThis.__lagon__,F=[[S,"netlify"],[N,"edge-light"],[u,"workerd"],[O,"fastly"],[D,"deno"],[L,"bun"],[A,"node"],[b,"lagon"]];function G(){const e=F.find(o=>o[0]);if(e)return {name:e[1]}}const P=G();P?.name||"";
 
@@ -159,7 +160,7 @@ new Proxy(/* @__PURE__ */ Object.create(null), {
   }
 });
 
-const serverAssets = [{"baseName":"server","dir":"/Users/macbook2020/Documents/pjame/rtarf-ads-web/server/assets"}];
+const serverAssets = [{"baseName":"server","dir":"/root/pj/rtarf-ads-web/server/assets"}];
 
 const assets = createStorage();
 
@@ -171,11 +172,11 @@ const storage = createStorage({});
 
 storage.mount('/assets', assets);
 
-storage.mount('root', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"/Users/macbook2020/Documents/pjame/rtarf-ads-web","ignore":["**/node_modules/**","**/.git/**"]}));
-storage.mount('src', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"/Users/macbook2020/Documents/pjame/rtarf-ads-web/server","ignore":["**/node_modules/**","**/.git/**"]}));
-storage.mount('build', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"/Users/macbook2020/Documents/pjame/rtarf-ads-web/.nuxt","ignore":["**/node_modules/**","**/.git/**"]}));
-storage.mount('cache', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"/Users/macbook2020/Documents/pjame/rtarf-ads-web/.nuxt/cache","ignore":["**/node_modules/**","**/.git/**"]}));
-storage.mount('data', unstorage_47drivers_47fs({"driver":"fs","base":"/Users/macbook2020/Documents/pjame/rtarf-ads-web/.data/kv","ignore":["**/node_modules/**","**/.git/**"]}));
+storage.mount('root', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"/root/pj/rtarf-ads-web","ignore":["**/node_modules/**","**/.git/**"]}));
+storage.mount('src', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"/root/pj/rtarf-ads-web/server","ignore":["**/node_modules/**","**/.git/**"]}));
+storage.mount('build', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"/root/pj/rtarf-ads-web/.nuxt","ignore":["**/node_modules/**","**/.git/**"]}));
+storage.mount('cache', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"/root/pj/rtarf-ads-web/.nuxt/cache","ignore":["**/node_modules/**","**/.git/**"]}));
+storage.mount('data', unstorage_47drivers_47fs({"driver":"fs","base":"/root/pj/rtarf-ads-web/.data/kv","ignore":["**/node_modules/**","**/.git/**"]}));
 
 function useStorage(base = "") {
   return base ? prefixStorage(storage, base) : storage;
@@ -625,13 +626,13 @@ if (!window.__NUXT_DEVTOOLS_TIME_METRIC__) {
 window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 `;
 
-const _HnR49qFQMo = (function(nitro) {
+const _kLWnU3E3Zr = (function(nitro) {
   nitro.hooks.hook("render:html", (htmlContext) => {
     htmlContext.head.push(`<script>${script}<\/script>`);
   });
 });
 
-const rootDir = "/Users/macbook2020/Documents/pjame/rtarf-ads-web";
+const rootDir = "/root/pj/rtarf-ads-web";
 
 const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"Military Rule Detection Joint Sharing"};
 
@@ -650,7 +651,7 @@ const devReducers = {
   URL: (data) => data instanceof URL ? data.toString() : void 0
 };
 const asyncContext = getContext("nuxt-dev", { asyncContext: true, AsyncLocalStorage });
-const _2ECrePYV0U = (nitroApp) => {
+const _1q9Pt8MYtK = (nitroApp) => {
   const handler = nitroApp.h3App.handler;
   nitroApp.h3App.handler = (event) => {
     return asyncContext.callAsync({ logs: [], event }, () => handler(event));
@@ -719,8 +720,8 @@ function onConsoleLog(callback) {
 }
 
 const plugins = [
-  _HnR49qFQMo,
-_2ECrePYV0U
+  _kLWnU3E3Zr,
+_1q9Pt8MYtK
 ];
 
 const scheduledTasks = false;
@@ -851,25 +852,25 @@ const errorHandler = (async function errorhandler(error, event) {
   return send(event, html);
 });
 
-const _lazy_WEX9Er = () => Promise.resolve().then(function () { return config$1; });
-const _lazy_DcHZGk = () => Promise.resolve().then(function () { return getToken; });
-const _lazy_bE3RkL = () => Promise.resolve().then(function () { return hello$1; });
-const _lazy_Rd7FvB = () => Promise.resolve().then(function () { return login$1; });
-const _lazy_5uHFvW = () => Promise.resolve().then(function () { return _protected$1; });
-const _lazy_1dtQVQ = () => Promise.resolve().then(function () { return refresh$1; });
-const _lazy_knL3P9 = () => Promise.resolve().then(function () { return _id_$1; });
-const _lazy_mo9FKP = () => Promise.resolve().then(function () { return renderer$1; });
+const _lazy_KtUQbv = () => Promise.resolve().then(function () { return config$1; });
+const _lazy_hgD2G0 = () => Promise.resolve().then(function () { return hello$1; });
+const _lazy_13B1sd = () => Promise.resolve().then(function () { return login$1; });
+const _lazy_sPuwe7 = () => Promise.resolve().then(function () { return overview$1; });
+const _lazy_fR5n5S = () => Promise.resolve().then(function () { return _protected$1; });
+const _lazy_MMYxbV = () => Promise.resolve().then(function () { return refresh$1; });
+const _lazy_IQkaMD = () => Promise.resolve().then(function () { return _id_$1; });
+const _lazy_dQr8BL = () => Promise.resolve().then(function () { return renderer$1; });
 
 const handlers = [
-  { route: '/api/config', handler: _lazy_WEX9Er, lazy: true, middleware: false, method: undefined },
-  { route: '/api/get-token', handler: _lazy_DcHZGk, lazy: true, middleware: false, method: undefined },
-  { route: '/api/hello', handler: _lazy_bE3RkL, lazy: true, middleware: false, method: undefined },
-  { route: '/api/login', handler: _lazy_Rd7FvB, lazy: true, middleware: false, method: undefined },
-  { route: '/api/protected', handler: _lazy_5uHFvW, lazy: true, middleware: false, method: undefined },
-  { route: '/api/refresh', handler: _lazy_1dtQVQ, lazy: true, middleware: false, method: undefined },
-  { route: '/api/user/:id', handler: _lazy_knL3P9, lazy: true, middleware: false, method: undefined },
-  { route: '/__nuxt_error', handler: _lazy_mo9FKP, lazy: true, middleware: false, method: undefined },
-  { route: '/**', handler: _lazy_mo9FKP, lazy: true, middleware: false, method: undefined }
+  { route: '/api/config', handler: _lazy_KtUQbv, lazy: true, middleware: false, method: undefined },
+  { route: '/api/hello', handler: _lazy_hgD2G0, lazy: true, middleware: false, method: undefined },
+  { route: '/api/login', handler: _lazy_13B1sd, lazy: true, middleware: false, method: undefined },
+  { route: '/api/overview', handler: _lazy_sPuwe7, lazy: true, middleware: false, method: undefined },
+  { route: '/api/protected', handler: _lazy_fR5n5S, lazy: true, middleware: false, method: undefined },
+  { route: '/api/refresh', handler: _lazy_MMYxbV, lazy: true, middleware: false, method: undefined },
+  { route: '/api/user/:id', handler: _lazy_IQkaMD, lazy: true, middleware: false, method: undefined },
+  { route: '/__nuxt_error', handler: _lazy_dQr8BL, lazy: true, middleware: false, method: undefined },
+  { route: '/**', handler: _lazy_dQr8BL, lazy: true, middleware: false, method: undefined }
 ];
 
 function createNitroApp() {
@@ -1074,10 +1075,6 @@ const config$1 = /*#__PURE__*/Object.freeze({
   default: config
 });
 
-const getToken = /*#__PURE__*/Object.freeze({
-  __proto__: null
-});
-
 const hello = defineEventHandler(() => {
   const config = useRuntimeConfig();
   return { message: "Hello from the backend!, " + config.apiPath };
@@ -1123,6 +1120,52 @@ const login$1 = /*#__PURE__*/Object.freeze({
   default: login
 });
 
+const overview = defineEventHandler(async (event) => {
+  var _a;
+  const config = useRuntimeConfig();
+  const apiPath = config.apiPath + "/api/SystemVariable/org/default/action/GetSystemVariables";
+  const authHeader = event.node.req.headers.authorization;
+  if (!authHeader) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "Missing Authorization header"
+    });
+  }
+  const parts = authHeader.split(" ");
+  if (parts.length !== 2 || parts[0] !== "Bearer") {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "Invalid Authorization header format"
+    });
+  }
+  const token = parts[1];
+  const encodedToken = Buffer.from(token).toString("base64");
+  const data = { FullTextSearch: "" };
+  try {
+    const response = await $fetch(apiPath, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${encodedToken}`
+      },
+      // $fetch accepts a body; we stringify it to ensure JSON raw format
+      body: JSON.stringify(data)
+    });
+    return response;
+  } catch (error) {
+    console.error("Error calling overview API:", error);
+    throw createError({
+      statusCode: ((_a = error.response) == null ? void 0 : _a.status) || 500,
+      statusMessage: "Failed to fetch overview data"
+    });
+  }
+});
+
+const overview$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: overview
+});
+
 const _protected = defineEventHandler(async (event) => {
   const authHeader = event.req.headers.authorization;
   if (!authHeader) {
@@ -1156,7 +1199,6 @@ const refresh = defineEventHandler(async (event) => {
     });
   }
   const config = useRuntimeConfig();
-  console.log(config);
   const form = new URLSearchParams({
     grant_type: "refresh_token",
     client_id: config.keycloak.idpClientId,
@@ -1273,8 +1315,8 @@ function publicAssetsURL(...path) {
 
 globalThis.__buildAssetsURL = buildAssetsURL;
 globalThis.__publicAssetsURL = publicAssetsURL;
-const getClientManifest = () => import('file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/.nuxt/dist/server/client.manifest.mjs').then((r) => r.default || r).then((r) => typeof r === "function" ? r() : r);
-const getServerEntry = () => import('file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/.nuxt/dist/server/server.mjs').then((r) => r.default || r);
+const getClientManifest = () => import('file:///root/pj/rtarf-ads-web/.nuxt/dist/server/client.manifest.mjs').then((r) => r.default || r).then((r) => typeof r === "function" ? r() : r);
+const getServerEntry = () => import('file:///root/pj/rtarf-ads-web/.nuxt/dist/server/server.mjs').then((r) => r.default || r);
 const getSSRStyles = lazyCachedFunction(() => Promise.resolve().then(function () { return styles$1; }).then((r) => r.default || r));
 const getSSRRenderer = lazyCachedFunction(async () => {
   const manifest = await getClientManifest();

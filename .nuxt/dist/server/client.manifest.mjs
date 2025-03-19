@@ -1,1 +1,1 @@
-export { default } from "file:///Users/macbook2020/Documents/pjame/rtarf-ads-web/node_modules/@nuxt/vite-builder/dist/runtime/client.manifest.mjs"
+export { default } from "file:///root/pj/rtarf-ads-web/node_modules/@nuxt/vite-builder/dist/runtime/client.manifest.mjs"

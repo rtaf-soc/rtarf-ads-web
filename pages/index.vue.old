@@ -55,7 +55,7 @@ export default {
       ]
     };
   },
-  async mounted() {
+  async onMounted() {
     await this.loadMenu();
   },
   methods: {

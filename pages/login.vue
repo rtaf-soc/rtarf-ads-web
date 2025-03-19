@@ -47,7 +47,7 @@ const onSubmit = async (event) => {
     event.preventDefault();
     error.value = null
     try {
-        Loading.show()
+        // Loading.show()
         // Updated login logic: call the auth store's login action which now uses Keycloak API (/api/login)
         await auth.login(username.value, password.value)
         // After successful login, navigate to your intended page (e.g., home)

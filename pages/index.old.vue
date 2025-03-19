@@ -468,7 +468,7 @@ export default {
     };
   },
 
-  async mounted() {
+  async onMounted() {
     // console.log('load menu');
     // await this.loadMenu();
     // this.loadDriver()
