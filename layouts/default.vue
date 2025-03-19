@@ -9,7 +9,7 @@ const router = useRouter()
 
 const auth = useAuthStore()
 
-
+const fab_user_menu = ref(false)
 const menuInsetLevel = 0.3
 
 const hotelLink: MenuRedirectProps[] = [
@@ -27,28 +27,42 @@ const hotelLink: MenuRedirectProps[] = [
   },
 ];
 
-const webviewLink: MenuRedirectProps[] = [
-  {
-    title: 'Geo-IP Attack Map',
-    // caption: 'จัดหา',
-    icon: 'table_chart',
-    link: "/geo_ip_attack"
-  },
-  {
-    title: 'สถานะอุปกรณ์เครือข่าย',
-    // caption: 'จัดหา',
-    icon: 'table_chart',
-    link: "/numa_status"
-  },
-];
+// const webviewLink: MenuRedirectProps[] = [
+//   {
+//     title: 'Geo-IP Attack Map',
+//     // caption: 'จัดหา',
+//     icon: 'my_location',
+//     link: "/geo_ip_attack"
+//   },
+//   {
+//     title: 'สถานะอุปกรณ์เครือข่าย',
+//     // caption: 'จัดหา',
+//     icon: 'table_chart',
+//     link: "/numa_status"
+//   },
+// ];
 
 const ThreatBlacklistLink: MenuRedirectProps[] = [
 
   {
-    title: 'Threat Blacklist',
-    // caption: 'จัดหา',
-    icon: 'table_chart',
-    link: "/destination"
+    title: 'Source IP Blacklist',
+    icon: 'source',
+    link: "/threat_blacklist/source_ip_blacklist",
+  },
+  {
+    title: 'Destination IP Blacklist',
+    icon: 'location_on',
+    link: "/threat_blacklist/destination_ip_blacklist",
+  },
+  {
+    title: 'Domain Blacklist',
+    icon: 'domain_disabled',
+    link: "/threat_blacklist/domain_blacklist",
+  },
+  {
+    title: 'SHA256 Blacklist',
+    icon: 'no_encryption',
+    link: "/threat_blacklist/sha256_blacklist",
   },
 ];
 
@@ -57,8 +71,9 @@ const ThreatHuntingLink: MenuRedirectProps[] = [
   {
     title: 'Threat Hunting',
     // caption: 'จัดหา',
-    icon: 'table_chart',
-    link: "/threat_hunting"
+    icon: 'policy',
+    link: "/threat_hunting",
+    inset: 0.0
   },
 ];
 
@@ -67,8 +82,9 @@ const overviewLink: MenuRedirectProps[] = [
   {
     title: 'Overview',
     // caption: 'จัดหา',
-    icon: 'overview',
-    link: "/overview"
+    icon: 'settings_overscan',
+    link: "/overview",
+    inset: 0.0
   },
 ];
 
@@ -77,18 +93,25 @@ const commanderLink: MenuRedirectProps[] = [
   {
     title: 'Commander',
     // caption: 'จัดหา',
-    icon: 'commander',
-    link: "/commander"
+    icon: 'keyboard_command_key',
+    link: "/commander",
+    inset: 0.0
   },
 ];
 
 const dashboardLink: MenuRedirectProps[] = [
 
   {
-    title: 'Dashboard',
+    title: 'MIST Summary',
     // caption: 'จัดหา',
-    icon: 'Dashboard',
-    link: "/dashboard"
+    icon: 'dashboard',
+    link: "/dashboard/mist_summary",
+  },
+  {
+    title: 'Event Summary',
+    // caption: 'จัดหา',
+    icon: 'dashboard',
+    link: "/dashboard/event_summary",
   },
 ];
 
@@ -97,8 +120,9 @@ const IPMappingLink: MenuRedirectProps[] = [
   {
     title: 'IP Mapping',
     // caption: 'จัดหา',
-    icon: 'Dashboard',
-    link: "/ip_mapping"
+    icon: 'hub',
+    link: "/ip_mapping",
+    inset: 0.0
   },
 ];
 
@@ -107,18 +131,21 @@ const ThreatIntelligenceLink: MenuRedirectProps[] = [
   {
     title: 'Threat Intelligence',
     // caption: 'จัดหา',
-    icon: 'Dashboard',
-    link: "/threat_intelligence"
+    icon: "psychology",
+    link: "/threat_intelligence",
+    inset: 0.0
   },
 ];
+
 
 const geoIpLink: MenuRedirectProps[] = [
 
   {
     title: 'GeoIP',
     // caption: 'จัดหา',
-    icon: 'Dashboard',
-    link: "/geo_ip_attack"
+    icon: 'my_location',
+    link: "/geo_ip_attack",
+    inset: 0.0
   },
 ];
 
@@ -127,8 +154,9 @@ const deviceUptimeLink: MenuRedirectProps[] = [
   {
     title: 'Device Uptime',
     // caption: 'จัดหา',
-    icon: 'Dashboard',
-    link: "/numa_status"
+    icon: 'troubleshoot',
+    link: "/numa_status",
+    inset: 0.0
   },
 ];
 
@@ -137,8 +165,9 @@ const deviceCVELink: MenuRedirectProps[] = [
   {
     title: 'Device CVE',
     // caption: 'จัดหา',
-    icon: 'Dashboard',
-    link: "/device_cve"
+    icon: 'privacy_tip',
+    link: "/device_cve",
+    inset: 0.0
   },
 ];
 
@@ -146,25 +175,80 @@ const toolsLink: MenuRedirectProps[] = [
 
   {
     title: 'Kibana',
-    // caption: 'จัดหา',
-    icon: 'Dashboard',
-    link: "/device_cve"
+    icon: 'open_in_new',
+    link: '/tools/kibana',
+    openNewTab: true
   },
   {
     title: 'Kafka',
     // caption: 'จัดหา',
-    icon: 'Dashboard',
-    link: "/device_cve"
+    icon: 'open_in_new',
+    link: "/tools/kafka",
+    openNewTab: true
+  },
+  {
+    title: 'Metalog',
+    // caption: 'จัดหา',
+    icon: 'open_in_new',
+    link: "/tools/metalog",
+    openNewTab: true
+  },
+  {
+    title: 'Net Approve',
+    // caption: 'จัดหา',
+    icon: 'open_in_new',
+    link: "/tools/net_approve",
+    openNewTab: true
+  },
+  {
+    title: 'GeoIP',
+    // caption: 'จัดหา',
+    icon: 'open_in_new',
+    link: "/tools/geo_ip",
+    openNewTab: true
+  },
+  {
+    title: 'Superset',
+    // caption: 'จัดหา',
+    icon: 'open_in_new',
+    link: "/tools/superset",
+    openNewTab: true
+  },
+  {
+    title: 'Loki',
+    // caption: 'จัดหา',
+    icon: 'open_in_new',
+    link: "/tools/loki",
+    openNewTab: true
+  },
+  {
+    title: 'Prometheus',
+    // caption: 'จัดหา',
+    icon: 'open_in_new',
+    link: "/tools/prometheus",
+    openNewTab: true
   },
 ];
 
 const adminLink: MenuRedirectProps[] = [
 
   {
-    title: 'Admin',
+    title: 'System Variable',
     // caption: 'จัดหา',
-    icon: 'Dashboard',
-    link: "/admin"
+    icon: 'tune',
+    link: "/admin/index"
+  },
+  {
+    title: 'Users',
+    // caption: 'จัดหา',
+    icon: 'group',
+    link: "/admin/users"
+  },
+  {
+    title: 'Roles',
+    // caption: 'จัดหา',
+    icon: 'manage_accounts',
+    link: "/admin/system_variable"
   },
 ];
 
@@ -190,20 +274,33 @@ function handleLogout() {
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-btn v-if="auth.isAuthenticated" flat dense round icon="menu" :glossy="false"
-          @click="toggleLeftDrawer" />
+        <q-btn v-if="auth.isAuthenticated" flat dense round icon="menu" :glossy="false" @click="toggleLeftDrawer" />
 
         <q-toolbar-title>
           Military Rule Detection Joint Sharing
         </q-toolbar-title>
 
-        <q-btn v-if="auth.isAuthenticated" dense label="Logout" color="negative" @click="handleLogout" />
+        <!-- <q-btn v-if="auth.isAuthenticated" dense label="Logout" color="negative" @click="handleLogout" /> -->
+        <div>
+          <q-fab v-if="auth.isAuthenticated" v-model="fab_user_menu" vertical-actions-align="left" dense color="dark"
+            icon="person" direction="down" padding="xs">
+            <!-- <q-fab-action class="q-ma-lg" color="primary" @click="handleLogout" icon="logout" /> -->
+
+            <q-btn v-if="auth.isAuthenticated" dense icon="logout" color="negative" @click="handleLogout" />
+          </q-fab>
+        </div>
       </q-toolbar>
     </q-header>
 
     <q-drawer :breakpoint="500" v-model="leftDrawerOpen" show-if-above bordered v-if="auth.isAuthenticated">
       <q-list>
-        <q-item-label header> Menu </q-item-label>
+        <!-- <q-item-label header> Menu </q-item-label> -->
+        <q-item-label header  class="flex flex-col items-center justify-center">
+          <img src="/assets/icon.svg" alt="Menu Icon" width="43" height="41" />
+
+          <img src="/assets/icon-word.svg" alt="Menu Icon" width="89" height="24" />
+
+        </q-item-label>
 
         <q-card>
           <MenuRedirect v-for="link in overviewLink" :key="link.title" v-bind="link" />
@@ -217,13 +314,17 @@ function handleLogout() {
           <MenuRedirect v-for="link in ThreatHuntingLink" :key="link.title" v-bind="link" />
         </q-card>
 
-        <q-card>
-          <MenuRedirect v-for="link in dashboardLink" :key="link.title" v-bind="link" />
-        </q-card>
+        <q-expansion-item expand-separator icon="dashboard" caption="Dashboard">
+          <q-card>
+            <MenuRedirect v-for="link in dashboardLink" :key="link.title" v-bind="link" />
+          </q-card>
+        </q-expansion-item>
 
-        <q-card>
-          <MenuRedirect v-for="link in ThreatBlacklistLink" :key="link.title" v-bind="link" />
-        </q-card>
+        <q-expansion-item expand-separator icon="app_blocking" caption="Threat Blacklist">
+          <q-card>
+            <MenuRedirect v-for="link in ThreatBlacklistLink" :key="link.title" v-bind="link" />
+          </q-card>
+        </q-expansion-item>
 
         <q-card>
           <MenuRedirect v-for="link in IPMappingLink" :key="link.title" v-bind="link" />
@@ -244,15 +345,19 @@ function handleLogout() {
         <q-card>
           <MenuRedirect v-for="link in deviceCVELink" :key="link.title" v-bind="link" />
         </q-card>
-        <q-expansion-item expand-separator icon="visibility" caption="Tools">
+
+        <q-expansion-item expand-separator icon="construction" caption="Tools">
           <q-card>
-            <MenuRedirect v-for=" link in toolsLink " :key="link.title" v-bind="link" />
+            <MenuRedirect v-for="link in toolsLink" :key="link.title" v-bind="link" />
           </q-card>
         </q-expansion-item>
 
-        <q-card>
-          <MenuRedirect v-for="link in adminLink" :key="link.title" v-bind="link" />
-        </q-card>
+        <q-expansion-item expand-separator icon="admin_panel_settings" caption="Admin">
+          <q-card>
+            <MenuRedirect v-for="link in adminLink" :key="link.title" v-bind="link" />
+          </q-card>
+        </q-expansion-item>
+
 
         <!-- <q-expansion-item expand-separator icon="visibility" caption="รายการตรวจจับ">
           <q-card>

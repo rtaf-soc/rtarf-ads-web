@@ -634,7 +634,7 @@ const _kLWnU3E3Zr = (function(nitro) {
 
 const rootDir = "/root/pj/rtarf-ads-web";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"Military Rule Detection Joint Sharing"};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/svg+xml","href":"favicon.svg"},{"rel":"icon","type":"image/x-icon","href":"favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"Military Rule Detection Joint Sharing"};
 
 const appRootTag = "div";
 

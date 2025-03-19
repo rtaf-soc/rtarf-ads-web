@@ -6,7 +6,11 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: "Military Rule Detection Joint Sharing",
-      link: [{ rel: "icon", type: "image/x-icon", href: "favicon.ico" }],
+      link: [
+        { rel: "icon", type: "image/svg+xml", href: "favicon.svg" },
+        { rel: "icon", type: "image/x-icon", href: "favicon.ico" }
+
+      ],
     },
   },
   plugins: ["~/plugins/websocket.js"],
