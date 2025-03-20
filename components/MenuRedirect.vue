@@ -10,13 +10,17 @@ export interface MenuRedirectProps {
   icon?: string;
   clickable?: boolean;
   disable?: boolean;
+  inset?: number;
+  openNewTab?: boolean
 }
 const props = withDefaults(defineProps<MenuRedirectProps>(), {
   caption: "",
   link: "#",
   icon: "",
   clickable: true,
-  disable: false
+  disable: false,
+  inset: 0.3,
+  openNewTab: false
 });
 
 async function handleClick() {
@@ -25,7 +29,12 @@ async function handleClick() {
     console.log('call token')
     auth.refreshAuthToken()
     // If refresh succeeds, redirect to the provided link
-    router.push({ path: props.link })
+    if (props.openNewTab) {
+      window.open(props.link, "_blank")
+    } else {
+
+      router.push({ path: props.link })
+    }
   } catch (error) {
     // If refreshing fails, log out and send user to login page
     console.log(error)
@@ -37,8 +46,8 @@ async function handleClick() {
 // const redirect = (link) => clearError({ redirect: link })
 </script>
 <template>
-  <q-item :inset-level="0.3" :clickable="clickable" :active="link === $route.path" active-class="bg-primary text-white"
-    target="_blank" :disable="disable" @click="handleClick">
+  <q-item :inset-level="inset" :clickable="clickable" :active="link === $route.path"
+    active-class="bg-primary text-white" target="_blank" :disable="disable" @click="handleClick">
     <q-item-section v-if="icon" avatar>
       <q-icon :name="icon" />
     </q-item-section>
