@@ -8,15 +8,20 @@
         <div class="row">
           <div class="col-12 col-md-12 q-pa-sm">
             <q-table class="my-sticky-header-table" style="height: 75vh;" flat bordered title="เมนู"
-              :rows="table_rows_menu" :columns="table_columns_menu" row-key="id" :filter="filter_menu_table"
-              :pagination="pagination_menu" separator="cell" :loading="loading">
+              :rows="table_rows_menu" :columns="table_columns_menu" row-key="id" :pagination="pagination_menu"
+              separator="cell" :loading="loading">
               <template v-slot:top-left>
                 <div class="text-h5 q-mr-md">Black list IP Address</div>
-                <q-input outlined dense debounce="300" v-model="filter_menu_table" placeholder="ค้นหา">
+                <q-input outlined dense debounce="300" placeholder="ค้นหา" v-model="filter_menu_table" bg-color="dark">
                   <template v-slot:append>
-                    <!-- <q-icon name="ค้นหา" /> -->
+                    <q-btn round dense flat icon="search" @click="onClick(`tableSearch`)" />
                   </template>
                 </q-input>
+              </template>
+              <template v-slot:top-right>
+                <q-btn class="q-mr-lg" icon="add" rounded color="green-7"
+                  @click="this.add_ingredient_detail_isOpen = true" />
+                <q-btn :disable="selectedTable <= 0" icon="delete" rounded color="negative" @click="onClick(`deleteSelectedTable`)"/>
               </template>
 
               <template v-slot:body-cell="props">
@@ -35,31 +40,31 @@
               </template>
 
               <template v-slot:body="props">
-                <!-- <q-tr :props="props" @click="handleRowClick(props.row)" class="cursor-pointer"
-                  :class="(props.row.index % 2 === 0) ? 'bg-grey-10' : 'bg-grey-9'">
-                  <q-td v-for="col in props.cols" :key="col.name" :props="props">
-                    {{ props.row[col.field] }}
-                  </q-td>
-                </q-tr> -->
-
                 <q-tr :props="props" class="cursor-pointer"
                   :class="(props.row.index % 2 === 0) ? 'bg-grey-10' : 'bg-grey-9'">
-                  <q-td v-for="col in props.cols" :key="col.name" :props="props">
-                    <!-- {{ props.row[col.field] }} -->
-                    <template v-if="col.name === 'tags'">
-                      <!-- <q-icon name="edit" @click="showValue(props.row[col.field])" /> -->
-                      <q-chip class="shadow-up-3" clickable rounded @click="onClick(`editIngredient`, props.row)">
+                  <q-td v-for="(col, colIndex) in props.cols" :key="col.name" :props="props">
+
+                    <template v-if="col.name === 'id'">
+                      <q-checkbox :model-value="isRowSelected(props.row)"
+                        @update:model-value="val => toggleRowSelection(props.row, val)" />
+                      <q-chip class="shadow-up-3 q-pr-sm" clickable rounded
+                        @click="onClick('editIngredient', props.row)">
                         <q-avatar icon="edit" color="blue" text-color="white"></q-avatar>
-                        <div class="text-center text-bold">{{ props.row.tags }} </div>
+                        <div class="text-center text-bold">{{ props.row.index }}</div>
                       </q-chip>
                     </template>
+
+                    <template v-else-if="col.name === 'createdDate'">
+                      {{ convertTimestamp(props.row.createdDate) }}
+                    </template>
+
                     <template v-else>
                       {{ props.row[col.field] }}
                     </template>
+
                   </q-td>
                 </q-tr>
               </template>
-
             </q-table>
           </div>
         </div>
@@ -69,17 +74,18 @@
       <q-card style="width: 800px; max-width: 800vw;">
 
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">แก้ไขข้อมูลของ ID : <q-badge class="text-h5" color="primary">{{
+          <div class="text-h6">แก้ไขข้อมูลของ ID : <q-badge outline class="text-h6" align="middle" color="negative">{{
             edit_ingredient_detail.blacklistId }} </q-badge></div>
 
-          <div class="text-h7 q-mt-sm">IP Address : <q-badge class="text-h5" color="primary">{{
-            edit_ingredient_detail.blacklistCode }} </q-badge></div>
+          <!-- <div class="text-h7 q-mt-sm">Source IP Address : <q-badge class="text-h5" color="primary">{{
+            edit_ingredient_detail.blacklistCode }} </q-badge></div> -->
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.blacklistCode" outlined label="Source IP" />
             <q-input v-model="edit_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -87,6 +93,28 @@
         <q-card-actions align="around">
           <q-btn label="ยกเลิก" color="negative" v-close-popup />
           <q-btn flat label="บันทึก" @click="onClick('saveEditIngredient')" color="primary" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <q-dialog v-model="add_ingredient_detail_isOpen">
+      <q-card style="width: 800px; max-width: 800vw;">
+
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">เพิ่มข้อมููล </div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
+          <q-item-section>
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.blacklistCode" outlined label="Source IP" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.tags" outlined label="tags" />
+          </q-item-section>
+        </q-item>
+
+        <q-card-actions align="around">
+          <q-btn label="ยกเลิก" color="negative" v-close-popup />
+          <q-btn flat label="บันทึก" @click="onClick('saveAddTable')" color="primary" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -102,14 +130,15 @@ import { useAuthStore } from '~/stores/auth'
 
 const table_columns_menu = [
 
-  { name: 'id', align: 'center', label: 'ลำดับที่', field: 'index', headerStyle: 'width: 30px' },
-  { name: 'blacklistId', label: 'ชื่อ', align: 'left', field: 'blacklistId', sortable: true },
-  { name: 'blacklistCode', align: 'center', label: 'ip_address', field: 'blacklistCode', sortable: true, },
-  { name: 'orgId', align: 'center', label: 'รหัสสถานที่', field: 'orgId', sortable: true, },
-  { name: 'tags', align: 'center', label: 'tags', field: 'tags', sortable: true, },
+  { name: 'id', align: 'center', label: 'Action', field: 'index', headerStyle: 'width: 30px' },
+  // { name: 'blacklistId', label: 'ชื่อ', align: 'left', field: 'blacklistId', sortable: true },
+  { name: 'blacklistCode', align: 'left', label: 'Source IP', field: 'blacklistCode', sortable: true, },
+  // { name: 'orgId', align: 'center', label: 'รหัสสถานที่', field: 'orgId', sortable: true, },
+  { name: 'tags', align: 'left', label: 'tags', field: 'tags', sortable: true, },
   // { name: 'blacklistType', align: 'center', label: 'type', field: 'blacklistType', sortable: true, },
-  // { name: 'createdDate', align: 'center', label: 'สร้างเมื่อ', field: 'createdDate', sortable: true, },
-  { name: 'createdDate', align: 'center', label: 'วันที่เก็บข้อมูล', field: 'createdDate', format: (val, row) => this.convertTimestamp(val), sortable: true },
+
+  { name: 'createdDate', align: 'center', label: 'สร้างเมื่อ', field: 'createdDate', sortable: true, },
+
 ]
 
 
@@ -221,6 +250,25 @@ const edit_ingredient_detail = {
   tolerance: 0,
 
 }
+const add_ingredient_detail_isOpen = ref(false)
+const add_ingredient_detail = {
+  blacklistId: "zxcvzxcv",
+  orgId: "default",
+  blacklistCode: "",
+  tags: "",
+  blacklistType: 2,
+  createdDate: "2024-10-12T09:24:30.125001Z"
+
+}
+
+// "blacklistId": "8d2b7f6c-49a9-43db-86fa-ff123c8e5e77",
+//   "orgId": "default",
+//     "blacklistCode": "192.168.1.1",
+//       "tags": "Automatic-Scan",
+//         "blacklistType": 1,
+//           "createdDate": "2024-10-12T09:24:30.125001Z"
+
+const selectedTable = ref([])
 
 // Loading.show()
 
@@ -258,16 +306,19 @@ export default {
       pagination_menu,
       pagination_ingredient,
       edit_ingredient_detail_isOpen,
-      edit_ingredient_detail
+      edit_ingredient_detail,
+      selectedTable,
+      add_ingredient_detail_isOpen,
+      add_ingredient_detail
       // rowsNumber: xx if getting data from a server
     };
   },
 
-  convertTimestamp(datetime) {
-    let dbtime = moment(datetime);
-    let formattedDate = dbtime.format("DD-MM-YYYY");
-    return formattedDate // Output: 26-12-2023
-  },
+  // convertTimestamp(datetime) {
+  //   let dbtime = moment(datetime);
+  //   let formattedDate = dbtime.format("DD/MM/YYYY");
+  //   return formattedDate // Output: 26-12-2023
+  // },
 
   async onMounted() {
     // console.log('onMount2')
@@ -297,7 +348,9 @@ export default {
         this.menus = mockdata;
         console.log(this.menus);
         let data_rows = mockdata
+        this.selectedTable = []
         for (let index = 0; index < data_rows.length; index++) {
+          this.selectedTable.push({ value: false })
           const element = data_rows[index];
           element.index = index + 1;
         }
@@ -310,14 +363,9 @@ export default {
         this.menus = [];
       }
     },
-    handleRowClick(props) {
-      console.log(props.id);
-      // this.loadIngredients(props.id);
-    },
     convertTimestamp(datetime) {
-      let dbtime = moment(datetime);
-      let formattedDate = dbtime.format("DD-MM-YYYY");
-      return formattedDate // Output: 26-12-2023
+      console.log('call')
+      return moment(datetime).format("DD/MM/YYYY");
     },
 
     navigateToIngredients(menuId) {
@@ -332,8 +380,57 @@ export default {
     callApiIngredients(menuId) {
       // this.$router.push({ path: '/ingredient', query: { menu_id: menuId } });
     },
+    getCurrentTimestamp() {
+      // Get the current UTC time using moment
+      const now = moment.utc();
+      // Format milliseconds as three digits
+      const ms = now.format("SSS");
+      // Append three zeros to simulate microseconds
+      return now.format("YYYY-MM-DDTHH:mm:ss.") + ms + "000Z";
+    },
+    clearAddTable() {
+      this.add_ingredient_detail = {
+        blacklistId: "zxcvzxcv",
+        orgId: "default",
+        blacklistCode: "",
+        tags: "",
+        blacklistType: 2,
+        createdDate: "2024-10-12T09:24:30.125001Z"
+
+      }
+    },
+    isRowSelected(row) {
+      return selectedTable.value.includes(row.index)
+    },
+
+    toggleRowSelection(row, isSelected) {
+      if (isSelected) {
+        // Add the row's unique index if it's not already in the array
+        if (!selectedTable.value.includes(row.index)) {
+          selectedTable.value.push(row.index)
+        }
+      } else {
+        // Remove the row's index from the array
+        selectedTable.value = selectedTable.value.filter(id => id !== row.index)
+      }
+    },
+    deleteSelectedRows() {
+      // Filter out rows that have been selected
+      table_rows_menu.value = table_rows_menu.value.filter(row => !selectedTable.value.includes(row.index))
+      // Clear the selection after deletion
+      selectedTable.value = []
+    },
+
     onClick(fn_name, param = null) {
       switch (fn_name) {
+        case 'tableSearch':
+          if (this.filter_menu_table.trim().length > 0) {
+            console.log(`have search text ${this.filter_menu_table}`)
+          } else {
+            console.log(`no search test`)
+          }
+          // edit_ingredient_detail 
+          break;
         case 'editIngredient':
           console.log(param);
           this.edit_ingredient_detail = param;
@@ -351,7 +448,20 @@ export default {
             message: 'บันทึกสำเร็จ'
           });
           this.edit_ingredient_detail_isOpen = false;
+          break;
         // const data = updateIngredient(this.edit_ingredient_detail.id, this.edit_ingredient_detail);
+        case 'saveAddTable':
+          this.add_ingredient_detail.createdDate = this.getCurrentTimestamp()
+          mock_data.push(this.add_ingredient_detail)
+          this.loadMenu()
+          this.clearAddTable()
+          this.add_ingredient_detail_isOpen = false
+          break;
+
+        case 'deleteSelectedTable':
+          console.log(`deleteTable`)
+          this.deleteSelectedRows()
+          break;
 
         default:
           break;
