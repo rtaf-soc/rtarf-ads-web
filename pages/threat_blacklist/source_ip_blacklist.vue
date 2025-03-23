@@ -421,9 +421,6 @@ export default {
       selectedTable.value = []
     },
 
-    onClick(action, row) {
-      console.log(action, row)
-    },
     onClick(fn_name, param = null) {
       switch (fn_name) {
         case 'tableSearch':
