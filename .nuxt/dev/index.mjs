@@ -116,31 +116,31 @@ const _inlineRuntimeConfig = {
     "idpClientSecret": "xx"
   },
   "tool": {
-    "toolUrl01": "https://www.google.co.th/1",
-    "toolUrl02": "https://www.google.co.th/2",
-    "toolUrl031": "https://www.google.co.th/31",
-    "toolUrl032": "https://www.google.co.th/32",
-    "toolUrl033": "https://www.google.co.th/33",
-    "toolUrl041": "https://www.google.co.th/41",
-    "toolUrl042": "https://www.google.co.th/42",
-    "toolUrl043": "https://www.google.co.th/43",
-    "toolUrl044": "https://www.google.co.th/44",
-    "toolUrl05": "https://www.google.co.th/5",
-    "toolUrl06": "https://www.google.co.th/6",
-    "toolUrl07": "https://www.google.co.th/7",
-    "toolUrl08": "https://www.google.co.th/8"
+    "url01": "https://www.google.co.th/1",
+    "url02": "https://www.google.co.th/2",
+    "url031": "https://www.google.co.th/31",
+    "url032": "https://www.google.co.th/32",
+    "url033": "https://www.google.co.th/33",
+    "url041": "https://www.google.co.th/41",
+    "url042": "https://www.google.co.th/42",
+    "url043": "https://www.google.co.th/43",
+    "url044": "https://www.google.co.th/44",
+    "url05": "https://www.google.co.th/5",
+    "url06": "https://www.google.co.th/6",
+    "url07": "https://www.google.co.th/7",
+    "url08": "https://www.google.co.th/8"
   },
   "dashboard": {
-    "dashboardUrl01": "https://www.google.co.th/1",
-    "dashboardUrl02": "https://www.google.co.th/2",
-    "dashboardUrl03": "https://www.google.co.th/3",
-    "dashboardUrl04": "https://www.google.co.th/4",
-    "dashboardUrl05": "https://www.google.co.th/5",
-    "dashboardUrl06": "https://www.google.co.th/6",
-    "dashboardUrl07": "https://www.google.co.th/7",
-    "dashboardUrl08": "https://www.google.co.th/8",
-    "dashboardUrl09": "https://www.google.co.th/9",
-    "dashboardUrl10": "https://www.google.co.th/10"
+    "url01": "https://www.google.co.th/1",
+    "url02": "https://www.google.co.th/2",
+    "url03": "https://www.google.co.th/3",
+    "url04": "https://www.google.co.th/4",
+    "url05": "https://www.google.co.th/5",
+    "url06": "https://www.google.co.th/6",
+    "url07": "https://www.google.co.th/7",
+    "url08": "https://www.google.co.th/8",
+    "url09": "https://www.google.co.th/9",
+    "url10": "https://www.google.co.th/10"
   }
 };
 const envOptions = {

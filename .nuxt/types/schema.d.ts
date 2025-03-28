@@ -30,53 +30,53 @@ declare module 'nuxt/schema' {
    },
 
    tool: {
-      toolUrl01: string,
+      url01: string,
 
-      toolUrl02: string,
+      url02: string,
 
-      toolUrl031: string,
+      url031: string,
 
-      toolUrl032: string,
+      url032: string,
 
-      toolUrl033: string,
+      url033: string,
 
-      toolUrl041: string,
+      url041: string,
 
-      toolUrl042: string,
+      url042: string,
 
-      toolUrl043: string,
+      url043: string,
 
-      toolUrl044: string,
+      url044: string,
 
-      toolUrl05: string,
+      url05: string,
 
-      toolUrl06: string,
+      url06: string,
 
-      toolUrl07: string,
+      url07: string,
 
-      toolUrl08: string,
+      url08: string,
    },
 
    dashboard: {
-      dashboardUrl01: string,
+      url01: string,
 
-      dashboardUrl02: string,
+      url02: string,
 
-      dashboardUrl03: string,
+      url03: string,
 
-      dashboardUrl04: string,
+      url04: string,
 
-      dashboardUrl05: string,
+      url05: string,
 
-      dashboardUrl06: string,
+      url06: string,
 
-      dashboardUrl07: string,
+      url07: string,
 
-      dashboardUrl08: string,
+      url08: string,
 
-      dashboardUrl09: string,
+      url09: string,
 
-      dashboardUrl10: string,
+      url10: string,
    },
 
    nitro: {
