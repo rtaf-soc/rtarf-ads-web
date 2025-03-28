@@ -1,7 +1,7 @@
 <template>
   <q-page v-if="auth.isAuthenticated">
     <q-card>
-      <q-card-section>
+      <q-card-section style="height: 95vh;">
         <h5 class="q-mt-none q-pt-none">IP Mapping</h5>
       </q-card-section>
 

@@ -101,17 +101,77 @@ const commanderLink: MenuRedirectProps[] = [
 
 const dashboardLink: MenuRedirectProps[] = [
 
+  // {
+  //   title: 'MIST Summary',
+  //   // caption: 'จัดหา',
+  //   icon: 'dashboard',
+  //   link: "/dashboard/mist_summary",
+  // },
+  // {
+  //   title: 'Event Summary',
+  //   // caption: 'จัดหา',
+  //   icon: 'dashboard',
+  //   link: "/dashboard/event_summary",
+  // },
   {
-    title: 'MIST Summary',
+    title: 'Zeek Event Summary',
     // caption: 'จัดหา',
     icon: 'dashboard',
-    link: "/dashboard/mist_summary",
+    link: "/dashboard/zeek_event_summary",
   },
   {
-    title: 'Event Summary',
+    title: 'Blacklist Summary',
     // caption: 'จัดหา',
     icon: 'dashboard',
-    link: "/dashboard/event_summary",
+    link: "/dashboard/blacklist_summary",
+  },
+  {
+    title: 'Crowdstrie Summary',
+    // caption: 'จัดหา',
+    icon: 'dashboard',
+    link: "/dashboard/crowdstrie_summary",
+  },
+  {
+    title: 'IoC Summary',
+    // caption: 'จัดหา',
+    icon: 'dashboard',
+    link: "/dashboard/ioc_summary",
+  },
+  {
+    title: 'Zeek Summary (Suricata)',
+    // caption: 'จัดหา',
+    icon: 'dashboard',
+    link: "/dashboard/zeek_summary_suricata",
+  },
+  {
+    title: 'Zeek Summary (Intel)',
+    // caption: 'จัดหา',
+    icon: 'dashboard',
+    link: "/dashboard/zeek_summary_intel",
+  },
+  {
+    title: 'Zeek Summary (HTTP)',
+    // caption: 'จัดหา',
+    icon: 'dashboard',
+    link: "/dashboard/zeek_summary_http",
+  },
+  {
+    title: 'Zeek Summary (Files)',
+    // caption: 'จัดหา',
+    icon: 'dashboard',
+    link: "/dashboard/zeek_summary_files",
+  },
+  {
+    title: 'Zeek Summary (SSL)',
+    // caption: 'จัดหา',
+    icon: 'dashboard',
+    link: "/dashboard/zeek_summary_ssl",
+  },
+  {
+    title: 'Zeek Summary (DNS)',
+    // caption: 'จัดหา',
+    icon: 'dashboard',
+    link: "/dashboard/zeek_summary_dns",
   },
 ];
 
@@ -187,17 +247,53 @@ const toolsLink: MenuRedirectProps[] = [
     openNewTab: true
   },
   {
-    title: 'Metalog',
+    title: 'Metalog #1',
     // caption: 'จัดหา',
     icon: 'open_in_new',
-    link: "/tools/metalog",
+    link: "/tools/metalog_1",
     openNewTab: true
   },
   {
-    title: 'Net Approve',
+    title: 'Metalog #2',
     // caption: 'จัดหา',
     icon: 'open_in_new',
-    link: "/tools/net_approve",
+    link: "/tools/metalog_2",
+    openNewTab: true
+  },
+  {
+    title: 'Metalog #3',
+    // caption: 'จัดหา',
+    icon: 'open_in_new',
+    link: "/tools/metalog_3",
+    openNewTab: true
+  },
+
+  {
+    title: 'Net Approve #1',
+    // caption: 'จัดหา',
+    icon: 'open_in_new',
+    link: "/tools/net_approve_1",
+    openNewTab: true
+  },
+  {
+    title: 'Net Approve #2',
+    // caption: 'จัดหา',
+    icon: 'open_in_new',
+    link: "/tools/net_approve_2",
+    openNewTab: true
+  },
+  {
+    title: 'Net Approve #3',
+    // caption: 'จัดหา',
+    icon: 'open_in_new',
+    link: "/tools/net_approve_3",
+    openNewTab: true
+  },
+  {
+    title: 'Net Approve #4',
+    // caption: 'จัดหา',
+    icon: 'open_in_new',
+    link: "/tools/net_approve_4",
     openNewTab: true
   },
   {
