@@ -91,6 +91,56 @@ declare module 'nuxt/schema' {
    geoIpURL: string,
 
    machineStatusURL: string,
+
+   dashboard: {
+      url01: string,
+
+      url02: string,
+
+      url03: string,
+
+      url04: string,
+
+      url05: string,
+
+      url06: string,
+
+      url07: string,
+
+      url08: string,
+
+      url09: string,
+
+      url10: string,
+   },
+
+   tool: {
+      url01: string,
+
+      url02: string,
+
+      url031: string,
+
+      url032: string,
+
+      url033: string,
+
+      url041: string,
+
+      url042: string,
+
+      url043: string,
+
+      url044: string,
+
+      url05: string,
+
+      url06: string,
+
+      url07: string,
+
+      url08: string,
+   },
   }
 }
 declare module 'vue' {
