@@ -1,8 +1,8 @@
 <template>
     <q-page v-if="auth.isAuthenticated">
       <q-card>
-        <q-card-section>
-          <h5 class="q-mt-none q-pt-none">Zeek Summary (Suricata)</h5>
+        <q-card-section class="q-pb-none">
+            <h5 class="q-pa-none q-ma-none">Zeek Summary (Suricata)</h5>
         </q-card-section>
         <q-card-section>
           <iframe sandbox="allow-scripts allow-same-origin" :src="url05" width="100%" height="800"
