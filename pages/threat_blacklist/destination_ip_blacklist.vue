@@ -2,7 +2,8 @@
   <q-page v-if="auth.isAuthenticated">
     <q-card>
       <q-card-section class="q-pb-none">
-        <h5 class="q-pa-none q-ma-none">Destination IP</h5>
+        <h5 class="q-pa-none q-ma-none">
+          Destination IP</h5>
       </q-card-section>
       <q-card-section>
         <div class="row">

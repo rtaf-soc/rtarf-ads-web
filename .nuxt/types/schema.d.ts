@@ -29,6 +29,41 @@ declare module 'nuxt/schema' {
       idpClientSecret: string,
    },
 
+   nitro: {
+      envPrefix: string,
+   },
+  }
+  interface PublicRuntimeConfig {
+   baseURL: string,
+
+   scaleURL: string,
+
+   geoIpURL: string,
+
+   machineStatusURL: string,
+
+   dashboard: {
+      url01: string,
+
+      url02: string,
+
+      url03: string,
+
+      url04: string,
+
+      url05: string,
+
+      url06: string,
+
+      url07: string,
+
+      url08: string,
+
+      url09: string,
+
+      url10: string,
+   },
+
    tool: {
       url01: string,
 
@@ -56,41 +91,6 @@ declare module 'nuxt/schema' {
 
       url08: string,
    },
-
-   dashboard: {
-      url01: string,
-
-      url02: string,
-
-      url03: string,
-
-      url04: string,
-
-      url05: string,
-
-      url06: string,
-
-      url07: string,
-
-      url08: string,
-
-      url09: string,
-
-      url10: string,
-   },
-
-   nitro: {
-      envPrefix: string,
-   },
-  }
-  interface PublicRuntimeConfig {
-   baseURL: string,
-
-   scaleURL: string,
-
-   geoIpURL: string,
-
-   machineStatusURL: string,
   }
 }
 declare module 'vue' {

@@ -4,7 +4,7 @@
 import { ref, nextTick } from 'vue';
 import { useAuthStore } from '~/stores/auth'
 import { type MenuRedirectProps } from "../components/MenuRedirect.vue";
-import Dashboard from '~/pages/dashboard.vue';
+// import Dashboard from '~/pages/dashboard.vue.old';
 const router = useRouter()
 
 const auth = useAuthStore()
