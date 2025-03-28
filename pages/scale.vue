@@ -1,8 +1,9 @@
 <template>
   <q-page>
     <q-card>
-      <q-card-section>
-        <h5 class="q-mt-none q-pt-none">หน้าหลัก</h5>
+      <q-card-section class="q-pb-none">
+        <h5 class="q-pa-none q-ma-none">
+          หน้าหลัก</h5>
       </q-card-section>
       <q-card-section>
         <div class="row">

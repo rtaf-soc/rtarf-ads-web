@@ -1,11 +1,12 @@
 <template>
   <q-page v-if="auth.isAuthenticated">
     <q-card>
-      <q-card-section>
-        <h5 class="q-mt-none q-pt-none">Kafka</h5>
+      <q-card-section class="q-pb-none">
+        <h5 class="q-pa-none q-ma-none">
+          Kafka</h5>
       </q-card-section>
       <q-card-section>
-        <iframe sandbox="allow-scripts allow-same-origin" :src="toolUrl02" width="100%" height="800"
+        <iframe sandbox="allow-scripts allow-same-origin" :src="url02" width="100%" height="800"
           style="border: none;"></iframe>
       </q-card-section>
     </q-card>
@@ -22,10 +23,10 @@ export default {
     onMounted(() => {
       // Loading.hide()
     })
-    const { public: { toolUrl02 } } = useRuntimeConfig();
+    const { public: { tool : {url02 } }} = useRuntimeConfig();
     const auth = useAuthStore();
     return {
-      toolUrl02,
+      url02,
       auth
     }
   },

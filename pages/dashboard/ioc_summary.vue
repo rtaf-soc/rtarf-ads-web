@@ -5,7 +5,7 @@
           <h5 class="q-mt-none q-pt-none">IoC Summary</h5>
         </q-card-section>
         <q-card-section>
-          <iframe sandbox="allow-scripts allow-same-origin" :src="dashboardUrl04" width="100%" height="800"
+          <iframe sandbox="allow-scripts allow-same-origin" :src="url04" width="100%" height="800"
             style="border: none;"></iframe>
         </q-card-section>
       </q-card>
@@ -22,10 +22,10 @@
       onMounted(() => {
         // Loading.hide()
       })
-      const { public: { dashboardUrl04 } } = useRuntimeConfig();
+      const { public: { dashboard: { url04 } } } = useRuntimeConfig();
       const auth = useAuthStore();
       return {
-        dashboardUrl04,
+        url04,
         auth
       }
     },

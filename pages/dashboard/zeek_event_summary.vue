@@ -5,7 +5,7 @@
           <h5 class="q-mt-none q-pt-none">Zeek Event Summary</h5>
         </q-card-section>
         <q-card-section>
-          <iframe sandbox="allow-scripts allow-same-origin" :src="dashboardUrl01" width="100%" height="800"
+          <iframe sandbox="allow-scripts allow-same-origin" :src="url01" width="100%" height="800"
             style="border: none;"></iframe>
         </q-card-section>
       </q-card>
@@ -22,10 +22,10 @@
       onMounted(() => {
         // Loading.hide()
       })
-      const { public: { dashboardUrl01 } } = useRuntimeConfig();
+      const { public: { dashboard: { url01 } } } = useRuntimeConfig();
       const auth = useAuthStore();
       return {
-        dashboardUrl01,
+        url01,
         auth
       }
     },

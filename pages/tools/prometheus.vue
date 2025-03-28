@@ -1,11 +1,12 @@
 <template>
   <q-page v-if="auth.isAuthenticated">
     <q-card>
-      <q-card-section>
-        <h5 class="q-mt-none q-pt-none">Prometheus</h5>
+      <q-card-section class="q-pb-none">
+        <h5 class="q-pa-none q-ma-none">
+          Prometheus</h5>
       </q-card-section>
       <q-card-section>
-        <iframe sandbox="allow-scripts allow-same-origin" :src="toolUrl08" width="100%" height="800"
+        <iframe sandbox="allow-scripts allow-same-origin" :src="url08" width="100%" height="800"
           style="border: none;"></iframe>
       </q-card-section>
     </q-card>
@@ -22,10 +23,10 @@ export default {
     onMounted(() => {
       // Loading.hide()
     })
-    const { public: { toolUrl08 } } = useRuntimeConfig();
+    const { public: { tool : {url08 } }} = useRuntimeConfig();
     const auth = useAuthStore();
     return {
-      toolUrl08,
+      url08,
       auth
     }
   },
