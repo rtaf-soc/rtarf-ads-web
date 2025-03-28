@@ -29,6 +29,56 @@ declare module 'nuxt/schema' {
       idpClientSecret: string,
    },
 
+   tool: {
+      toolUrl01: string,
+
+      toolUrl02: string,
+
+      toolUrl031: string,
+
+      toolUrl032: string,
+
+      toolUrl033: string,
+
+      toolUrl041: string,
+
+      toolUrl042: string,
+
+      toolUrl043: string,
+
+      toolUrl044: string,
+
+      toolUrl05: string,
+
+      toolUrl06: string,
+
+      toolUrl07: string,
+
+      toolUrl08: string,
+   },
+
+   dashboard: {
+      dashboardUrl01: string,
+
+      dashboardUrl02: string,
+
+      dashboardUrl03: string,
+
+      dashboardUrl04: string,
+
+      dashboardUrl05: string,
+
+      dashboardUrl06: string,
+
+      dashboardUrl07: string,
+
+      dashboardUrl08: string,
+
+      dashboardUrl09: string,
+
+      dashboardUrl10: string,
+   },
+
    nitro: {
       envPrefix: string,
    },
