@@ -29,6 +29,7 @@
 // (Keep your original imports and comments if any)
 import { ref , onMounted } from 'vue'
 import { useAuthStore } from '~/stores/auth'
+import { useTitleStore } from '~/stores/title'
 import { useRouter } from 'vue-router'
 // Preserve your original variable names and comments
 const username = ref('') // your username input
@@ -36,9 +37,11 @@ const password = ref('') // your password input
 const error = ref(null)  // to display login errors
 const auth = useAuthStore()
 const router = useRouter()
+const title = useTitleStore()
 onMounted(() => {
     // Loading.hide()
     if (auth.isAuthenticated) {
+        title.setTitle('Overview')
         router.push('/overview')  // Redirect to the main page if token is valid
     }
 
@@ -56,6 +59,7 @@ const onSubmit = async (event) => {
             type: 'positive',
             message: 'Login successful!'
         });
+        title.setTitle('Overview')
         router.push('/overview')
     } catch (err) {
         // Preserve your original error handling

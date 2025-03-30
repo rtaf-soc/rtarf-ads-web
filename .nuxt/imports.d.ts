@@ -33,6 +33,7 @@ export { verifyToken } from '../utils/verifyToken';
 export { useAuthStore } from '../stores/auth';
 export { useDriverStore } from '../stores/driver';
 export { state, mutations } from '../stores/index';
+export { useTitleStore } from '../stores/title';
 export { useWeightStore } from '../stores/weight';
 export { useNuxtDevTools } from '../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';
 export { useDialogPluginComponent, useFormChild, useInterval, useMeta, useQuasar, useRenderCache, useSplitAttrs, useTick, useTimeout, AppFullscreen, BottomSheet, Dialog, Loading, LoadingBar, Notify } from 'quasar';

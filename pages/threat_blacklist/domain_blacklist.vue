@@ -1,9 +1,9 @@
 <template>
   <q-page v-if="auth.isAuthenticated">
     <q-card>
-      <q-card-section class="q-pb-none">
+      <!-- <q-card-section class="q-pb-none">
         <h5 class="q-pa-none q-ma-none">Domain Blacklist</h5>
-      </q-card-section>
+      </q-card-section> -->
       <q-card-section>
         <div class="row">
           <div class="col-12 col-md-12 q-pa-sm">

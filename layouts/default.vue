@@ -3,12 +3,14 @@
 // import type { EssentialLinkProps } from '../components/EssentialLink.vue';
 import { ref, nextTick } from 'vue';
 import { useAuthStore } from '~/stores/auth'
+import { useTitleStore } from '~/stores/title'
 import { type MenuRedirectProps } from "../components/MenuRedirect.vue";
 // import Dashboard from '~/pages/dashboard.vue.old';
 const router = useRouter()
 const { public: { tool } } = useRuntimeConfig();
 // console.log(tool)
 const auth = useAuthStore()
+const title = useTitleStore()
 
 const fab_user_menu = ref(false)
 const menuInsetLevel = 0.3
@@ -346,7 +348,7 @@ const adminLink: MenuRedirectProps[] = [
     title: 'System Variable',
     // caption: 'จัดหา',
     icon: 'tune',
-    link: "/admin/index"
+    link: "/admin/system_variable"
   },
   {
     title: 'Users',
@@ -358,7 +360,7 @@ const adminLink: MenuRedirectProps[] = [
     title: 'Roles',
     // caption: 'จัดหา',
     icon: 'manage_accounts',
-    link: "/admin/system_variable"
+    link: "/admin/roles"
   },
 ];
 
@@ -386,8 +388,12 @@ function handleLogout() {
       <q-toolbar>
         <q-btn v-if="auth.isAuthenticated" flat dense round icon="menu" :glossy="false" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title>
+        <!-- <q-toolbar-title>
           Military Rule Detection Joint Sharing
+        </q-toolbar-title> -->
+
+        <q-toolbar-title>
+          {{ title.title }}
         </q-toolbar-title>
 
         <!-- <q-btn v-if="auth.isAuthenticated" dense label="Logout" color="negative" @click="handleLogout" /> -->

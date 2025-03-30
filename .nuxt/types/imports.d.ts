@@ -180,6 +180,7 @@ declare global {
   const useState: typeof import('../../node_modules/nuxt/dist/app/composables/state')['useState']
   const useTick: typeof import('../../node_modules/quasar')['useTick']
   const useTimeout: typeof import('../../node_modules/quasar')['useTimeout']
+  const useTitleStore: typeof import('../../stores/title')['useTitleStore']
   const useTransitionState: typeof import('../../node_modules/vue')['useTransitionState']
   const useWeightStore: typeof import('../../stores/weight')['useWeightStore']
   const verifyToken: typeof import('../../utils/verifyToken')['verifyToken']
@@ -383,6 +384,7 @@ declare module 'vue' {
     readonly useState: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/state')['useState']>
     readonly useTick: UnwrapRef<typeof import('../../node_modules/quasar')['useTick']>
     readonly useTimeout: UnwrapRef<typeof import('../../node_modules/quasar')['useTimeout']>
+    readonly useTitleStore: UnwrapRef<typeof import('../../stores/title')['useTitleStore']>
     readonly useTransitionState: UnwrapRef<typeof import('../../node_modules/vue')['useTransitionState']>
     readonly useWeightStore: UnwrapRef<typeof import('../../stores/weight')['useWeightStore']>
     readonly verifyToken: UnwrapRef<typeof import('../../utils/verifyToken')['verifyToken']>
