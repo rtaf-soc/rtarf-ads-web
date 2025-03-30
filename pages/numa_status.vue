@@ -1,8 +1,8 @@
 <template>
   <q-page v-if="auth.isAuthenticated">
     <q-card>
-      <q-card-section style="height: 95vh;">
-        <h5 class="q-mt-none q-pt-none">สถานะอุปกรณ์เครือข่าย</h5>
+      <q-card-section class="q-pb-none">
+        <h5 class="q-pa-none q-ma-none">สถานะอุปกรณ์เครือข่าย</h5>
       </q-card-section>
       <q-card-section>
         <iframe :src="machineStatusURL" width="100%" height="800" style="border: none;"></iframe>

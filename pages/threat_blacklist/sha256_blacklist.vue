@@ -85,7 +85,7 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.blacklistCode" outlined label="Destination IP" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.blacklistCode" outlined label="SHA256" />
             <q-input v-model="edit_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -132,7 +132,7 @@ const table_columns_menu = [
 
   { name: 'id', align: 'center', label: 'Action', field: 'index', headerStyle: 'width: 30px' },
   // { name: 'blacklistId', label: 'ชื่อ', align: 'left', field: 'blacklistId', sortable: true },
-  { name: 'blacklistCode', align: 'left', label: 'Destination IP', field: 'blacklistCode', sortable: true, },
+  { name: 'blacklistCode', align: 'left', label: 'SHA256', field: 'blacklistCode', sortable: true, },
   // { name: 'orgId', align: 'center', label: 'รหัสสถานที่', field: 'orgId', sortable: true, },
   { name: 'tags', align: 'left', label: 'tags', field: 'tags', sortable: true, },
   // { name: 'blacklistType', align: 'center', label: 'type', field: 'blacklistType', sortable: true, },
