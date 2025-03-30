@@ -1,9 +1,9 @@
 <template>
     <q-page v-if="auth.isAuthenticated">
       <q-card>
-        <q-card-section>
+        <!-- <q-card-section>
           <h5 class="q-mt-none q-pt-none">Roles</h5>
-        </q-card-section>
+        </q-card-section> -->
   
       </q-card>
   

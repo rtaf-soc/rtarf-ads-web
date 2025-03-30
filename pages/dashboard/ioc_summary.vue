@@ -1,9 +1,9 @@
 <template>
     <q-page v-if="auth.isAuthenticated">
       <q-card>
-        <q-card-section class="q-pb-none">
+        <!-- <q-card-section class="q-pb-none">
             <h5 class="q-pa-none q-ma-none">IoC Summary</h5>
-        </q-card-section>
+        </q-card-section> -->
         <q-card-section>
           <iframe sandbox="allow-scripts allow-same-origin" :src="url04" width="100%" height="800"
             style="border: none;"></iframe>

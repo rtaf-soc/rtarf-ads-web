@@ -1,9 +1,9 @@
 <template>
   <q-page v-if="auth.isAuthenticated">
     <q-card>
-      <q-card-section class="q-pb-none">
+      <!-- <q-card-section class="q-pb-none">
         <h5 class="q-pa-none q-ma-none">Domain Blacklist</h5>
-      </q-card-section>
+      </q-card-section> -->
       <q-card-section>
         <div class="row">
           <div class="col-12 col-md-12 q-pa-sm">
@@ -107,7 +107,7 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.blacklistCode" outlined label="Source IP" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.blacklistCode" outlined label="Domain" />
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -132,7 +132,7 @@ const table_columns_menu = [
 
   { name: 'id', align: 'center', label: 'Action', field: 'index', headerStyle: 'width: 30px' },
   // { name: 'blacklistId', label: 'ชื่อ', align: 'left', field: 'blacklistId', sortable: true },
-  { name: 'blacklistCode', align: 'left', label: 'Source IP', field: 'blacklistCode', sortable: true, },
+  { name: 'blacklistCode', align: 'left', label: 'Domain', field: 'blacklistCode', sortable: true, },
   // { name: 'orgId', align: 'center', label: 'รหัสสถานที่', field: 'orgId', sortable: true, },
   { name: 'tags', align: 'left', label: 'tags', field: 'tags', sortable: true, },
   // { name: 'blacklistType', align: 'center', label: 'type', field: 'blacklistType', sortable: true, },

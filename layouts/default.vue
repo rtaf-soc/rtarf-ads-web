@@ -3,11 +3,14 @@
 // import type { EssentialLinkProps } from '../components/EssentialLink.vue';
 import { ref, nextTick } from 'vue';
 import { useAuthStore } from '~/stores/auth'
+import { useTitleStore } from '~/stores/title'
 import { type MenuRedirectProps } from "../components/MenuRedirect.vue";
 // import Dashboard from '~/pages/dashboard.vue.old';
 const router = useRouter()
-
+const { public: { tool } } = useRuntimeConfig();
+// console.log(tool)
 const auth = useAuthStore()
+const title = useTitleStore()
 
 const fab_user_menu = ref(false)
 const menuInsetLevel = 0.3
@@ -236,35 +239,40 @@ const toolsLink: MenuRedirectProps[] = [
   {
     title: 'Kibana',
     icon: 'open_in_new',
-    link: '/tools/kibana',
+    // link: '/tools/kibana',
+    link: tool.url01,
     openNewTab: true
   },
   {
     title: 'Kafka',
     // caption: 'จัดหา',
     icon: 'open_in_new',
-    link: "/tools/kafka",
+    // link: "/tools/kafka",
+    link: tool.url02,
     openNewTab: true
   },
   {
     title: 'Metalog #1',
     // caption: 'จัดหา',
     icon: 'open_in_new',
-    link: "/tools/metalog_1",
+    // link: "/tools/metalog_1",
+    link: tool.url031,
     openNewTab: true
   },
   {
     title: 'Metalog #2',
     // caption: 'จัดหา',
     icon: 'open_in_new',
-    link: "/tools/metalog_2",
+    // link: "/tools/metalog_2",
+    link: tool.url032,
     openNewTab: true
   },
   {
     title: 'Metalog #3',
     // caption: 'จัดหา',
     icon: 'open_in_new',
-    link: "/tools/metalog_3",
+    // link: "/tools/metalog_3",
+    link: tool.url033,
     openNewTab: true
   },
 
@@ -272,56 +280,64 @@ const toolsLink: MenuRedirectProps[] = [
     title: 'Net Approve #1',
     // caption: 'จัดหา',
     icon: 'open_in_new',
-    link: "/tools/net_approve_1",
+    // link: "/tools/net_approve_1",
+    link: tool.url041,
     openNewTab: true
   },
   {
     title: 'Net Approve #2',
     // caption: 'จัดหา',
     icon: 'open_in_new',
-    link: "/tools/net_approve_2",
+    // link: "/tools/net_approve_2",
+    link: tool.url042,
     openNewTab: true
   },
   {
     title: 'Net Approve #3',
     // caption: 'จัดหา',
     icon: 'open_in_new',
-    link: "/tools/net_approve_3",
+    // link: "/tools/net_approve_3",
+    link: tool.url043,
     openNewTab: true
   },
   {
     title: 'Net Approve #4',
     // caption: 'จัดหา',
     icon: 'open_in_new',
-    link: "/tools/net_approve_4",
+    // link: "/tools/net_approve_4",
+    link: tool.url044,
     openNewTab: true
   },
   {
     title: 'GeoIP',
     // caption: 'จัดหา',
     icon: 'open_in_new',
-    link: "/tools/geo_ip",
+    // link: "/tools/geo_ip",
+    link: tool.url05,
     openNewTab: true
   },
   {
     title: 'Superset',
     // caption: 'จัดหา',
     icon: 'open_in_new',
-    link: "/tools/superset",
+    // link: "/tools/superset",
+    link: tool.url05,
     openNewTab: true
   },
   {
     title: 'Loki',
     // caption: 'จัดหา',
     icon: 'open_in_new',
-    link: "/tools/loki",
+    // link: "/tools/loki",
+    link: tool.url06,
     openNewTab: true
   },
   {
     title: 'Prometheus',
     // caption: 'จัดหา',
     icon: 'open_in_new',
-    link: "/tools/prometheus",
+    // link: "/tools/prometheus",
+    link: tool.url07,
     openNewTab: true
   },
 ];
@@ -332,7 +348,7 @@ const adminLink: MenuRedirectProps[] = [
     title: 'System Variable',
     // caption: 'จัดหา',
     icon: 'tune',
-    link: "/admin/index"
+    link: "/admin/system_variable"
   },
   {
     title: 'Users',
@@ -344,7 +360,7 @@ const adminLink: MenuRedirectProps[] = [
     title: 'Roles',
     // caption: 'จัดหา',
     icon: 'manage_accounts',
-    link: "/admin/system_variable"
+    link: "/admin/roles"
   },
 ];
 
@@ -372,8 +388,12 @@ function handleLogout() {
       <q-toolbar>
         <q-btn v-if="auth.isAuthenticated" flat dense round icon="menu" :glossy="false" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title>
+        <!-- <q-toolbar-title>
           Military Rule Detection Joint Sharing
+        </q-toolbar-title> -->
+
+        <q-toolbar-title>
+          {{ title.title }}
         </q-toolbar-title>
 
         <!-- <q-btn v-if="auth.isAuthenticated" dense label="Logout" color="negative" @click="handleLogout" /> -->
@@ -391,7 +411,7 @@ function handleLogout() {
     <q-drawer :breakpoint="500" v-model="leftDrawerOpen" show-if-above bordered v-if="auth.isAuthenticated">
       <q-list>
         <!-- <q-item-label header> Menu </q-item-label> -->
-        <q-item-label header  class="flex flex-col items-center justify-center">
+        <q-item-label header class="flex flex-col items-center justify-center">
           <img src="/assets/icon.svg" alt="Menu Icon" width="43" height="41" />
 
           <img src="/assets/icon-word.svg" alt="Menu Icon" width="89" height="24" />

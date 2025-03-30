@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useAuthStore } from '~/stores/auth'
+import { useTitleStore } from '~/stores/title'
 const auth = useAuthStore()
 const router = useRouter()
+const titleStore = useTitleStore()
 
 export interface MenuRedirectProps {
   title: string;
@@ -32,7 +34,8 @@ async function handleClick() {
     if (props.openNewTab) {
       window.open(props.link, "_blank")
     } else {
-
+      // console.log(props.title)
+      titleStore.setTitle(props.title)
       router.push({ path: props.link })
     }
   } catch (error) {
