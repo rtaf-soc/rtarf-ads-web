@@ -43,6 +43,9 @@ onMounted(() => {
     if (auth.isAuthenticated) {
         title.setTitle('Overview')
         router.push('/overview')  // Redirect to the main page if token is valid
+    }else{
+              
+        title.setTitle('Login')
     }
 
 })

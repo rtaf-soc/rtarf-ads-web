@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router'
+import { useTitleStore } from '~/stores/title'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -90,6 +91,8 @@ export const useAuthStore = defineStore('auth', {
       if (this.expiresAt && Date.now() > this.expiresAt) {
         this.logout()
         const router = useRouter()
+        const title = useTitleStore()
+        title.setTitle('Login')
         router.push('/login')
       }
     }

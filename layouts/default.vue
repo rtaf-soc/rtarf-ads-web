@@ -177,7 +177,16 @@ const dashboardLink: MenuRedirectProps[] = [
     link: "/dashboard/zeek_summary_dns",
   },
 ];
+const SigmaYalaRulesLink: MenuRedirectProps[] = [
 
+  {
+    title: 'Sigma & Yala rules',
+    // caption: 'จัดหา',
+    icon: 'hub',
+    link: "/sigma_yala_rules",
+    inset: 0.0
+  },
+];
 const IPMappingLink: MenuRedirectProps[] = [
 
   {
@@ -321,7 +330,7 @@ const toolsLink: MenuRedirectProps[] = [
     // caption: 'จัดหา',
     icon: 'open_in_new',
     // link: "/tools/superset",
-    link: tool.url05,
+    link: tool.url06,
     openNewTab: true
   },
   {
@@ -329,7 +338,7 @@ const toolsLink: MenuRedirectProps[] = [
     // caption: 'จัดหา',
     icon: 'open_in_new',
     // link: "/tools/loki",
-    link: tool.url06,
+    link: tool.url07,
     openNewTab: true
   },
   {
@@ -337,7 +346,7 @@ const toolsLink: MenuRedirectProps[] = [
     // caption: 'จัดหา',
     icon: 'open_in_new',
     // link: "/tools/prometheus",
-    link: tool.url07,
+    link: tool.url08,
     openNewTab: true
   },
 ];
@@ -378,6 +387,8 @@ function toggleLeftDrawer() {
 }
 function handleLogout() {
   auth.logout()
+      
+  title.setTitle('Login')
   router.push('/login')
 }
 
@@ -442,6 +453,9 @@ function handleLogout() {
           </q-card>
         </q-expansion-item>
 
+        <q-card>
+          <MenuRedirect v-for="link in SigmaYalaRulesLink" :key="link.title" v-bind="link" />
+        </q-card>
         <q-card>
           <MenuRedirect v-for="link in IPMappingLink" :key="link.title" v-bind="link" />
         </q-card>
