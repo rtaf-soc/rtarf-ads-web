@@ -22,7 +22,7 @@
       onMounted(() => {
         // Loading.hide()
       })
-      const { public: { dashboard: { url09 } } } = useRuntimeConfig();
+      const { public: { dashboard: { url10 } } } = useRuntimeConfig();
       const auth = useAuthStore();
       return {
         url09,
