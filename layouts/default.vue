@@ -321,7 +321,7 @@ const toolsLink: MenuRedirectProps[] = [
     // caption: 'จัดหา',
     icon: 'open_in_new',
     // link: "/tools/superset",
-    link: tool.url05,
+    link: tool.url06,
     openNewTab: true
   },
   {
@@ -329,7 +329,7 @@ const toolsLink: MenuRedirectProps[] = [
     // caption: 'จัดหา',
     icon: 'open_in_new',
     // link: "/tools/loki",
-    link: tool.url06,
+    link: tool.url07,
     openNewTab: true
   },
   {
@@ -337,7 +337,7 @@ const toolsLink: MenuRedirectProps[] = [
     // caption: 'จัดหา',
     icon: 'open_in_new',
     // link: "/tools/prometheus",
-    link: tool.url07,
+    link: tool.url08,
     openNewTab: true
   },
 ];
@@ -378,6 +378,8 @@ function toggleLeftDrawer() {
 }
 function handleLogout() {
   auth.logout()
+      
+  title.setTitle('Login')
   router.push('/login')
 }
 
