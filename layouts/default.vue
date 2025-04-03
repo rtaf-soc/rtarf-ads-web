@@ -159,13 +159,13 @@ const dashboardLink: MenuRedirectProps[] = [
     link: "/dashboard/zeek_summary_http",
   },
   {
-    title: 'Zeek Summary (Files)',
+    title: 'Zeek Summary (Kerberos)',
     // caption: 'จัดหา',
     icon: 'dashboard',
     link: "/dashboard/zeek_summary_files",
   },
   {
-    title: 'Zeek Summary (SSL)',
+    title: 'Zeek Summary (Radius)',
     // caption: 'จัดหา',
     icon: 'dashboard',
     link: "/dashboard/zeek_summary_ssl",
