@@ -3,7 +3,7 @@
     <q-card>
       <!-- <q-card-section class="q-pb-none">
         <h5 class="q-pa-none q-ma-none">
-          Crowdstrie Summary</h5>
+          Crowdstrike Summary</h5>
       </q-card-section> -->
       <q-card-section>
         <iframe sandbox="allow-scripts allow-same-origin" :src="url03" width="100%" height="800"
