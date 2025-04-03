@@ -129,7 +129,7 @@ const dashboardLink: MenuRedirectProps[] = [
     link: "/dashboard/blacklist_summary",
   },
   {
-    title: 'Crowdstrie Summary',
+    title: 'CrowdStrike Summary',
     // caption: 'จัดหา',
     icon: 'dashboard',
     link: "/dashboard/crowdstrie_summary",
