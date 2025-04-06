@@ -5,7 +5,7 @@
             <h5 class="q-pa-none q-ma-none">Zeek Summary (DNS)</h5>
         </q-card-section> -->
         <q-card-section>
-          <iframe sandbox="allow-scripts allow-same-origin" :src="url09" width="100%" height="800"
+          <iframe sandbox="allow-scripts allow-same-origin" :src="url10" width="100%" height="800"
             style="border: none;"></iframe>
         </q-card-section>
       </q-card>
@@ -25,7 +25,7 @@
       const { public: { dashboard: { url10 } } } = useRuntimeConfig();
       const auth = useAuthStore();
       return {
-        url09,
+        url10,
         auth
       }
     },
