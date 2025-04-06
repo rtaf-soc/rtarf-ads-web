@@ -5,6 +5,7 @@
         <h5 class="q-pa-none q-ma-none">
           Destination IP</h5>
       </q-card-section> -->
+
       <q-card-section>
         <div class="row">
           <div class="col-12 col-md-12 q-pa-sm">
@@ -20,8 +21,7 @@
                 </q-input>
               </template>
               <template v-slot:top-right>
-                <q-btn class="q-mr-lg" icon="add" rounded color="green-7"
-                  @click="this.add_ingredient_detail_isOpen = true" />
+                <q-btn class="q-mr-lg" icon="add" rounded color="green-7" @click="onClick(`addTable`)" />
                 <q-btn :disable="selectedTable <= 0" icon="delete" rounded color="negative"
                   @click="onClick(`deleteSelectedTable`)" />
               </template>
@@ -91,8 +91,17 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.cidr" outlined label="CIDR" />
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.network_zone" outlined label="Network Zone" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.rule_name" outlined label="Rule Name" />
+
+            <q-btn @click="this.showEditor = !this.showEditor" color="green">
+              แก้ไข code</q-btn>
+            <div v-if="showEditor">
+              <MonacoEditor v-model="edit_ingredient_detail.rule_definition" lang="yaml" style="height: 400px;"
+                :options="editorOptions" />
+            </div>
+            <q-input v-if="!showEditor" class="q-pb-lg" v-model="edit_ingredient_detail.rule_definition" outlined
+              label="Rule Definition" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.url" outlined label="URL" />
             <q-input v-model="edit_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -103,7 +112,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-dialog v-model="add_ingredient_detail_isOpen">
+    <q-dialog v-model="add_ingredient_detail_isOpen" @show="onDialogShow">
       <q-card style="width: 800px; max-width: 800vw;">
 
         <q-card-section class="row items-center q-pb-none">
@@ -114,16 +123,20 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.cidr" outlined label="CIDR">
-              <template v-slot:after>
-                <q-btn round dense flat icon="error">
-                  <q-tooltip class="bg-red text-body2">
-                    example : 192.168.1.1/32
-                  </q-tooltip>
-                </q-btn>
-              </template>
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.rule_name" outlined label="Rule Name">
+
             </q-input>
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.network_zone" outlined label="Network Zone" />
+
+            <q-btn @click="this.showEditor = !this.showEditor" color="green">
+              แก้ไข code</q-btn>
+            <div v-if="showEditor">
+              <MonacoEditor v-model="add_ingredient_detail.rule_definition"  lang="yaml" style="height: 400px;"
+                :options="editorOptions" />
+            </div>
+            <q-input v-if="!showEditor" class="q-pb-lg" v-model="add_ingredient_detail.rule_definition" outlined
+              label="Rule Definition" disable />
+
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.url" outlined label="URL" />
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -141,15 +154,12 @@
 import moment from 'moment';
 import { useAuthStore } from '~/stores/auth'
 
-// import { fetchMenu, createMenu } from '~/api/menuService';
-// import { createIngredient, fetchIngredients, updateIngredient } from '~/api/ingredientService';
-
 const table_columns_menu = [
 
   { name: 'id', align: 'center', label: 'Action', field: 'index', headerStyle: 'width: 30px' },
   // { name: 'blacklistId', label: 'ชื่อ', align: 'left', field: 'blacklistId', sortable: true },
-  { name: 'cidr', align: 'left', label: 'CIDR', field: 'cidr', sortable: true, },
-  { name: 'network_zone', align: 'center', label: 'Network Zone', field: 'network_zone', sortable: true, },
+  { name: 'rule_name', align: 'left', label: 'Rule Name', field: 'rule_name', sortable: true, },
+  { name: 'url', align: 'center', label: 'URL', field: 'url', sortable: true, },
   { name: 'tags', align: 'left', label: 'tags', field: 'tags', sortable: true, },
   // { name: 'blacklistType', align: 'center', label: 'type', field: 'blacklistType', sortable: true, },
 
@@ -157,44 +167,97 @@ const table_columns_menu = [
 
 ]
 
+const monacoEditor = ref(null)
+const showEditor = ref(false)
+const editorOptions = {
+  automaticLayout: true,
+  theme: 'vs-dark',
+}
+
 
 const mock_data = [
   {
-    "cidr": "192.168.1.1/32",
-    "network_zone": "Internal",
-    "tags": "corporate, intranet",
-    "createdDate": "2023-09-01T12:00:00Z",
-    "update_at": "2023-09-01T12:00:00Z"
+    "rule_name": "NoEmptyFields",
+    "rule_definition": "|\n  description: Ensure that all required fields are filled\n  conditions:\n    - field: username\n      required: true\n    - field: password\n      required: true",
+    "url": "https://example.com/rules/no-empty-fields",
+    "tags": "validation, form, data",
+    "createdDate": "2023-09-01T08:00:00Z",
+    "update_at": "2023-09-10T08:00:00Z"
   },
   {
-    "cidr": "10.10.9.0/24",
-    "network_zone": "DMZ",
-    "tags": "public, testing",
-    "createdDate": "2023-08-01T08:30:00Z",
-    "update_at": "2023-08-05T09:45:00Z"
+    "rule_name": "MaxInputLength",
+    "rule_definition": "|\n  description: Limit the input length to prevent overflow issues\n  max_length: 100\n  note: 'Ensures UI stability'",
+    "url": "https://example.com/rules/max-input-length",
+    "tags": "validation, input, UI",
+    "createdDate": "2023-08-20T09:00:00Z",
+    "update_at": "2023-08-25T09:00:00Z"
   },
   {
-    "cidr": "172.16.0.0/16",
-    "network_zone": "VPN",
-    "tags": "remote, secure",
-    "createdDate": "2023-07-10T10:00:00Z",
-    "update_at": "2023-07-12T10:00:00Z"
+    "rule_name": "UniqueEmail",
+    "rule_definition": "|\n  description: Ensure that the email address is unique in the system\n  check:\n    - field: email\n      uniqueness: true",
+    "url": "https://example.com/rules/unique-email",
+    "tags": "validation, email, uniqueness",
+    "createdDate": "2023-07-15T10:00:00Z",
+    "update_at": "2023-07-20T10:00:00Z"
   },
   {
-    "cidr": "192.168.100.0/24",
-    "network_zone": "Guest",
-    "tags": "wifi, guest",
-    "createdDate": "2023-06-20T15:00:00Z",
-    "update_at": "2023-06-25T15:00:00Z"
+    "rule_name": "ValidDateFormat",
+    "rule_definition": "|\n  description: Date should follow the format YYYY-MM-DD\n  pattern: '^\\d{4}-\\d{2}-\\d{2}$'\n  example: 2023-01-01",
+    "url": "https://example.com/rules/valid-date-format",
+    "tags": "validation, date, format",
+    "createdDate": "2023-06-01T11:00:00Z",
+    "update_at": "2023-06-05T11:00:00Z"
   },
   {
-    "cidr": "10.0.0.0/8",
-    "network_zone": "Corporate",
-    "tags": "enterprise, main",
-    "createdDate": "2023-05-15T11:00:00Z",
-    "update_at": "2023-05-20T11:00:00Z"
+    "rule_name": "PositiveNumbers",
+    "rule_definition": "|\n  description: Ensure that numeric values are positive\n  conditions:\n    - value: must be > 0",
+    "url": "https://example.com/rules/positive-numbers",
+    "tags": "validation, numeric, logic",
+    "createdDate": "2023-05-10T12:00:00Z",
+    "update_at": "2023-05-15T12:00:00Z"
+  },
+  {
+    "rule_name": "NoSQLInjection",
+    "rule_definition": "|\n  description: Prevent SQL injection by sanitizing all database inputs\n  methods:\n    - parameterized queries\n    - input sanitization",
+    "url": "https://example.com/rules/no-sql-injection",
+    "tags": "security, database, injection",
+    "createdDate": "2023-04-01T13:00:00Z",
+    "update_at": "2023-04-05T13:00:00Z"
+  },
+  {
+    "rule_name": "StrongPassword",
+    "rule_definition": "|\n  description: Password must be strong and secure\n  criteria:\n    - minimum: 8 characters\n    - mix: letters, numbers, and symbols",
+    "url": "https://example.com/rules/strong-password",
+    "tags": "security, password, validation",
+    "createdDate": "2023-03-20T14:00:00Z",
+    "update_at": "2023-03-25T14:00:00Z"
+  },
+  {
+    "rule_name": "SecureProtocol",
+    "rule_definition": "|\n  description: All external communications must use HTTPS\n  note: 'Ensures data encryption and integrity'",
+    "url": "https://example.com/rules/secure-protocol",
+    "tags": "security, network, protocol",
+    "createdDate": "2023-02-10T15:00:00Z",
+    "update_at": "2023-02-15T15:00:00Z"
+  },
+  {
+    "rule_name": "SafeRedirect",
+    "rule_definition": "|\n  description: Validate redirect URLs to prevent open redirect vulnerabilities\n  checks:\n    - verify domain\n    - allow-list trusted URLs",
+    "url": "https://example.com/rules/safe-redirect",
+    "tags": "security, redirect, validation",
+    "createdDate": "2023-01-05T16:00:00Z",
+    "update_at": "2023-01-10T16:00:00Z"
+  },
+  {
+    "rule_name": "ValidURLFormat",
+    "rule_definition": "|\n  description: URL must adhere to a valid format\n  pattern: '^(https?|ftp)://[^\\s/$.?#].[^\\s]*$'\n  example: https://example.com",
+    "url": "https://example.com/rules/valid-url-format",
+    "tags": "validation, url, format",
+    "createdDate": "2023-12-01T17:00:00Z",
+    "update_at": "2023-12-05T17:00:00Z"
   }
 ]
+
 
 
 
@@ -218,15 +281,19 @@ const pagination_ingredient = {
 const loading = ref(true)
 const edit_ingredient_detail_isOpen = ref(false)
 const edit_ingredient_detail = {
-  cidr: "",
-  network_zone: "",
-  tag: 0,
+  rule_name: "",
+  rule_definition: "",
+  url: "",
+  tags: "",
+  createdDate: "2024-10-12T09:24:30.125001Z",
+  update_at: "2023-05-20T11:00:00Z"
 
 }
 const add_ingredient_detail_isOpen = ref(false)
 const add_ingredient_detail = {
-  cidr: "",
-  network_zone: "",
+  rule_name: "",
+  rule_definition: "",
+  url: "",
   tags: "",
   createdDate: "2024-10-12T09:24:30.125001Z",
   update_at: "2023-05-20T11:00:00Z"
@@ -241,7 +308,15 @@ const add_ingredient_detail = {
 //           "createdDate": "2024-10-12T09:24:30.125001Z"
 
 const selectedTable = ref([])
-
+const code = ref(`# Write your YAML code here...
+rule:
+  description: "Ensure all required fields are filled."
+  conditions:
+    - field: username
+      required: true
+    - field: password
+      required: true
+`)
 // Loading.show()
 
 export default {
@@ -281,7 +356,13 @@ export default {
       edit_ingredient_detail,
       selectedTable,
       add_ingredient_detail_isOpen,
-      add_ingredient_detail
+      add_ingredient_detail,
+
+      editorOptions,
+      code,
+      monacoEditor,
+      showEditor
+
       // rowsNumber: xx if getting data from a server
     };
   },
@@ -362,8 +443,9 @@ export default {
     },
     clearAddTable() {
       this.add_ingredient_detail = {
-        cidr: "",
-        network_zone: "",
+        rule_name: "",
+        rule_definition: "",
+        url: "",
         tags: "",
         createdDate: "2024-10-12T09:24:30.125001Z",
         update_at: "2023-05-20T11:00:00Z"
@@ -403,6 +485,7 @@ export default {
           // edit_ingredient_detail 
           break;
         case 'editIngredient':
+          this.showEditor = false
           console.log(param);
           this.edit_ingredient_detail = param;
           this.edit_ingredient_detail_isOpen = true;
@@ -434,7 +517,10 @@ export default {
           console.log(`deleteTable`)
           this.deleteSelectedRows()
           break;
-
+        case 'addTable':
+          this.showEditor = false
+          this.add_ingredient_detail_isOpen = true
+          break;
         default:
           break;
       }

@@ -22,7 +22,8 @@
               <template v-slot:top-right>
                 <q-btn class="q-mr-lg" icon="add" rounded color="green-7"
                   @click="this.add_ingredient_detail_isOpen = true" />
-                <q-btn :disable="selectedTable <= 0" icon="delete" rounded color="negative" @click="onClick(`deleteSelectedTable`)"/>
+                <q-btn :disable="selectedTable <= 0" icon="delete" rounded color="negative"
+                  @click="onClick(`deleteSelectedTable`)" />
               </template>
 
               <template v-slot:body-cell="props">
@@ -344,7 +345,7 @@ export default {
       try {
         // const data = await fetchMenu();
         let mockdata = mock_data.filter(item => item.blacklistType === 1);
-
+        // console.log(mockdata)
         // console.log(filteredData);
         this.menus = mockdata;
         console.log(this.menus);

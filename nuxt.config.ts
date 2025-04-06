@@ -21,11 +21,16 @@ export default defineNuxtConfig({
     "@nuxt/devtools",
     "nuxt-quasar-ui",
     "@nuxtjs/google-fonts",
-    "@pinia/nuxt",
     // '@nuxtjs/axios',
     // '@nuxtjs/auth-next'
     // '@nuxtjs/dotenv'
+    "@pinia/nuxt",
+    "nuxt-monaco-editor",
   ],
+  monaco: {
+    // Optional: List additional languages you want to support
+    languages: ['yaml', 'javascript', 'typescript']
+  },
 
   // router: {
   //   middleware: 'auth'

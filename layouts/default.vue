@@ -177,13 +177,13 @@ const dashboardLink: MenuRedirectProps[] = [
     link: "/dashboard/zeek_summary_dns",
   },
 ];
-const SigmaYalaRulesLink: MenuRedirectProps[] = [
+const SigmaYaraRulesLink: MenuRedirectProps[] = [
 
   {
-    title: 'Sigma & Yala rules',
+    title: 'Sigma & Yara rules',
     // caption: 'จัดหา',
     icon: 'hub',
-    link: "/sigma_yala_rules",
+    link: "/sigma_yara_rules",
     inset: 0.0
   },
 ];
@@ -454,7 +454,7 @@ function handleLogout() {
         </q-expansion-item>
 
         <q-card>
-          <MenuRedirect v-for="link in SigmaYalaRulesLink" :key="link.title" v-bind="link" />
+          <MenuRedirect v-for="link in SigmaYaraRulesLink" :key="link.title" v-bind="link" />
         </q-card>
         <q-card>
           <MenuRedirect v-for="link in IPMappingLink" :key="link.title" v-bind="link" />
