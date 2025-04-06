@@ -2,16 +2,18 @@
   <q-page v-if="auth.isAuthenticated">
     <q-card>
       <!-- <q-card-section class="q-pb-none">
-        <h5 class="q-pa-none q-ma-none">Domain Blacklist</h5>
+        <h5 class="q-pa-none q-ma-none">
+          Destination IP</h5>
       </q-card-section> -->
-      <!-- <q-card-section>
+
+      <q-card-section>
         <div class="row">
           <div class="col-12 col-md-12 q-pa-sm">
             <q-table class="my-sticky-header-table" style="height: 87vh;" flat bordered title="เมนู"
               :rows="table_rows_menu" :columns="table_columns_menu" row-key="id" :pagination="pagination_menu"
               separator="cell" :loading="loading">
               <template v-slot:top-left>
-                <div class="text-h5 q-mr-md">Black list IP Address</div>
+                <!-- <div class="text-h5 q-mr-md">Black list IP Address</div> -->
                 <q-input outlined dense debounce="300" placeholder="ค้นหา" v-model="filter_menu_table" bg-color="dark">
                   <template v-slot:append>
                     <q-btn round dense flat icon="search" @click="onClick(`tableSearch`)" />
@@ -19,9 +21,9 @@
                 </q-input>
               </template>
               <template v-slot:top-right>
-                <q-btn class="q-mr-lg" icon="add" rounded color="green-7"
-                  @click="this.add_ingredient_detail_isOpen = true" />
-                <q-btn :disable="selectedTable <= 0" icon="delete" rounded color="negative" @click="onClick(`deleteSelectedTable`)"/>
+                <q-btn class="q-mr-lg" icon="add" rounded color="green-7" @click="onClick(`addTable`)" />
+                <q-btn :disable="selectedTable <= 0" icon="delete" rounded color="negative"
+                  @click="onClick(`deleteSelectedTable`)" />
               </template>
 
               <template v-slot:body-cell="props">
@@ -68,16 +70,20 @@
             </q-table>
           </div>
         </div>
-      </q-card-section> -->
+      </q-card-section>
     </q-card>
     <q-dialog v-model="edit_ingredient_detail_isOpen">
       <q-card style="width: 800px; max-width: 800vw;">
 
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">แก้ไขข้อมูลของ ID : <q-badge outline class="text-h6" align="middle" color="negative">{{
-            edit_ingredient_detail.blacklistId }} </q-badge></div>
+          <div class="text-h6">แก้ไขข้อมูล
+            <!-- <q-badge outline class="text-h6" align="middle" color="negative">
+              {{edit_ingredient_detail.cidr }} 
 
-          <!-- <div class="text-h7 q-mt-sm">Source IP Address : <q-badge class="text-h5" color="primary">{{
+            </q-badge> -->
+          </div>
+
+          <!-- <div class="text-h7 q-mt-sm">Destination IP Address : <q-badge class="text-h5" color="primary">{{
             edit_ingredient_detail.blacklistCode }} </q-badge></div> -->
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
@@ -85,7 +91,17 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.blacklistCode" outlined label="Source IP" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.rule_name" outlined label="Rule Name" />
+
+            <q-btn @click="this.showEditor = !this.showEditor" color="green">
+              แก้ไข code</q-btn>
+            <div v-if="showEditor">
+              <MonacoEditor v-model="edit_ingredient_detail.rule_definition" lang="yaml" style="height: 400px;"
+                :options="editorOptions" />
+            </div>
+            <q-input v-if="!showEditor" class="q-pb-lg" v-model="edit_ingredient_detail.rule_definition" outlined
+              label="Rule Definition" disable />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.url" outlined label="URL" />
             <q-input v-model="edit_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -96,18 +112,31 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-dialog v-model="add_ingredient_detail_isOpen">
+    <q-dialog v-model="add_ingredient_detail_isOpen" @show="onDialogShow">
       <q-card style="width: 800px; max-width: 800vw;">
 
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">เพิ่มข้อมููล </div>
+          <div class="text-h6">เพิ่มข้อมูล </div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.blacklistCode" outlined label="Domain" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.rule_name" outlined label="Rule Name">
+
+            </q-input>
+
+            <q-btn @click="this.showEditor = !this.showEditor" color="green">
+              แก้ไข code</q-btn>
+            <div v-if="showEditor">
+              <MonacoEditor v-model="add_ingredient_detail.rule_definition"  lang="yaml" style="height: 400px;"
+                :options="editorOptions" />
+            </div>
+            <q-input v-if="!showEditor" class="q-pb-lg" v-model="add_ingredient_detail.rule_definition" outlined
+              label="Rule Definition" disable />
+
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.url" outlined label="URL" />
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -125,105 +154,112 @@
 import moment from 'moment';
 import { useAuthStore } from '~/stores/auth'
 
-// import { fetchMenu, createMenu } from '~/api/menuService';
-// import { createIngredient, fetchIngredients, updateIngredient } from '~/api/ingredientService';
-
 const table_columns_menu = [
 
   { name: 'id', align: 'center', label: 'Action', field: 'index', headerStyle: 'width: 30px' },
   // { name: 'blacklistId', label: 'ชื่อ', align: 'left', field: 'blacklistId', sortable: true },
-  { name: 'blacklistCode', align: 'left', label: 'Domain', field: 'blacklistCode', sortable: true, },
-  // { name: 'orgId', align: 'center', label: 'รหัสสถานที่', field: 'orgId', sortable: true, },
+  { name: 'rule_name', align: 'left', label: 'Rule Name', field: 'rule_name', sortable: true, },
+  { name: 'url', align: 'center', label: 'URL', field: 'url', sortable: true, },
   { name: 'tags', align: 'left', label: 'tags', field: 'tags', sortable: true, },
   // { name: 'blacklistType', align: 'center', label: 'type', field: 'blacklistType', sortable: true, },
 
-  { name: 'createdDate', align: 'center', label: 'สร้างเมื่อ', field: 'createdDate', sortable: true, },
+  // { name: 'createdDate', align: 'center', label: 'สร้างเมื่อ', field: 'createdDate', sortable: true, },
 
 ]
+
+const monacoEditor = ref(null)
+const showEditor = ref(false)
+const editorOptions = {
+  automaticLayout: true,
+  theme: 'vs-dark',
+}
 
 
 const mock_data = [
   {
-    "blacklistId": "8d2b7f6c-49a9-43db-86fa-ff123c8e5e77",
-    "orgId": "default",
-    "blacklistCode": "192.168.1.1",
-    "tags": "Automatic-Scan",
-    "blacklistType": 1,
-    "createdDate": "2024-10-12T09:24:30.125001Z"
+    "rule_name": "NoEmptyFields",
+    "rule_definition": "|\n  description: Ensure that all required fields are filled\n  conditions:\n    - field: username\n      required: true\n    - field: password\n      required: true",
+    "url": "https://example.com/rules/no-empty-fields",
+    "tags": "validation, form, data",
+    "createdDate": "2023-09-01T08:00:00Z",
+    "update_at": "2023-09-10T08:00:00Z"
   },
   {
-    "blacklistId": "5e9d4c2d-58f3-4f8f-b59a-b51d7e2f5b29",
-    "orgId": "branch1",
-    "blacklistCode": "203.0.113.5",
-    "tags": "Manual-Import",
-    "blacklistType": 2,
-    "createdDate": "2024-10-11T15:37:19.678005Z"
+    "rule_name": "MaxInputLength",
+    "rule_definition": "|\n  description: Limit the input length to prevent overflow issues\n  max_length: 100\n  note: 'Ensures UI stability'",
+    "url": "https://example.com/rules/max-input-length",
+    "tags": "validation, input, UI",
+    "createdDate": "2023-08-20T09:00:00Z",
+    "update_at": "2023-08-25T09:00:00Z"
   },
   {
-    "blacklistId": "a673f3a1-bb82-4a94-b3d6-ead99b43b9a2",
-    "orgId": "default",
-    "blacklistCode": "172.16.254.3",
-    "tags": "Security-Alert",
-    "blacklistType": 2,
-    "createdDate": "2024-10-13T14:48:22.345987Z"
+    "rule_name": "UniqueEmail",
+    "rule_definition": "|\n  description: Ensure that the email address is unique in the system\n  check:\n    - field: email\n      uniqueness: true",
+    "url": "https://example.com/rules/unique-email",
+    "tags": "validation, email, uniqueness",
+    "createdDate": "2023-07-15T10:00:00Z",
+    "update_at": "2023-07-20T10:00:00Z"
   },
   {
-    "blacklistId": "f1c9a58d-3f84-4ea8-bf3c-4b6f7e78d2c0",
-    "orgId": "branch2",
-    "blacklistCode": "198.51.100.14",
-    "tags": "Automatic-Scan",
-    "blacklistType": 1,
-    "createdDate": "2024-10-13T16:54:11.912340Z"
+    "rule_name": "ValidDateFormat",
+    "rule_definition": "|\n  description: Date should follow the format YYYY-MM-DD\n  pattern: '^\\d{4}-\\d{2}-\\d{2}$'\n  example: 2023-01-01",
+    "url": "https://example.com/rules/valid-date-format",
+    "tags": "validation, date, format",
+    "createdDate": "2023-06-01T11:00:00Z",
+    "update_at": "2023-06-05T11:00:00Z"
   },
   {
-    "blacklistId": "d57f82d1-7b8a-48f4-a1d7-cd49e7c2e9a1",
-    "orgId": "default",
-    "blacklistCode": "185.224.128.141",
-    "tags": "Manual-Import",
-    "blacklistType": 2,
-    "createdDate": "2024-10-13T11:54:46.325011Z"
+    "rule_name": "PositiveNumbers",
+    "rule_definition": "|\n  description: Ensure that numeric values are positive\n  conditions:\n    - value: must be > 0",
+    "url": "https://example.com/rules/positive-numbers",
+    "tags": "validation, numeric, logic",
+    "createdDate": "2023-05-10T12:00:00Z",
+    "update_at": "2023-05-15T12:00:00Z"
   },
   {
-    "blacklistId": "3c1d1b2e-8eaf-4b82-bf7f-8e5ed7c9fd2e",
-    "orgId": "branch3",
-    "blacklistCode": "203.0.113.22",
-    "tags": "Security-Alert",
-    "blacklistType": 1,
-    "createdDate": "2024-10-10T10:10:10.101010Z"
+    "rule_name": "NoSQLInjection",
+    "rule_definition": "|\n  description: Prevent SQL injection by sanitizing all database inputs\n  methods:\n    - parameterized queries\n    - input sanitization",
+    "url": "https://example.com/rules/no-sql-injection",
+    "tags": "security, database, injection",
+    "createdDate": "2023-04-01T13:00:00Z",
+    "update_at": "2023-04-05T13:00:00Z"
   },
   {
-    "blacklistId": "95a1f8b7-3a5e-41cd-a6c1-23bc678abc4d",
-    "orgId": "default",
-    "blacklistCode": "10.0.0.2",
-    "tags": "Manual-Import",
-    "blacklistType": 1,
-    "createdDate": "2024-10-14T05:00:33.123456Z"
+    "rule_name": "StrongPassword",
+    "rule_definition": "|\n  description: Password must be strong and secure\n  criteria:\n    - minimum: 8 characters\n    - mix: letters, numbers, and symbols",
+    "url": "https://example.com/rules/strong-password",
+    "tags": "security, password, validation",
+    "createdDate": "2023-03-20T14:00:00Z",
+    "update_at": "2023-03-25T14:00:00Z"
   },
   {
-    "blacklistId": "6c3db8f9-a2d8-4e15-983b-bf31a2e0b123",
-    "orgId": "branch1",
-    "blacklistCode": "192.0.2.34",
-    "tags": "Automatic-Scan",
-    "blacklistType": 2,
-    "createdDate": "2024-10-13T08:30:55.445678Z"
+    "rule_name": "SecureProtocol",
+    "rule_definition": "|\n  description: All external communications must use HTTPS\n  note: 'Ensures data encryption and integrity'",
+    "url": "https://example.com/rules/secure-protocol",
+    "tags": "security, network, protocol",
+    "createdDate": "2023-02-10T15:00:00Z",
+    "update_at": "2023-02-15T15:00:00Z"
   },
   {
-    "blacklistId": "0e3f4a58-8f24-4c59-b2f7-948adf5ec879",
-    "orgId": "branch2",
-    "blacklistCode": "172.16.0.8",
-    "tags": "Security-Alert",
-    "blacklistType": 1,
-    "createdDate": "2024-10-13T17:21:43.563432Z"
+    "rule_name": "SafeRedirect",
+    "rule_definition": "|\n  description: Validate redirect URLs to prevent open redirect vulnerabilities\n  checks:\n    - verify domain\n    - allow-list trusted URLs",
+    "url": "https://example.com/rules/safe-redirect",
+    "tags": "security, redirect, validation",
+    "createdDate": "2023-01-05T16:00:00Z",
+    "update_at": "2023-01-10T16:00:00Z"
   },
   {
-    "blacklistId": "bcf9a61d-e287-4e99-b389-294b582ca4a2",
-    "orgId": "default",
-    "blacklistCode": "10.10.10.10",
-    "tags": "Manual-Import",
-    "blacklistType": 2,
-    "createdDate": "2024-10-13T13:47:12.876123Z"
+    "rule_name": "ValidURLFormat",
+    "rule_definition": "|\n  description: URL must adhere to a valid format\n  pattern: '^(https?|ftp)://[^\\s/$.?#].[^\\s]*$'\n  example: https://example.com",
+    "url": "https://example.com/rules/valid-url-format",
+    "tags": "validation, url, format",
+    "createdDate": "2023-12-01T17:00:00Z",
+    "update_at": "2023-12-05T17:00:00Z"
   }
 ]
+
+
+
 
 const table_rows_menu = ref([])
 const table_rows_ingredients = ref([])
@@ -245,19 +281,22 @@ const pagination_ingredient = {
 const loading = ref(true)
 const edit_ingredient_detail_isOpen = ref(false)
 const edit_ingredient_detail = {
-  name: "",
-  weight: "",
-  tolerance: 0,
+  rule_name: "",
+  rule_definition: "",
+  url: "",
+  tags: "",
+  createdDate: "2024-10-12T09:24:30.125001Z",
+  update_at: "2023-05-20T11:00:00Z"
 
 }
 const add_ingredient_detail_isOpen = ref(false)
 const add_ingredient_detail = {
-  blacklistId: "zxcvzxcv",
-  orgId: "default",
-  blacklistCode: "",
+  rule_name: "",
+  rule_definition: "",
+  url: "",
   tags: "",
-  blacklistType: 2,
-  createdDate: "2024-10-12T09:24:30.125001Z"
+  createdDate: "2024-10-12T09:24:30.125001Z",
+  update_at: "2023-05-20T11:00:00Z"
 
 }
 
@@ -269,7 +308,15 @@ const add_ingredient_detail = {
 //           "createdDate": "2024-10-12T09:24:30.125001Z"
 
 const selectedTable = ref([])
-
+const code = ref(`# Write your YAML code here...
+rule:
+  description: "Ensure all required fields are filled."
+  conditions:
+    - field: username
+      required: true
+    - field: password
+      required: true
+`)
 // Loading.show()
 
 export default {
@@ -309,7 +356,13 @@ export default {
       edit_ingredient_detail,
       selectedTable,
       add_ingredient_detail_isOpen,
-      add_ingredient_detail
+      add_ingredient_detail,
+
+      editorOptions,
+      code,
+      monacoEditor,
+      showEditor
+
       // rowsNumber: xx if getting data from a server
     };
   },
@@ -342,8 +395,8 @@ export default {
     async loadMenu() {
       try {
         // const data = await fetchMenu();
-        let mockdata = mock_data.filter(item => item.blacklistType === 2);
-
+        let mockdata = [...mock_data];
+        // console.log(mockdata)
         // console.log(filteredData);
         this.menus = mockdata;
         console.log(this.menus);
@@ -390,12 +443,12 @@ export default {
     },
     clearAddTable() {
       this.add_ingredient_detail = {
-        blacklistId: "zxcvzxcv",
-        orgId: "default",
-        blacklistCode: "",
+        rule_name: "",
+        rule_definition: "",
+        url: "",
         tags: "",
-        blacklistType: 2,
-        createdDate: "2024-10-12T09:24:30.125001Z"
+        createdDate: "2024-10-12T09:24:30.125001Z",
+        update_at: "2023-05-20T11:00:00Z"
 
       }
     },
@@ -432,6 +485,7 @@ export default {
           // edit_ingredient_detail 
           break;
         case 'editIngredient':
+          this.showEditor = false
           console.log(param);
           this.edit_ingredient_detail = param;
           this.edit_ingredient_detail_isOpen = true;
@@ -453,6 +507,7 @@ export default {
         case 'saveAddTable':
           this.add_ingredient_detail.createdDate = this.getCurrentTimestamp()
           mock_data.push(this.add_ingredient_detail)
+          // console.log(mock_data)
           this.loadMenu()
           this.clearAddTable()
           this.add_ingredient_detail_isOpen = false
@@ -462,7 +517,10 @@ export default {
           console.log(`deleteTable`)
           this.deleteSelectedRows()
           break;
-
+        case 'addTable':
+          this.showEditor = false
+          this.add_ingredient_detail_isOpen = true
+          break;
         default:
           break;
       }

@@ -100,7 +100,7 @@
       <q-card style="width: 800px; max-width: 800vw;">
 
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">เพิ่มข้อมููล </div>
+          <div class="text-h6">เพิ่มข้อมูล </div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
