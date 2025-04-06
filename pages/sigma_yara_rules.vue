@@ -100,7 +100,7 @@
                 :options="editorOptions" />
             </div>
             <q-input v-if="!showEditor" class="q-pb-lg" v-model="edit_ingredient_detail.rule_definition" outlined
-              label="Rule Definition" />
+              label="Rule Definition" disable />
             <q-input class="q-pb-lg" v-model="edit_ingredient_detail.url" outlined label="URL" />
             <q-input v-model="edit_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
@@ -116,7 +116,7 @@
       <q-card style="width: 800px; max-width: 800vw;">
 
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">เพิ่มข้อมููล </div>
+          <div class="text-h6">เพิ่มข้อมูล </div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
