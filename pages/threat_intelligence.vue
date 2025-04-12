@@ -424,9 +424,9 @@ export default {
     },
     clearAddTable() {
       this.add_ingredient_detail = {
-        rule_name: "",
-        rule_definition: "",
         url: "",
+        description: "",
+        api_key: "",
         tags: "",
         createdDate: "2024-10-12T09:24:30.125001Z",
         update_at: "2023-05-20T11:00:00Z"
