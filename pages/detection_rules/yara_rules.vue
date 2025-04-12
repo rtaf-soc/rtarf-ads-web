@@ -91,13 +91,17 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.rule_name" outlined label="Rule Name" />
+
+            <q-btn @click="this.showEditor = !this.showEditor" color="green">
+              แก้ไข code</q-btn>
+            <div v-if="showEditor">
+              <MonacoEditor v-model="edit_ingredient_detail.rule_definition" lang="yaml" style="height: 400px;"
+                :options="editorOptions" />
+            </div>
+            <q-input v-if="!showEditor" class="q-pb-lg" v-model="edit_ingredient_detail.rule_definition" outlined
+              label="Rule Definition" disable />
             <q-input class="q-pb-lg" v-model="edit_ingredient_detail.url" outlined label="URL" />
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.description" outlined label="Description" />
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.api_key" outlined label="API Key" type="password">
-              <template v-slot:append>
-                <q-btn flat round dense icon="content_copy" @click="copyToClipboard(edit_ingredient_detail.api_key)" />
-              </template>
-            </q-input>
             <q-input v-model="edit_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -119,14 +123,20 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.rule_name" outlined label="Rule Name">
+
+            </q-input>
+
+            <q-btn @click="this.showEditor = !this.showEditor" color="green">
+              แก้ไข code</q-btn>
+            <div v-if="showEditor">
+              <MonacoEditor v-model="add_ingredient_detail.rule_definition"  lang="yaml" style="height: 400px;"
+                :options="editorOptions" />
+            </div>
+            <q-input v-if="!showEditor" class="q-pb-lg" v-model="add_ingredient_detail.rule_definition" outlined
+              label="Rule Definition" disable />
 
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.url" outlined label="URL" />
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.description" outlined label="Description" />
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.api_key" outlined label="API Key" type="password">
-              <template v-slot:append>
-                <q-btn flat round dense icon="content_copy" @click="copyToClipboard(add_ingredient_detail.api_key)" />
-              </template>
-            </q-input>
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -147,9 +157,9 @@ import { useAuthStore } from '~/stores/auth'
 const table_columns_menu = [
 
   { name: 'id', align: 'center', label: 'Action', field: 'index', headerStyle: 'width: 30px' },
+  // { name: 'blacklistId', label: 'ชื่อ', align: 'left', field: 'blacklistId', sortable: true },
+  { name: 'rule_name', align: 'left', label: 'Rule Name', field: 'rule_name', sortable: true, },
   { name: 'url', align: 'center', label: 'URL', field: 'url', sortable: true, },
-  { name: 'description', align: 'left', label: 'Description', field: 'description', sortable: true, },
-
   { name: 'tags', align: 'left', label: 'tags', field: 'tags', sortable: true, },
   // { name: 'blacklistType', align: 'center', label: 'type', field: 'blacklistType', sortable: true, },
 
@@ -167,87 +177,86 @@ const editorOptions = {
 
 const mock_data = [
   {
-    "url": "http://10.10.9.0/abcde/sxxxss",
-    "description": "This is the first record, providing sample information for testing purposes.",
-    "api_key": "sk_1a2b3c4d",
-    "tags": "sample, test, first",
-    "createdDate": "2023-01-10T09:00:00Z",
-    "update_at": "2023-02-10T09:00:00Z"
+    "rule_name": "NoEmptyFields",
+    "rule_definition": "|\n  description: Ensure that all required fields are filled\n  conditions:\n    - field: username\n      required: true\n    - field: password\n      required: true",
+    "url": "https://example.com/rules/no-empty-fields",
+    "tags": "validation, form, data",
+    "createdDate": "2023-09-01T08:00:00Z",
+    "update_at": "2023-09-10T08:00:00Z"
   },
   {
-    "url": "http://10.10.9.1/abcde/xyz123",
-    "description": "This is the second record with additional information.",
-    "api_key": "sk_2b3c4d5e",
-    "tags": "example, second, node",
-    "createdDate": "2023-02-15T11:30:00Z",
-    "update_at": "2023-03-01T11:30:00Z"
+    "rule_name": "MaxInputLength",
+    "rule_definition": "|\n  description: Limit the input length to prevent overflow issues\n  max_length: 100\n  note: 'Ensures UI stability'",
+    "url": "https://example.com/rules/max-input-length",
+    "tags": "validation, input, UI",
+    "createdDate": "2023-08-20T09:00:00Z",
+    "update_at": "2023-08-25T09:00:00Z"
   },
   {
-    "url": "http://10.10.9.2/abcde/route66",
-    "description": "This is the third record that includes a unique endpoint detail.",
-    "api_key": "sk_3c4d5e6f",
-    "tags": "api, test, third",
-    "createdDate": "2023-03-20T14:45:00Z",
-    "update_at": "2023-04-05T14:45:00Z"
+    "rule_name": "UniqueEmail",
+    "rule_definition": "|\n  description: Ensure that the email address is unique in the system\n  check:\n    - field: email\n      uniqueness: true",
+    "url": "https://example.com/rules/unique-email",
+    "tags": "validation, email, uniqueness",
+    "createdDate": "2023-07-15T10:00:00Z",
+    "update_at": "2023-07-20T10:00:00Z"
   },
   {
-    "url": "http://10.10.9.3/abcde/path987",
-    "description": "The fourth record is designed for testing edge cases.",
-    "api_key": "sk_4d5e6f7g",
-    "tags": "edge, scenario, fourth",
-    "createdDate": "2023-04-15T08:00:00Z",
-    "update_at": "2023-04-20T08:00:00Z"
+    "rule_name": "ValidDateFormat",
+    "rule_definition": "|\n  description: Date should follow the format YYYY-MM-DD\n  pattern: '^\\d{4}-\\d{2}-\\d{2}$'\n  example: 2023-01-01",
+    "url": "https://example.com/rules/valid-date-format",
+    "tags": "validation, date, format",
+    "createdDate": "2023-06-01T11:00:00Z",
+    "update_at": "2023-06-05T11:00:00Z"
   },
   {
-    "url": "http://10.10.9.4/abcde/endpoint55",
-    "description": "Fifth sample record used for backend testing.",
-    "api_key": "sk_5e6f7g8h",
-    "tags": "backend, test, fifth",
-    "createdDate": "2023-05-01T10:15:00Z",
-    "update_at": "2023-05-05T10:15:00Z"
+    "rule_name": "PositiveNumbers",
+    "rule_definition": "|\n  description: Ensure that numeric values are positive\n  conditions:\n    - value: must be > 0",
+    "url": "https://example.com/rules/positive-numbers",
+    "tags": "validation, numeric, logic",
+    "createdDate": "2023-05-10T12:00:00Z",
+    "update_at": "2023-05-15T12:00:00Z"
   },
   {
-    "url": "http://10.10.9.5/abcde/service77",
-    "description": "The sixth entry handles specific service integration scenarios.",
-    "api_key": "sk_6f7g8h9i",
-    "tags": "service, integration, sixth",
-    "createdDate": "2023-05-10T13:20:00Z",
-    "update_at": "2023-05-15T13:20:00Z"
+    "rule_name": "NoSQLInjection",
+    "rule_definition": "|\n  description: Prevent SQL injection by sanitizing all database inputs\n  methods:\n    - parameterized queries\n    - input sanitization",
+    "url": "https://example.com/rules/no-sql-injection",
+    "tags": "security, database, injection",
+    "createdDate": "2023-04-01T13:00:00Z",
+    "update_at": "2023-04-05T13:00:00Z"
   },
   {
-    "url": "http://10.10.9.6/abcde/access88",
-    "description": "Seventh record carrying additional access information.",
-    "api_key": "sk_7g8h9i0j",
-    "tags": "access, security, seventh",
-    "createdDate": "2023-06-01T16:30:00Z",
-    "update_at": "2023-06-10T16:30:00Z"
+    "rule_name": "StrongPassword",
+    "rule_definition": "|\n  description: Password must be strong and secure\n  criteria:\n    - minimum: 8 characters\n    - mix: letters, numbers, and symbols",
+    "url": "https://example.com/rules/strong-password",
+    "tags": "security, password, validation",
+    "createdDate": "2023-03-20T14:00:00Z",
+    "update_at": "2023-03-25T14:00:00Z"
   },
   {
-    "url": "http://10.10.9.7/abcde/module99",
-    "description": "The eighth record integrates different modules and functions.",
-    "api_key": "sk_8h9i0j1k",
-    "tags": "module, integration, eighth",
-    "createdDate": "2023-06-15T18:40:00Z",
-    "update_at": "2023-06-20T18:40:00Z"
+    "rule_name": "SecureProtocol",
+    "rule_definition": "|\n  description: All external communications must use HTTPS\n  note: 'Ensures data encryption and integrity'",
+    "url": "https://example.com/rules/secure-protocol",
+    "tags": "security, network, protocol",
+    "createdDate": "2023-02-10T15:00:00Z",
+    "update_at": "2023-02-15T15:00:00Z"
   },
   {
-    "url": "http://10.10.9.8/abcde/api101",
-    "description": "Ninth record is used for testing API connectivity.",
-    "api_key": "sk_9i0j1k2l",
-    "tags": "api, connectivity, ninth",
-    "createdDate": "2023-07-01T20:00:00Z",
-    "update_at": "2023-07-05T20:00:00Z"
+    "rule_name": "SafeRedirect",
+    "rule_definition": "|\n  description: Validate redirect URLs to prevent open redirect vulnerabilities\n  checks:\n    - verify domain\n    - allow-list trusted URLs",
+    "url": "https://example.com/rules/safe-redirect",
+    "tags": "security, redirect, validation",
+    "createdDate": "2023-01-05T16:00:00Z",
+    "update_at": "2023-01-10T16:00:00Z"
   },
   {
-    "url": "http://10.10.9.9/abcde/interface202",
-    "description": "The tenth record acts as a final endpoint in the service suite.",
-    "api_key": "sk_0j1k2l3m",
-    "tags": "interface, endpoint, tenth",
-    "createdDate": "2023-07-10T22:00:00Z",
-    "update_at": "2023-07-15T22:00:00Z"
+    "rule_name": "ValidURLFormat",
+    "rule_definition": "|\n  description: URL must adhere to a valid format\n  pattern: '^(https?|ftp)://[^\\s/$.?#].[^\\s]*$'\n  example: https://example.com",
+    "url": "https://example.com/rules/valid-url-format",
+    "tags": "validation, url, format",
+    "createdDate": "2023-12-01T17:00:00Z",
+    "update_at": "2023-12-05T17:00:00Z"
   }
 ]
-
 
 
 
@@ -272,9 +281,9 @@ const pagination_ingredient = {
 const loading = ref(true)
 const edit_ingredient_detail_isOpen = ref(false)
 const edit_ingredient_detail = {
+  rule_name: "",
+  rule_definition: "",
   url: "",
-  description: "",
-  api_key: "",
   tags: "",
   createdDate: "2024-10-12T09:24:30.125001Z",
   update_at: "2023-05-20T11:00:00Z"
@@ -282,9 +291,9 @@ const edit_ingredient_detail = {
 }
 const add_ingredient_detail_isOpen = ref(false)
 const add_ingredient_detail = {
+  rule_name: "",
+  rule_definition: "",
   url: "",
-  description: "",
-  api_key: "",
   tags: "",
   createdDate: "2024-10-12T09:24:30.125001Z",
   update_at: "2023-05-20T11:00:00Z"
@@ -299,6 +308,15 @@ const add_ingredient_detail = {
 //           "createdDate": "2024-10-12T09:24:30.125001Z"
 
 const selectedTable = ref([])
+const code = ref(`# Write your YAML code here...
+rule:
+  description: "Ensure all required fields are filled."
+  conditions:
+    - field: username
+      required: true
+    - field: password
+      required: true
+`)
 // Loading.show()
 
 export default {
@@ -341,6 +359,7 @@ export default {
       add_ingredient_detail,
 
       editorOptions,
+      code,
       monacoEditor,
       showEditor
 
@@ -424,9 +443,9 @@ export default {
     },
     clearAddTable() {
       this.add_ingredient_detail = {
+        rule_name: "",
+        rule_definition: "",
         url: "",
-        description: "",
-        api_key: "",
         tags: "",
         createdDate: "2024-10-12T09:24:30.125001Z",
         update_at: "2023-05-20T11:00:00Z"
@@ -453,25 +472,6 @@ export default {
       table_rows_menu.value = table_rows_menu.value.filter(row => !selectedTable.value.includes(row.index))
       // Clear the selection after deletion
       selectedTable.value = []
-    },
-
-    async copyToClipboard(textToCopy) {
-      try {
-        // Use the Clipboard API to write the text
-        await navigator.clipboard.writeText(textToCopy)
-        Notify.create({
-          message: 'Text copied successfully!',
-          color: 'positive',
-          position: 'top'
-        })
-      } catch (error) {
-        console.error('Failed to copy:', error)
-        Notify.create({
-          message: 'Failed to copy text',
-          color: 'negative',
-          position: 'top'
-        })
-      }
     },
 
     onClick(fn_name, param = null) {

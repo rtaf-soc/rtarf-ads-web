@@ -177,16 +177,39 @@ const dashboardLink: MenuRedirectProps[] = [
     link: "/dashboard/zeek_summary_dns",
   },
 ];
-const SigmaYaraRulesLink: MenuRedirectProps[] = [
+// const SigmaYaraRulesLink: MenuRedirectProps[] = [
+
+//   {
+//     title: 'Sigma & Yara rules',
+//     // caption: 'จัดหา',
+//     icon: 'hub',
+//     link: "/sigma_yara_rules",
+//     inset: 0.0
+//   },
+// ];
+
+const DetectionRulesLink: MenuRedirectProps[] = [
 
   {
-    title: 'Sigma & Yara rules',
+    title: 'Sigma Rules',
     // caption: 'จัดหา',
-    icon: 'hub',
-    link: "/sigma_yara_rules",
-    inset: 0.0
+    icon: 'gavel',
+    link: "/detection_rules/sigma_rules",
+  },
+  {
+    title: 'Yara Rules',
+    // caption: 'จัดหา',
+    icon: 'gavel',
+    link: "/detection_rules/yara_rules",
+  },
+  {
+    title: 'Suricata rules',
+    // caption: 'จัดหา',
+    icon: 'gavel',
+    link: "/detection_rules/suricata_rules",
   },
 ];
+
 const IPMappingLink: MenuRedirectProps[] = [
 
   {
@@ -441,21 +464,24 @@ function handleLogout() {
           <MenuRedirect v-for="link in ThreatHuntingLink" :key="link.title" v-bind="link" />
         </q-card>
 
-        <q-expansion-item expand-separator icon="dashboard" caption="Dashboard">
+        <q-expansion-item expand-separator icon="dashboard" label="Dashboard">
           <q-card>
             <MenuRedirect v-for="link in dashboardLink" :key="link.title" v-bind="link" />
           </q-card>
         </q-expansion-item>
 
-        <q-expansion-item expand-separator icon="app_blocking" caption="Threat Blacklist">
+        <q-expansion-item expand-separator icon="app_blocking" label="Threat Blacklist">
           <q-card>
             <MenuRedirect v-for="link in ThreatBlacklistLink" :key="link.title" v-bind="link" />
           </q-card>
         </q-expansion-item>
 
-        <q-card>
-          <MenuRedirect v-for="link in SigmaYaraRulesLink" :key="link.title" v-bind="link" />
-        </q-card>
+        <q-expansion-item expand-separator icon="radar" label="Detection Rules">
+          <q-card>
+            <MenuRedirect v-for="link in DetectionRulesLink" :key="link.title" v-bind="link" />
+          </q-card>
+        </q-expansion-item>
+
         <q-card>
           <MenuRedirect v-for="link in IPMappingLink" :key="link.title" v-bind="link" />
         </q-card>
@@ -476,13 +502,13 @@ function handleLogout() {
           <MenuRedirect v-for="link in deviceCVELink" :key="link.title" v-bind="link" />
         </q-card>
 
-        <q-expansion-item expand-separator icon="construction" caption="Tools">
+        <q-expansion-item expand-separator icon="construction" label="Tools">
           <q-card>
             <MenuRedirect v-for="link in toolsLink" :key="link.title" v-bind="link" />
           </q-card>
         </q-expansion-item>
 
-        <q-expansion-item expand-separator icon="admin_panel_settings" caption="Admin">
+        <q-expansion-item expand-separator icon="admin_panel_settings" label="Admin">
           <q-card>
             <MenuRedirect v-for="link in adminLink" :key="link.title" v-bind="link" />
           </q-card>
