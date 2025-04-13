@@ -410,7 +410,7 @@ function toggleLeftDrawer() {
 }
 function handleLogout() {
   auth.logout()
-      
+
   title.setTitle('Login')
   router.push('/login')
 }
@@ -460,9 +460,9 @@ function handleLogout() {
           <MenuRedirect v-for="link in commanderLink" :key="link.title" v-bind="link" />
         </q-card>
 
-        <q-card>
+        <!-- <q-card>
           <MenuRedirect v-for="link in ThreatHuntingLink" :key="link.title" v-bind="link" />
-        </q-card>
+        </q-card> -->
 
         <q-expansion-item expand-separator icon="dashboard" label="Dashboard">
           <q-card>
@@ -476,7 +476,8 @@ function handleLogout() {
           </q-card>
         </q-expansion-item>
 
-        <q-expansion-item expand-separator icon="radar" label="Detection Rules">
+        <!-- <q-expansion-item expand-separator icon="radar" label="Detection Rules"> -->
+        <q-expansion-item expand-separator icon="radar" label="Threat Hunting">
           <q-card>
             <MenuRedirect v-for="link in DetectionRulesLink" :key="link.title" v-bind="link" />
           </q-card>
