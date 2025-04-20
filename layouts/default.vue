@@ -394,6 +394,11 @@ const adminLink: MenuRedirectProps[] = [
     icon: 'manage_accounts',
     link: "/admin/roles"
   },
+  {
+    title: 'API Keys',
+    icon: 'vpn_key',
+    link: "/admin/api_keys"
+  },
 ];
 
 
