@@ -114,6 +114,9 @@ export default defineNuxtConfig({
         url07:"https://www.google.co.th/7",
         url08:"https://www.google.co.th/8",
       },
+      commander:{
+        url01:"https://www.google.co.th/commander"
+      }
 
     },
   },
