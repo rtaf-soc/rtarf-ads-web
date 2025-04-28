@@ -17,6 +17,7 @@ type NuxtAppInjections =
   InjectionType<typeof import("../../node_modules/@pinia/nuxt/dist/runtime/plugin.vue3.js").default> &
   InjectionType<typeof import("../../node_modules/nuxt/dist/pages/runtime/plugins/prefetch.client.js").default> &
   InjectionType<typeof import("../../node_modules/nuxt/dist/pages/runtime/plugins/check-if-page-unused.js").default> &
+  InjectionType<typeof import("../../node_modules/nuxt-monaco-editor/dist/runtime/plugin-dev.client.js").default> &
   InjectionType<typeof import("../../node_modules/nuxt-quasar-ui/dist/runtime/plugin.js").default> &
   InjectionType<typeof import("../../node_modules/@nuxt/devtools/dist/runtime/plugins/devtools.server.js").default> &
   InjectionType<typeof import("../../node_modules/@nuxt/devtools/dist/runtime/plugins/devtools.client.js").default> &
@@ -24,7 +25,8 @@ type NuxtAppInjections =
   InjectionType<typeof import("../../node_modules/nuxt/dist/app/plugins/check-if-layout-used.js").default> &
   InjectionType<typeof import("../../plugins/websocket.js").default> &
   InjectionType<typeof import("../../plugins/auth.client.js").default> &
-  InjectionType<typeof import("../../plugins/init-auth.js").default>
+  InjectionType<typeof import("../../plugins/init-auth.js").default> &
+  InjectionType<typeof import("../../plugins/monaco-custom-yaml.js").default>
 
 declare module '#app' {
   interface NuxtApp extends NuxtAppInjections { }

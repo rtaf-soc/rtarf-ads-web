@@ -139,6 +139,8 @@
     "../node_modules/@nuxtjs/google-fonts/dist/runtime",
     "../node_modules/@pinia/nuxt/runtime",
     "../node_modules/@pinia/nuxt/dist/runtime",
+    "../node_modules/nuxt-monaco-editor/runtime",
+    "../node_modules/nuxt-monaco-editor/dist/runtime",
     "../node_modules/@nuxt/telemetry/runtime",
     "../node_modules/@nuxt/telemetry/dist/runtime",
     ".."
@@ -155,6 +157,8 @@
     "../node_modules/@nuxtjs/google-fonts/dist/runtime/server",
     "../node_modules/@pinia/nuxt/runtime/server",
     "../node_modules/@pinia/nuxt/dist/runtime/server",
+    "../node_modules/nuxt-monaco-editor/runtime/server",
+    "../node_modules/nuxt-monaco-editor/dist/runtime/server",
     "../node_modules/@nuxt/telemetry/runtime/server",
     "../node_modules/@nuxt/telemetry/dist/runtime/server",
     "../.output"

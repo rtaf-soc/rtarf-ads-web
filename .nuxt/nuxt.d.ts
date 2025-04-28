@@ -4,6 +4,7 @@
 /// <reference types="nuxt-quasar-ui" />
 /// <reference types="@nuxtjs/google-fonts" />
 /// <reference types="@pinia/nuxt" />
+/// <reference types="nuxt-monaco-editor" />
 /// <reference types="@nuxt/devtools" />
 /// <reference types="@nuxt/telemetry" />
 /// <reference types="nuxt" />

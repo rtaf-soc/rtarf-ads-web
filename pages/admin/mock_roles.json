@@ -1,0 +1,63 @@
+[
+    {
+      "name": "User Management",
+      "description": "Manage user accounts and permissions",
+      "premissions": "create,read,update,delete",
+      "tags": "admin,security"
+    },
+    {
+      "name": "Reporting Module",
+      "description": "Generate and view reports",
+      "premissions": "read,export",
+      "tags": "analytics,reporting"
+    },
+    {
+      "name": "Settings",
+      "description": "Modify application settings",
+      "premissions": "read,update",
+      "tags": "configuration,admin"
+    },
+    {
+      "name": "Audit Logs",
+      "description": "Access and review audit logs",
+      "premissions": "read,delete",
+      "tags": "security,logs"
+    },
+    {
+      "name": "Billing",
+      "description": "Manage billing and invoices",
+      "premissions": "create,read,update",
+      "tags": "finance,billing"
+    },
+    {
+      "name": "Notification",
+      "description": "Configure notification preferences",
+      "premissions": "read,update",
+      "tags": "communication,alerts"
+    },
+    {
+      "name": "Data Import",
+      "description": "Import data from external sources",
+      "premissions": "create,read",
+      "tags": "data,import"
+    },
+    {
+      "name": "API Access",
+      "description": "Access system APIs",
+      "premissions": "read,execute",
+      "tags": "api,integration"
+    },
+    {
+      "name": "File Manager",
+      "description": "Upload, download, and manage files",
+      "premissions": "create,read,delete",
+      "tags": "storage,files"
+    },
+    {
+      "name": "Audit Trail",
+      "description": "View system change history",
+      "premissions": "read",
+      "tags": "audit,history"
+    }
+  ]
+  

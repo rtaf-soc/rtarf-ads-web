@@ -38,4 +38,5 @@ export { useWeightStore } from '../stores/weight';
 export { useNuxtDevTools } from '../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';
 export { useDialogPluginComponent, useFormChild, useInterval, useMeta, useQuasar, useRenderCache, useSplitAttrs, useTick, useTimeout, AppFullscreen, BottomSheet, Dialog, Loading, LoadingBar, Notify } from 'quasar';
 export { defineStore, acceptHMRUpdate, usePinia, storeToRefs } from '../node_modules/@pinia/nuxt/dist/runtime/composables';
+export { useMonaco } from '../node_modules/nuxt-monaco-editor/dist/runtime/composables';
 export { definePageMeta } from '../node_modules/nuxt/dist/pages/runtime/composables';
