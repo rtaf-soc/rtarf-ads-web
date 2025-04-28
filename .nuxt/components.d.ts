@@ -140,6 +140,8 @@ interface _GlobalComponents {
     'QUploaderAddTrigger': typeof import("quasar")['QUploaderAddTrigger']
     'QVideo': typeof import("quasar")['QVideo']
     'QVirtualScroll': typeof import("quasar")['QVirtualScroll']
+    'MonacoEditor': typeof import("../node_modules/nuxt-monaco-editor/dist/runtime/MonacoEditor.client.vue")['default']
+    'MonacoDiffEditor': typeof import("../node_modules/nuxt-monaco-editor/dist/runtime/MonacoDiffEditor.client.vue")['default']
     'NuxtPage': typeof import("../node_modules/nuxt/dist/pages/runtime/page")['default']
     'NoScript': typeof import("../node_modules/nuxt/dist/head/runtime/components")['NoScript']
     'Link': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Link']
@@ -152,6 +154,8 @@ interface _GlobalComponents {
     'Body': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']
     'NuxtIsland': typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
     'NuxtRouteAnnouncer': IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
+    'MonacoEditor': IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
+    'MonacoDiffEditor': IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
       'LazyEssentialLink': typeof import("../components/EssentialLink.vue")['default']
     'LazyExampleComponent': typeof import("../components/ExampleComponent.vue")['default']
     'LazyExampleList': typeof import("../components/ExampleList.vue")['default']
@@ -290,6 +294,8 @@ interface _GlobalComponents {
     'LazyQUploaderAddTrigger': typeof import("quasar")['QUploaderAddTrigger']
     'LazyQVideo': typeof import("quasar")['QVideo']
     'LazyQVirtualScroll': typeof import("quasar")['QVirtualScroll']
+    'LazyMonacoEditor': typeof import("../node_modules/nuxt-monaco-editor/dist/runtime/MonacoEditor.client.vue")['default']
+    'LazyMonacoDiffEditor': typeof import("../node_modules/nuxt-monaco-editor/dist/runtime/MonacoDiffEditor.client.vue")['default']
     'LazyNuxtPage': typeof import("../node_modules/nuxt/dist/pages/runtime/page")['default']
     'LazyNoScript': typeof import("../node_modules/nuxt/dist/head/runtime/components")['NoScript']
     'LazyLink': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Link']
@@ -302,6 +308,8 @@ interface _GlobalComponents {
     'LazyBody': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']
     'LazyNuxtIsland': typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
     'LazyNuxtRouteAnnouncer': IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
+    'LazyMonacoEditor': IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
+    'LazyMonacoDiffEditor': IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
 }
 
 declare module 'vue' {
@@ -446,6 +454,8 @@ export const QUploader: typeof import("quasar")['QUploader']
 export const QUploaderAddTrigger: typeof import("quasar")['QUploaderAddTrigger']
 export const QVideo: typeof import("quasar")['QVideo']
 export const QVirtualScroll: typeof import("quasar")['QVirtualScroll']
+export const MonacoEditor: typeof import("../node_modules/nuxt-monaco-editor/dist/runtime/MonacoEditor.client.vue")['default']
+export const MonacoDiffEditor: typeof import("../node_modules/nuxt-monaco-editor/dist/runtime/MonacoDiffEditor.client.vue")['default']
 export const NuxtPage: typeof import("../node_modules/nuxt/dist/pages/runtime/page")['default']
 export const NoScript: typeof import("../node_modules/nuxt/dist/head/runtime/components")['NoScript']
 export const Link: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Link']
@@ -458,6 +468,8 @@ export const Html: typeof import("../node_modules/nuxt/dist/head/runtime/compone
 export const Body: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']
 export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
 export const NuxtRouteAnnouncer: IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
+export const MonacoEditor: IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
+export const MonacoDiffEditor: IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
 export const LazyEssentialLink: typeof import("../components/EssentialLink.vue")['default']
 export const LazyExampleComponent: typeof import("../components/ExampleComponent.vue")['default']
 export const LazyExampleList: typeof import("../components/ExampleList.vue")['default']
@@ -596,6 +608,8 @@ export const LazyQUploader: typeof import("quasar")['QUploader']
 export const LazyQUploaderAddTrigger: typeof import("quasar")['QUploaderAddTrigger']
 export const LazyQVideo: typeof import("quasar")['QVideo']
 export const LazyQVirtualScroll: typeof import("quasar")['QVirtualScroll']
+export const LazyMonacoEditor: typeof import("../node_modules/nuxt-monaco-editor/dist/runtime/MonacoEditor.client.vue")['default']
+export const LazyMonacoDiffEditor: typeof import("../node_modules/nuxt-monaco-editor/dist/runtime/MonacoDiffEditor.client.vue")['default']
 export const LazyNuxtPage: typeof import("../node_modules/nuxt/dist/pages/runtime/page")['default']
 export const LazyNoScript: typeof import("../node_modules/nuxt/dist/head/runtime/components")['NoScript']
 export const LazyLink: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Link']
@@ -608,5 +622,7 @@ export const LazyHtml: typeof import("../node_modules/nuxt/dist/head/runtime/com
 export const LazyBody: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']
 export const LazyNuxtIsland: typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
 export const LazyNuxtRouteAnnouncer: IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
+export const LazyMonacoEditor: IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
+export const LazyMonacoDiffEditor: IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
 
 export const componentNames: string[]
