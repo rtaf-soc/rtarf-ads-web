@@ -52,36 +52,10 @@ export default defineNuxtConfig({
       idpClientId: "xx",
       idpClientSecret: "xx",
     },
-
-    // tool:{
-    //   url01:"https://www.google.co.th/1",
-    //   url02:"https://www.google.co.th/2",
-    //   url031:"https://www.google.co.th/31",
-    //   url032:"https://www.google.co.th/32",
-    //   url033:"https://www.google.co.th/33",
-    //   url041:"https://www.google.co.th/41",
-    //   url042:"https://www.google.co.th/42",
-    //   url043:"https://www.google.co.th/43",
-    //   url044:"https://www.google.co.th/44",
-    //   url05:"https://www.google.co.th/5",
-    //   url06:"https://www.google.co.th/6",
-    //   url07:"https://www.google.co.th/7",
-    //   url08:"https://www.google.co.th/8",
-    // },
-    // dashboard:{
-    //   url01:"https://www.google.co.th/1",
-    //   url02:"https://www.google.co.th/2",
-    //   url03:"https://www.google.co.th/3",
-    //   url04:"https://www.google.co.th/4",
-    //   url05:"https://www.google.co.th/5",
-    //   url06:"https://www.google.co.th/6",
-    //   url07:"https://www.google.co.th/7",
-    //   url08:"https://www.google.co.th/8",
-    //   url09:"https://www.google.co.th/9",
-    //   url10:"https://www.google.co.th/10",
-    // },
+    debugMode:"false",
 
     //for frontend (expose)
+
     public: {
       baseURL: "https://api.example.com",
       scaleURL: "https://api.example.com",
