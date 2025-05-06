@@ -3,7 +3,7 @@ import { Buffer } from 'buffer'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
-  const rulesApi = config.apiPath + '/api/HuntingRule/org/default/action/GetHuntingRules'
+  const rulesApi = config.apiPath + '/api/HuntingRule/org/default/action/UpdateHuntingRuleById'
 
   const authHeader = event.node.req.headers.authorization
   if (!authHeader) {
@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
       console.log('Body:', data)
     }
 
-    const response = await $fetch(rulesApi, {
+    const response = await $fetch(rulesApi+`/${data.ruleId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,13 +44,16 @@ export default defineEventHandler(async (event) => {
       },
       body: JSON.stringify(data)
     })
-
+    console.log(response)
+    if (response.description != "Success") {
+      throw error
+    }
     return response
   } catch (error) {
-    console.error('Error calling overview API:', error)
+    console.error('Error calling update API:', error)
     throw createError({
       statusCode: error.response?.status || 500,
-      statusMessage: 'Failed to fetch overview data'
+      statusMessage: 'Failed to update data'
     })
   }
 })

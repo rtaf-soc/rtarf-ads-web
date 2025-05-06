@@ -27,6 +27,7 @@ export default defineEventHandler(async (event) => {
       },
       body: form.toString()
     });
+    // console.log(tokenResponse)
     return tokenResponse;
   } catch (error) {
     console.error('Error refreshing token:', error);

@@ -76,11 +76,11 @@
       <q-card style="width: 800px; max-width: 800vw;">
 
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">แก้ไขข้อมูล
-            <!-- <q-badge outline class="text-h6" align="middle" color="negative">
-              {{edit_ingredient_detail.cidr }} 
+          <div class="text-h6">แก้ไขข้อมูลของ ID :
+            <q-badge outline class="text-h6 q-ml-md" align="middle" color="positive">
+              {{ edit_ingredient_detail.ruleId }}
 
-            </q-badge> -->
+            </q-badge>
           </div>
 
           <!-- <div class="text-h7 q-mt-sm">Destination IP Address : <q-badge class="text-h5" color="primary">{{
@@ -91,7 +91,7 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.ruleName" outlined label="Rule Name" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.ruleName" outlined label="Rule Name" disable />
 
             <q-btn @click="this.showEditor = !this.showEditor" color="green">
               แก้ไข code</q-btn>
@@ -136,7 +136,7 @@
             <q-input v-if="!showEditor" class="q-pb-lg" v-model="add_ingredient_detail.ruleDefinition" outlined
               label="Rule Definition" disable />
 
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.refUrl" outlined label="refUrl" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.refUrl" outlined label="URL" />
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -469,12 +469,6 @@ export default {
         selectedTable.value = selectedTable.value.filter(id => id !== row.index)
       }
     },
-    deleteSelectedRows() {
-      // Filter out rows that have been selected
-      table_rows_menu.value = table_rows_menu.value.filter(row => !selectedTable.value.includes(row.index))
-      // Clear the selection after deletion
-      selectedTable.value = []
-    },
 
     onClick(fn_name, param = null) {
       switch (fn_name) {
@@ -492,22 +486,23 @@ export default {
         case 'saveEditIngredient':
           console.log('saveEditIngredient')
           console.log(this.edit_ingredient_detail)
-          this.fn_updateIngredient(this.edit_ingredient_detail.id, this.edit_ingredient_detail)
-          Notify.create({
-            position: "top",
-            type: 'positive',
-            message: 'บันทึกสำเร็จ'
-          });
-          this.edit_ingredient_detail_isOpen = false;
+          // this.fn_updateIngredient(this.edit_ingredient_detail.id, this.edit_ingredient_detail)
+          this.updateData()
+          // Notify.create({
+          //   position: "top",
+          //   type: 'positive',
+          //   message: 'บันทึกสำเร็จ'
+          // });
+          // this.edit_ingredient_detail_isOpen = false;
           break;
         // const data = updateIngredient(this.edit_ingredient_detail.id, this.edit_ingredient_detail);
         case 'saveAddTable':
           this.add_ingredient_detail.ruleCreatedDate = this.getCurrentTimestamp()
-          mock_data.push(this.add_ingredient_detail)
+          this.addData()
           // console.log(mock_data)
-          this.loadMenu()
-          this.clearAddTable()
-          this.add_ingredient_detail_isOpen = false
+          // this.loadMenu()
+          // this.clearAddTable()
+          // this.add_ingredient_detail_isOpen = false
           break;
 
         case 'deleteSelectedTable':
@@ -527,12 +522,143 @@ export default {
       // console.log(resData)
 
     },
+    async deleteSelectedRows() {
+      // table_rows_menu.value.filter(row => !selectedTable.value.includes(row.ruleId)
+      // table_rows_menu.value = table_rows_menu.value.filter(row => !selectedTable.value.includes(row.index))
+      // selectedTable.value = []
+      let data = table_rows_menu.value.filter(row => selectedTable.value.includes(row.index))
+      // console.log(data.length)
+      for (let index = 0; index < data.length; index++) {
+        await this.deleteData(data[index].ruleId)
+
+      }
+      console.log(data)
+    },
+    async deleteData(ruleId) {
+
+      Loading.show()
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        let body = { ruleId: ruleId }
+
+        console.log(body)
+        let countData = await $fetch('/api/hunting_rules/delete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+          body: JSON.stringify(body)
+
+
+        });
+        Notify.create({
+          position: "top",
+          type: 'positive',
+          message: 'ลบมูลสำเร็จ'
+        });
+        this.edit_ingredient_detail_isOpen = false;
+        await this.loadData()
+      } catch (error) {
+        console.error('Error delete data:', error);
+        Notify.create({
+          position: "top",
+          type: 'negative',
+          message: 'Error delete data:' + error
+        });
+      } finally {
+        Loading.hide()
+      }
+    },
+    async updateData() {
+      console.log('add data')
+      Loading.show()
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        let body =
+          this.edit_ingredient_detail
+
+        console.log(body)
+        console.log('start addd')
+        let countData = await $fetch('/api/hunting_rules/update', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+          body: JSON.stringify(body)
+
+
+        });
+        Notify.create({
+          position: "top",
+          type: 'positive',
+          message: 'อัพเดขข้อมูลสำเร็จ'
+        });
+        this.edit_ingredient_detail_isOpen = false;
+        await this.loadData()
+      } catch (error) {
+        console.error('Error create data:', error);
+        Notify.create({
+          position: "top",
+          type: 'negative',
+          message: 'Error create data:' + error
+        });
+      } finally {
+        Loading.hide()
+      }
+    },
+    async addData() {
+      console.log('add data')
+      Loading.show()
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        let body = {
+          // ruleId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          ruleName: add_ingredient_detail.ruleName,
+          orgId: "default",
+          ruleCreatedDate: add_ingredient_detail.ruleCreatedDate,
+          ruleDescription: "",
+          ruleDefinition: add_ingredient_detail.ruleDefinition,
+          refUrl: add_ingredient_detail.refUrl,
+          refType: "Sigma",
+          tags: add_ingredient_detail.tags
+        }
+        console.log(body)
+        console.log('start addd')
+        let countData = await $fetch('/api/hunting_rules/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+          body: JSON.stringify(body)
+
+
+        });
+        Notify.create({
+          position: "top",
+          type: 'positive',
+          message: 'เพิ่มข้อมูลสำเร็จ'
+        });
+        this.add_ingredient_detail_isOpen = false
+        this.loadData()
+      } catch (error) {
+        console.error('Error create data:', error);
+
+      } finally {
+        Loading.hide()
+      }
+    },
 
     async loadData() {
       Loading.show()
       try {
         const accessToken = localStorage.getItem('accessToken');
-        let countData = await $fetch('/api/hunting_rules_count', {
+        let countData = await $fetch('/api/hunting_rules/count', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -556,7 +682,7 @@ export default {
         pagination_menu.value.page = 1
 
         console.log(pagination_menu.page)
-        let data = await $fetch('/api/hunting_rules', {
+        let data = await $fetch('/api/hunting_rules/rules', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -565,7 +691,7 @@ export default {
           // Use a raw JSON body as expected by your API:
 
           body: JSON.stringify({
-            offset: pagination_menu.page,
+            offset: pagination_menu.value.page,
             fromDate: "2025-05-05T17:56:35.528Z",
             toDate: "2025-05-06T17:56:35.528Z",
             limit: pagination_menu.value.rowsPerPage,
@@ -593,7 +719,7 @@ export default {
       Loading.show()
       try {
         const accessToken = localStorage.getItem('accessToken');
-        let countData = await $fetch('/api/hunting_rules_count', {
+        let countData = await $fetch('/api/hunting_rules/count', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -617,7 +743,7 @@ export default {
         pagination_menu.value.page = page
         pagination_menu.value.rowsPerPage = rowsPerPage
         console.log(pagination_menu.page)
-        let data = await $fetch('/api/hunting_rules', {
+        let data = await $fetch('/api/hunting_rules/rules', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
