@@ -3,10 +3,8 @@ import { Buffer } from 'buffer'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
-  // Use the API path from runtime config (or set a default)
-  const apiPath = config.apiPath + '/api/SystemVariable/org/default/action/GetSystemVariables'
+  const countApi = config.apiPath + '/api/HuntingRule/org/default/action/GetHuntingRuleCount'
 
-  // Retrieve the access token from the Authorization header
   const authHeader = event.node.req.headers.authorization
   if (!authHeader) {
     throw createError({
@@ -22,36 +20,30 @@ export default defineEventHandler(async (event) => {
     })
   }
   const token = parts[1]
-
-  // Base64-encode the access token
   const encodedToken = Buffer.from(token).toString('base64')
 
-  // Prepare the JSON data (raw format as required)
-  const data = { FullTextSearch: "" }
-
+  // ✅ Parse body sent from client
+  const data = await readBody(event)
+  console.log(data)
   try {
-    // Call your API endpoint using $fetch
-    console.log(`is debug mode:${config.debugMode}`)
-    if (config.debugMode) {
-      console.log('📡 Sending Request:')
-      console.log('URL:', apiPath)
-      console.log('Headers:', {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${encodedToken}`
-      })
-      console.log('Body:', data)
-    }
-    const response = await $fetch(apiPath, {
+
+    const response = await $fetch(countApi, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${encodedToken}`
       },
-      
-      // $fetch accepts a body; we stringify it to ensure JSON raw format
-      body: JSON.stringify(data)
-
+      body: JSON.stringify({
+        offset: 0,
+        fromDate: "2025-05-05T17:56:35.528Z",
+        toDate: "2025-05-06T17:56:35.528Z",
+        limit: 0,
+        fullTextSearch: data.fullTextSearch,
+        refType: data.refType
+      })
     })
+    console.log('count')
+    console.log(response)
     return response
   } catch (error) {
     console.error('Error calling overview API:', error)

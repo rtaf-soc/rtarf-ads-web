@@ -10,8 +10,8 @@
         <div class="row">
           <div class="col-12 col-md-12 q-pa-sm">
             <q-table class="my-sticky-header-table" style="height: 87vh;" flat bordered title="เมนู"
-              :rows="table_rows_menu" :columns="table_columns_menu" row-key="id" :pagination="pagination_menu"
-              separator="cell" :loading="loading">
+              :rows="table_rows_menu" :columns="table_columns_menu" row-key="id" v-model:pagination="pagination_menu"
+              @request="loadNextData" separator="cell" :loading="loading">
               <template v-slot:top-left>
                 <!-- <div class="text-h5 q-mr-md">Black list IP Address</div> -->
                 <q-input outlined dense debounce="300" placeholder="ค้นหา" v-model="filter_menu_table" bg-color="dark">
@@ -56,8 +56,8 @@
                       </q-chip>
                     </template>
 
-                    <template v-else-if="col.name === 'createdDate'">
-                      {{ convertTimestamp(props.row.createdDate) }}
+                    <template v-else-if="col.name === 'ruleCreatedDate'">
+                      {{ convertTimestamp(props.row.ruleCreatedDate) }}
                     </template>
 
                     <template v-else>
@@ -76,11 +76,11 @@
       <q-card style="width: 800px; max-width: 800vw;">
 
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">แก้ไขข้อมูล
-            <!-- <q-badge outline class="text-h6" align="middle" color="negative">
-              {{edit_ingredient_detail.cidr }} 
+          <div class="text-h6">แก้ไขข้อมูลของ ID :
+            <q-badge outline class="text-h6 q-ml-md" align="middle" color="positive">
+              {{ edit_ingredient_detail.ruleId }}
 
-            </q-badge> -->
+            </q-badge>
           </div>
 
           <!-- <div class="text-h7 q-mt-sm">Destination IP Address : <q-badge class="text-h5" color="primary">{{
@@ -91,17 +91,17 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.rule_name" outlined label="Rule Name" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.ruleName" outlined label="Rule Name" disable />
 
             <q-btn @click="this.showEditor = !this.showEditor" color="green">
               แก้ไข code</q-btn>
             <div v-if="showEditor">
-              <MonacoEditor v-model="edit_ingredient_detail.rule_definition" lang="yaml" style="height: 400px;"
+              <MonacoEditor v-model="edit_ingredient_detail.ruleDefinition" lang="yaml" style="height: 400px;"
                 :options="editorOptions" />
             </div>
-            <q-input v-if="!showEditor" class="q-pb-lg" v-model="edit_ingredient_detail.rule_definition" outlined
+            <q-input v-if="!showEditor" class="q-pb-lg" v-model="edit_ingredient_detail.ruleDefinition" outlined
               label="Rule Definition" disable />
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.url" outlined label="URL" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.refUrl" outlined label="refUrl" />
             <q-input v-model="edit_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -123,20 +123,20 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.rule_name" outlined label="Rule Name">
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.ruleName" outlined label="Rule Name">
 
             </q-input>
 
             <q-btn @click="this.showEditor = !this.showEditor" color="green">
               แก้ไข code</q-btn>
             <div v-if="showEditor">
-              <MonacoEditor v-model="add_ingredient_detail.rule_definition"  lang="yaml" style="height: 400px;"
+              <MonacoEditor v-model="add_ingredient_detail.ruleDefinition" lang="yaml" style="height: 400px;"
                 :options="editorOptions" />
             </div>
-            <q-input v-if="!showEditor" class="q-pb-lg" v-model="add_ingredient_detail.rule_definition" outlined
+            <q-input v-if="!showEditor" class="q-pb-lg" v-model="add_ingredient_detail.ruleDefinition" outlined
               label="Rule Definition" disable />
 
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.url" outlined label="URL" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.refUrl" outlined label="URL" />
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -158,12 +158,12 @@ const table_columns_menu = [
 
   { name: 'id', align: 'center', label: 'Action', field: 'index', headerStyle: 'width: 30px' },
   // { name: 'blacklistId', label: 'ชื่อ', align: 'left', field: 'blacklistId', sortable: true },
-  { name: 'rule_name', align: 'left', label: 'Rule Name', field: 'rule_name', sortable: true, },
-  { name: 'url', align: 'center', label: 'URL', field: 'url', sortable: true, },
+  { name: 'ruleName', align: 'left', label: 'Rule Name', field: 'ruleName', sortable: true, },
+  { name: 'refUrl', align: 'center', label: 'URL', field: 'refUrl', sortable: true, },
   { name: 'tags', align: 'left', label: 'tags', field: 'tags', sortable: true, },
   // { name: 'blacklistType', align: 'center', label: 'type', field: 'blacklistType', sortable: true, },
 
-  // { name: 'createdDate', align: 'center', label: 'สร้างเมื่อ', field: 'createdDate', sortable: true, },
+  // { name: 'ruleCreatedDate', align: 'center', label: 'สร้างเมื่อ', field: 'ruleCreatedDate', sortable: true, },
 
 ]
 
@@ -177,83 +177,83 @@ const editorOptions = {
 
 const mock_data = [
   {
-    "rule_name": "NoEmptyFields",
-    "rule_definition": "|\n  description: Ensure that all required fields are filled\n  conditions:\n    - field: username\n      required: true\n    - field: password\n      required: true",
-    "url": "https://example.com/rules/no-empty-fields",
+    "ruleName": "NoEmptyFields",
+    "ruleDefinition": "|\n  description: Ensure that all required fields are filled\n  conditions:\n    - field: username\n      required: true\n    - field: password\n      required: true",
+    "refUrl": "https://example.com/rules/no-empty-fields",
     "tags": "validation, form, data",
-    "createdDate": "2023-09-01T08:00:00Z",
+    "ruleCreatedDate": "2023-09-01T08:00:00Z",
     "update_at": "2023-09-10T08:00:00Z"
   },
   {
-    "rule_name": "MaxInputLength",
-    "rule_definition": "|\n  description: Limit the input length to prevent overflow issues\n  max_length: 100\n  note: 'Ensures UI stability'",
-    "url": "https://example.com/rules/max-input-length",
+    "ruleName": "MaxInputLength",
+    "ruleDefinition": "|\n  description: Limit the input length to prevent overflow issues\n  max_length: 100\n  note: 'Ensures UI stability'",
+    "refUrl": "https://example.com/rules/max-input-length",
     "tags": "validation, input, UI",
-    "createdDate": "2023-08-20T09:00:00Z",
+    "ruleCreatedDate": "2023-08-20T09:00:00Z",
     "update_at": "2023-08-25T09:00:00Z"
   },
   {
-    "rule_name": "UniqueEmail",
-    "rule_definition": "|\n  description: Ensure that the email address is unique in the system\n  check:\n    - field: email\n      uniqueness: true",
-    "url": "https://example.com/rules/unique-email",
+    "ruleName": "UniqueEmail",
+    "ruleDefinition": "|\n  description: Ensure that the email address is unique in the system\n  check:\n    - field: email\n      uniqueness: true",
+    "refUrl": "https://example.com/rules/unique-email",
     "tags": "validation, email, uniqueness",
-    "createdDate": "2023-07-15T10:00:00Z",
+    "ruleCreatedDate": "2023-07-15T10:00:00Z",
     "update_at": "2023-07-20T10:00:00Z"
   },
   {
-    "rule_name": "ValidDateFormat",
-    "rule_definition": "|\n  description: Date should follow the format YYYY-MM-DD\n  pattern: '^\\d{4}-\\d{2}-\\d{2}$'\n  example: 2023-01-01",
-    "url": "https://example.com/rules/valid-date-format",
+    "ruleName": "ValidDateFormat",
+    "ruleDefinition": "|\n  description: Date should follow the format YYYY-MM-DD\n  pattern: '^\\d{4}-\\d{2}-\\d{2}$'\n  example: 2023-01-01",
+    "refUrl": "https://example.com/rules/valid-date-format",
     "tags": "validation, date, format",
-    "createdDate": "2023-06-01T11:00:00Z",
+    "ruleCreatedDate": "2023-06-01T11:00:00Z",
     "update_at": "2023-06-05T11:00:00Z"
   },
   {
-    "rule_name": "PositiveNumbers",
-    "rule_definition": "|\n  description: Ensure that numeric values are positive\n  conditions:\n    - value: must be > 0",
-    "url": "https://example.com/rules/positive-numbers",
+    "ruleName": "PositiveNumbers",
+    "ruleDefinition": "|\n  description: Ensure that numeric values are positive\n  conditions:\n    - value: must be > 0",
+    "refUrl": "https://example.com/rules/positive-numbers",
     "tags": "validation, numeric, logic",
-    "createdDate": "2023-05-10T12:00:00Z",
+    "ruleCreatedDate": "2023-05-10T12:00:00Z",
     "update_at": "2023-05-15T12:00:00Z"
   },
   {
-    "rule_name": "NoSQLInjection",
-    "rule_definition": "|\n  description: Prevent SQL injection by sanitizing all database inputs\n  methods:\n    - parameterized queries\n    - input sanitization",
-    "url": "https://example.com/rules/no-sql-injection",
+    "ruleName": "NoSQLInjection",
+    "ruleDefinition": "|\n  description: Prevent SQL injection by sanitizing all database inputs\n  methods:\n    - parameterized queries\n    - input sanitization",
+    "refUrl": "https://example.com/rules/no-sql-injection",
     "tags": "security, database, injection",
-    "createdDate": "2023-04-01T13:00:00Z",
+    "ruleCreatedDate": "2023-04-01T13:00:00Z",
     "update_at": "2023-04-05T13:00:00Z"
   },
   {
-    "rule_name": "StrongPassword",
-    "rule_definition": "|\n  description: Password must be strong and secure\n  criteria:\n    - minimum: 8 characters\n    - mix: letters, numbers, and symbols",
-    "url": "https://example.com/rules/strong-password",
+    "ruleName": "StrongPassword",
+    "ruleDefinition": "|\n  description: Password must be strong and secure\n  criteria:\n    - minimum: 8 characters\n    - mix: letters, numbers, and symbols",
+    "refUrl": "https://example.com/rules/strong-password",
     "tags": "security, password, validation",
-    "createdDate": "2023-03-20T14:00:00Z",
+    "ruleCreatedDate": "2023-03-20T14:00:00Z",
     "update_at": "2023-03-25T14:00:00Z"
   },
   {
-    "rule_name": "SecureProtocol",
-    "rule_definition": "|\n  description: All external communications must use HTTPS\n  note: 'Ensures data encryption and integrity'",
-    "url": "https://example.com/rules/secure-protocol",
+    "ruleName": "SecureProtocol",
+    "ruleDefinition": "|\n  description: All external communications must use HTTPS\n  note: 'Ensures data encryption and integrity'",
+    "refUrl": "https://example.com/rules/secure-protocol",
     "tags": "security, network, protocol",
-    "createdDate": "2023-02-10T15:00:00Z",
+    "ruleCreatedDate": "2023-02-10T15:00:00Z",
     "update_at": "2023-02-15T15:00:00Z"
   },
   {
-    "rule_name": "SafeRedirect",
-    "rule_definition": "|\n  description: Validate redirect URLs to prevent open redirect vulnerabilities\n  checks:\n    - verify domain\n    - allow-list trusted URLs",
-    "url": "https://example.com/rules/safe-redirect",
+    "ruleName": "SafeRedirect",
+    "ruleDefinition": "|\n  description: Validate redirect URLs to prevent open redirect vulnerabilities\n  checks:\n    - verify domain\n    - allow-list trusted URLs",
+    "refUrl": "https://example.com/rules/safe-redirect",
     "tags": "security, redirect, validation",
-    "createdDate": "2023-01-05T16:00:00Z",
+    "ruleCreatedDate": "2023-01-05T16:00:00Z",
     "update_at": "2023-01-10T16:00:00Z"
   },
   {
-    "rule_name": "ValidURLFormat",
-    "rule_definition": "|\n  description: URL must adhere to a valid format\n  pattern: '^(https?|ftp)://[^\\s/$.?#].[^\\s]*$'\n  example: https://example.com",
-    "url": "https://example.com/rules/valid-url-format",
-    "tags": "validation, url, format",
-    "createdDate": "2023-12-01T17:00:00Z",
+    "ruleName": "ValidURLFormat",
+    "ruleDefinition": "|\n  description: refUrl must adhere to a valid format\n  pattern: '^(https?|ftp)://[^\\s/$.?#].[^\\s]*$'\n  example: https://example.com",
+    "refUrl": "https://example.com/rules/valid-refUrl-format",
+    "tags": "validation, refUrl, format",
+    "ruleCreatedDate": "2023-12-01T17:00:00Z",
     "update_at": "2023-12-05T17:00:00Z"
   }
 ]
@@ -265,12 +265,13 @@ const table_rows_menu = ref([])
 const table_rows_ingredients = ref([])
 const filter_menu_table = ref('')
 const filter_ingredient_table = ref('')
-const pagination_menu = {
+const pagination_menu = ref({
   sortBy: 'desc',
   descending: false,
   page: 1,
-  rowsPerPage: 10
-}
+  rowsPerPage: 10,
+  rowsNumber: 0
+})
 
 const pagination_ingredient = {
   sortBy: 'desc',
@@ -281,21 +282,21 @@ const pagination_ingredient = {
 const loading = ref(true)
 const edit_ingredient_detail_isOpen = ref(false)
 const edit_ingredient_detail = {
-  rule_name: "",
-  rule_definition: "",
-  url: "",
+  ruleName: "",
+  ruleDefinition: "",
+  refUrl: "",
   tags: "",
-  createdDate: "2024-10-12T09:24:30.125001Z",
+  ruleCreatedDate: "2024-10-12T09:24:30.125001Z",
   update_at: "2023-05-20T11:00:00Z"
 
 }
 const add_ingredient_detail_isOpen = ref(false)
 const add_ingredient_detail = {
-  rule_name: "",
-  rule_definition: "",
-  url: "",
+  ruleName: "",
+  ruleDefinition: "",
+  refUrl: "",
   tags: "",
-  createdDate: "2024-10-12T09:24:30.125001Z",
+  ruleCreatedDate: "2024-10-12T09:24:30.125001Z",
   update_at: "2023-05-20T11:00:00Z"
 
 }
@@ -305,7 +306,7 @@ const add_ingredient_detail = {
 //     "blacklistCode": "192.168.1.1",
 //       "tags": "Automatic-Scan",
 //         "blacklistType": 1,
-//           "createdDate": "2024-10-12T09:24:30.125001Z"
+//           "ruleCreatedDate": "2024-10-12T09:24:30.125001Z"
 
 const selectedTable = ref([])
 const code = ref(`# Write your YAML code here...
@@ -317,17 +318,16 @@ rule:
     - field: password
       required: true
 `)
-// Loading.show()
 
 export default {
+  mounted() {
+    this.loading = false
+    Loading.hide()
+  },
   setup() {
-    onMounted(() => {
-      // console.log('onMount1')
-      // this.loadMenu()
-      loading.value = false
-      Loading.hide()
-    })
+
     const auth = useAuthStore();
+
     return {
       auth,
       loading
@@ -361,7 +361,8 @@ export default {
       editorOptions,
       code,
       monacoEditor,
-      showEditor
+      showEditor,
+
 
       // rowsNumber: xx if getting data from a server
     };
@@ -377,6 +378,7 @@ export default {
     // console.log('onMount2')
     loading.value = false
     Loading.hide()
+    await this.fetchData()
     // console.log('load menu');
     // await this.loadMenu();
   },
@@ -385,17 +387,17 @@ export default {
     definePageMeta({
       middleware: 'auth'
     })
-    this.loadMenu();
+    this.loadData();
   },
   // onMounted() {
   //   loadMenu()
   //   // Loading.hide()
   // },
   methods: {
-    async loadMenu() {
+    async loadMenu(data) {
       try {
         // const data = await fetchMenu();
-        let mockdata = [...mock_data];
+        let mockdata = [...data];
         // console.log(mockdata)
         // console.log(filteredData);
         this.menus = mockdata;
@@ -405,7 +407,7 @@ export default {
         for (let index = 0; index < data_rows.length; index++) {
           this.selectedTable.push({ value: false })
           const element = data_rows[index];
-          element.index = index + 1;
+          element.index = index + 1 + ((pagination_menu.value.page - 1) * pagination_menu.value.rowsPerPage);
         }
         // console.log(data_rows)
         this.table_rows_menu = data_rows;
@@ -443,11 +445,11 @@ export default {
     },
     clearAddTable() {
       this.add_ingredient_detail = {
-        rule_name: "",
-        rule_definition: "",
-        url: "",
+        ruleName: "",
+        ruleDefinition: "",
+        refUrl: "",
         tags: "",
-        createdDate: "2024-10-12T09:24:30.125001Z",
+        ruleCreatedDate: "2024-10-12T09:24:30.125001Z",
         update_at: "2023-05-20T11:00:00Z"
 
       }
@@ -467,22 +469,11 @@ export default {
         selectedTable.value = selectedTable.value.filter(id => id !== row.index)
       }
     },
-    deleteSelectedRows() {
-      // Filter out rows that have been selected
-      table_rows_menu.value = table_rows_menu.value.filter(row => !selectedTable.value.includes(row.index))
-      // Clear the selection after deletion
-      selectedTable.value = []
-    },
 
     onClick(fn_name, param = null) {
       switch (fn_name) {
         case 'tableSearch':
-          if (this.filter_menu_table.trim().length > 0) {
-            console.log(`have search text ${this.filter_menu_table}`)
-          } else {
-            console.log(`no search test`)
-          }
-          // edit_ingredient_detail 
+          this.loadData()
           break;
         case 'editIngredient':
           this.showEditor = false
@@ -495,22 +486,23 @@ export default {
         case 'saveEditIngredient':
           console.log('saveEditIngredient')
           console.log(this.edit_ingredient_detail)
-          this.fn_updateIngredient(this.edit_ingredient_detail.id, this.edit_ingredient_detail)
-          Notify.create({
-            position: "top",
-            type: 'positive',
-            message: 'บันทึกสำเร็จ'
-          });
-          this.edit_ingredient_detail_isOpen = false;
+          // this.fn_updateIngredient(this.edit_ingredient_detail.id, this.edit_ingredient_detail)
+          this.updateData()
+          // Notify.create({
+          //   position: "top",
+          //   type: 'positive',
+          //   message: 'บันทึกสำเร็จ'
+          // });
+          // this.edit_ingredient_detail_isOpen = false;
           break;
         // const data = updateIngredient(this.edit_ingredient_detail.id, this.edit_ingredient_detail);
         case 'saveAddTable':
-          this.add_ingredient_detail.createdDate = this.getCurrentTimestamp()
-          mock_data.push(this.add_ingredient_detail)
+          this.add_ingredient_detail.ruleCreatedDate = this.getCurrentTimestamp()
+          this.addData()
           // console.log(mock_data)
-          this.loadMenu()
-          this.clearAddTable()
-          this.add_ingredient_detail_isOpen = false
+          // this.loadMenu()
+          // this.clearAddTable()
+          // this.add_ingredient_detail_isOpen = false
           break;
 
         case 'deleteSelectedTable':
@@ -529,6 +521,258 @@ export default {
       // const resData = await updateIngredient(id, data);
       // console.log(resData)
 
+    },
+    async deleteSelectedRows() {
+      // table_rows_menu.value.filter(row => !selectedTable.value.includes(row.ruleId)
+      // table_rows_menu.value = table_rows_menu.value.filter(row => !selectedTable.value.includes(row.index))
+      // selectedTable.value = []
+      let data = table_rows_menu.value.filter(row => selectedTable.value.includes(row.index))
+      // console.log(data.length)
+      for (let index = 0; index < data.length; index++) {
+        await this.deleteData(data[index].ruleId)
+
+      }
+      console.log(data)
+    },
+    async deleteData(ruleId) {
+
+      Loading.show()
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        let body = { ruleId: ruleId }
+
+        console.log(body)
+        let countData = await $fetch('/api/hunting_rules/delete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+          body: JSON.stringify(body)
+
+
+        });
+        Notify.create({
+          position: "top",
+          type: 'positive',
+          message: 'ลบมูลสำเร็จ'
+        });
+        this.edit_ingredient_detail_isOpen = false;
+        await this.loadData()
+      } catch (error) {
+        console.error('Error delete data:', error);
+        Notify.create({
+          position: "top",
+          type: 'negative',
+          message: 'Error delete data:' + error
+        });
+      } finally {
+        Loading.hide()
+      }
+    },
+    async updateData() {
+      console.log('add data')
+      Loading.show()
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        let body =
+          this.edit_ingredient_detail
+
+        console.log(body)
+        console.log('start addd')
+        let countData = await $fetch('/api/hunting_rules/update', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+          body: JSON.stringify(body)
+
+
+        });
+        Notify.create({
+          position: "top",
+          type: 'positive',
+          message: 'อัพเดขข้อมูลสำเร็จ'
+        });
+        this.edit_ingredient_detail_isOpen = false;
+        await this.loadData()
+      } catch (error) {
+        console.error('Error create data:', error);
+        Notify.create({
+          position: "top",
+          type: 'negative',
+          message: 'Error create data:' + error
+        });
+      } finally {
+        Loading.hide()
+      }
+    },
+    async addData() {
+      console.log('add data')
+      Loading.show()
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        let body = {
+          // ruleId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          ruleName: add_ingredient_detail.ruleName,
+          orgId: "default",
+          ruleCreatedDate: add_ingredient_detail.ruleCreatedDate,
+          ruleDescription: "",
+          ruleDefinition: add_ingredient_detail.ruleDefinition,
+          refUrl: add_ingredient_detail.refUrl,
+          refType: "Yara",
+          tags: add_ingredient_detail.tags
+        }
+        console.log(body)
+        console.log('start addd')
+        let countData = await $fetch('/api/hunting_rules/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+          body: JSON.stringify(body)
+
+
+        });
+        Notify.create({
+          position: "top",
+          type: 'positive',
+          message: 'เพิ่มข้อมูลสำเร็จ'
+        });
+        this.add_ingredient_detail_isOpen = false
+        this.loadData()
+      } catch (error) {
+        console.error('Error create data:', error);
+
+      } finally {
+        Loading.hide()
+      }
+    },
+
+    async loadData() {
+      Loading.show()
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        let countData = await $fetch('/api/hunting_rules/count', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+          body: JSON.stringify({
+            offset: 0,
+            fromDate: "2025-05-05T17:56:35.528Z",
+            toDate: "2025-05-06T17:56:35.528Z",
+            limit: 0,
+            fullTextSearch: filter_menu_table.value,
+            refType: "Yara"
+          })
+
+
+        });
+        console.log(countData)
+
+        pagination_menu.value.rowsNumber = countData
+        pagination_menu.value.page = 1
+
+        console.log(pagination_menu.page)
+        let data = await $fetch('/api/hunting_rules/rules', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+
+          body: JSON.stringify({
+            offset: pagination_menu.value.page,
+            fromDate: "2025-05-05T17:56:35.528Z",
+            toDate: "2025-05-06T17:56:35.528Z",
+            limit: pagination_menu.value.rowsPerPage,
+            fullTextSearch: filter_menu_table.value,
+            refType: "Yara"
+          })
+
+
+        });
+        // console.log(data)
+        await this.loadMenu(data)
+        // for (let index = 0; index < 4; index++) {
+        //   overViewArray.value[index]['link'] = overviewData.value[index].variableValue;
+        //   console.log(data)
+        // }
+      } catch (error) {
+        console.error('Error fetching overview data:', error);
+      } finally {
+        Loading.hide()
+      }
+    },
+
+    async loadNextData(props) {
+      const { page, rowsPerPage, sortBy, descending } = props.pagination
+      Loading.show()
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        let countData = await $fetch('/api/hunting_rules/count', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+          body: JSON.stringify({
+            offset: 0,
+            fromDate: "2025-05-05T17:56:35.528Z",
+            toDate: "2025-05-06T17:56:35.528Z",
+            limit: 0,
+            fullTextSearch: filter_menu_table.value,
+            refType: "Yara"
+          })
+
+
+        });
+        console.log(page - 1)
+        console.log(countData)
+        pagination_menu.value.rowsNumber = countData
+        pagination_menu.value.page = page
+        pagination_menu.value.rowsPerPage = rowsPerPage
+        console.log(pagination_menu.page)
+        let data = await $fetch('/api/hunting_rules/rules', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+
+          body: JSON.stringify({
+            offset: pagination_menu.value.page - 1,
+            fromDate: "2025-05-05T17:56:35.528Z",
+            toDate: "2025-05-06T17:56:35.528Z",
+            limit: pagination_menu.value.rowsPerPage,
+            fullTextSearch: filter_menu_table.value,
+            refType: "Yara"
+          })
+
+
+        });
+        // console.log(data)
+        await this.loadMenu(data)
+        // for (let index = 0; index < 4; index++) {
+        //   overViewArray.value[index]['link'] = overviewData.value[index].variableValue;
+        //   console.log(data)
+        // }
+      } catch (error) {
+        console.error('Error fetching overview data:', error);
+      } finally {
+        Loading.hide()
+      }
     }
     // async handleAddMenu() {
     //   try {
