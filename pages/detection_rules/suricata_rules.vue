@@ -8,19 +8,30 @@
 
       <q-card-section>
         <div class="row">
+
           <div class="col-12 col-md-12 q-pa-sm">
-            <q-table class="my-sticky-header-table" style="height: 87vh;" flat bordered title="เมนู"
+
+            <q-table class="my-sticky-header-table" style="height: 87vh;" flat bordered title="เมนู" color="amber"
               :rows="table_rows_menu" :columns="table_columns_menu" row-key="id" v-model:pagination="pagination_menu"
+              v-model:selected="selected" selection="multiple" :rows-per-page-options="[5, 10, 15, 20, 30, 50, 0]"
               @request="loadNextData" separator="cell" :loading="loading">
+
               <template v-slot:top-left>
+
                 <!-- <div class="text-h5 q-mr-md">Black list IP Address</div> -->
-                <q-input outlined dense debounce="300" placeholder="ค้นหา" v-model="filter_menu_table" bg-color="dark">
+                <q-input outlined dense debounce="300" placeholder="ค้นหา" v-model="filter_menu_table" bg-color="dark"
+                  @keyup.enter="onClick(`tableSearch`)">
                   <template v-slot:append>
+
                     <q-btn round dense flat icon="search" @click="onClick(`tableSearch`)" />
                   </template>
                 </q-input>
+                <q-badge class="q-ml-md text-bold q-pa-sm" align="middle" color="dark" style="font-size:20px;">
+                  ข้อมูลทั้งหมด : {{ Number(pagination_menu.rowsNumber).toLocaleString('en-US') }} ชุด
+                </q-badge>
               </template>
               <template v-slot:top-right>
+
                 <q-btn class="q-mr-lg" icon="add" rounded color="green-7" @click="onClick(`addTable`)" />
                 <q-btn :disable="selectedTable <= 0" icon="delete" rounded color="negative"
                   @click="onClick(`deleteSelectedTable`)" />
@@ -42,6 +53,7 @@
               </template>
 
               <template v-slot:body="props">
+
                 <q-tr :props="props" class="cursor-pointer"
                   :class="(props.row.index % 2 === 0) ? 'bg-grey-10' : 'bg-grey-9'">
                   <q-td v-for="(col, colIndex) in props.cols" :key="col.name" :props="props">
@@ -93,7 +105,8 @@
           <q-item-section>
             <q-input class="q-pb-lg" v-model="edit_ingredient_detail.ruleName" outlined label="Rule Name" disable />
 
-            <q-btn @click="this.showEditor = !this.showEditor" color="green">
+            <!-- <q-btn @click="this.showEditor = !this.showEditor" color="green"> -->
+            <q-btn @click="onClick('editRule')" color="green">
               แก้ไข code</q-btn>
             <div v-if="showEditor">
               <MonacoEditor v-model="edit_ingredient_detail.ruleDefinition" lang="yaml" style="height: 400px;"
@@ -101,7 +114,7 @@
             </div>
             <q-input v-if="!showEditor" class="q-pb-lg" v-model="edit_ingredient_detail.ruleDefinition" outlined
               label="Rule Definition" disable />
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.refUrl" outlined label="refUrl" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.refUrl" outlined label="URL" />
             <q-input v-model="edit_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -166,7 +179,7 @@ const table_columns_menu = [
   // { name: 'ruleCreatedDate', align: 'center', label: 'สร้างเมื่อ', field: 'ruleCreatedDate', sortable: true, },
 
 ]
-
+const selected = ref([])
 const monacoEditor = ref(null)
 const showEditor = ref(false)
 const editorOptions = {
@@ -470,7 +483,7 @@ export default {
       }
     },
 
-    onClick(fn_name, param = null) {
+    async onClick(fn_name, param = null) {
       switch (fn_name) {
         case 'tableSearch':
           this.loadData()
@@ -513,6 +526,14 @@ export default {
           this.showEditor = false
           this.add_ingredient_detail_isOpen = true
           break;
+        case 'editRule':
+          if (!this.showEditor) {
+            this.edit_ingredient_detail.ruleDefinition = await this.getRulesById(this.edit_ingredient_detail.ruleId)
+          }
+          this.showEditor = !this.showEditor
+          // this.edit_ingredient_detail_isOpen = true
+          break;
+
         default:
           break;
       }
@@ -533,6 +554,44 @@ export default {
 
       }
       console.log(data)
+    },
+    async getRulesById(ruleId) {
+
+      Loading.show()
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        let body = { ruleId: ruleId }
+
+        console.log(body)
+        let data = await $fetch('/api/hunting_rules/get_by_id', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+          body: JSON.stringify(body)
+
+
+        });
+        // Notify.create({
+        //   position: "top",
+        //   type: 'positive',
+        //   message: 'ลบมูลสำเร็จ'
+        // });
+        // this.edit_ingredient_detail_isOpen = false;
+        // await this.loadData()
+        return data.ruleDefinition
+      } catch (error) {
+        console.error('Error delete data:', error);
+        Notify.create({
+          position: "top",
+          type: 'negative',
+          message: 'Error delete data:' + error
+        });
+      } finally {
+        Loading.hide()
+      }
     },
     async deleteData(ruleId) {
 
