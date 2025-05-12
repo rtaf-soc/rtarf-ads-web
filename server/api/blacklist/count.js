@@ -39,7 +39,7 @@ export default defineEventHandler(async (event) => {
         toDate: "2025-05-06T17:56:35.528Z",
         limit: 0,
         fullTextSearch: data.fullTextSearch,
-        refType: data.refType
+        blacklistType: data.refType
       })
     })
     console.log('count')
