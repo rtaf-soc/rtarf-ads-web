@@ -549,10 +549,35 @@ export default {
       // selectedTable.value = []
       let data = table_rows_menu.value.filter(row => selectedTable.value.includes(row.index))
       // console.log(data.length)
-      for (let index = 0; index < data.length; index++) {
-        await this.deleteData(data[index].ruleId)
+      let html = data
+        .map(item => `${item.index}. Rule Name : ${item.ruleName} , URL : ${item.refUrl} , TAGS : ${item.tags}`)
+        .join('<br/>')
 
-      }
+      Dialog.create({
+        title: '<span class="text-red">ยืนยันการลบข้อมูลต่อไปนี้ !</span>',
+        message: `<span class="text-yellow">${html}</span>`,
+        html: true,
+        style:'minWidth:600px',
+        ok: {
+          push: true,
+          color: 'primary'
+        },
+        cancel: {
+          push: true,
+          color: 'negative'
+        },
+        persistent: true
+      }).onOk(async () => {
+        // console.log('>>>> OK')
+        for (let index = 0; index < data.length; index++) {
+          await this.deleteData(data[index].blacklistId)
+
+        }
+      }).onCancel(() => {
+        // console.log('>>>> Cancel')
+      }).onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+      })
       console.log(data)
     },
     async getRulesById(ruleId) {

@@ -409,13 +409,11 @@ export default {
         .map(item => `${item.index}. IP : ${item.blacklistCode} , TAGS : ${item.tags}`)
         .join('<br/>')
 
-
-
-
       Dialog.create({
         title: '<span class="text-red">ยืนยันการลบข้อมูลต่อไปนี้ !</span>',
         message: `<span class="text-yellow">${html}</span>`,
         html: true,
+        style:'minWidth:600px',
         ok: {
           push: true,
           color: 'primary'
