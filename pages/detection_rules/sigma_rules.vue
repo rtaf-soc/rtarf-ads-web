@@ -335,7 +335,7 @@ rule:
 export default {
   mounted() {
     this.loading = false
-    Loading.hide()
+    // Loading.hide()
   },
   setup() {
 
@@ -499,23 +499,13 @@ export default {
         case 'saveEditIngredient':
           console.log('saveEditIngredient')
           console.log(this.edit_ingredient_detail)
-          // this.fn_updateIngredient(this.edit_ingredient_detail.id, this.edit_ingredient_detail)
           this.updateData()
-          // Notify.create({
-          //   position: "top",
-          //   type: 'positive',
-          //   message: 'บันทึกสำเร็จ'
-          // });
-          // this.edit_ingredient_detail_isOpen = false;
+
           break;
-        // const data = updateIngredient(this.edit_ingredient_detail.id, this.edit_ingredient_detail);
         case 'saveAddTable':
           this.add_ingredient_detail.ruleCreatedDate = this.getCurrentTimestamp()
           this.addData()
-          // console.log(mock_data)
-          // this.loadMenu()
-          // this.clearAddTable()
-          // this.add_ingredient_detail_isOpen = false
+
           break;
 
         case 'deleteSelectedTable':
@@ -549,10 +539,39 @@ export default {
       // selectedTable.value = []
       let data = table_rows_menu.value.filter(row => selectedTable.value.includes(row.index))
       // console.log(data.length)
-      for (let index = 0; index < data.length; index++) {
-        await this.deleteData(data[index].ruleId)
+      let html = data
+        .map(item => `${item.index}. Rule Name : ${item.ruleName} , URL : ${item.refUrl} , TAGS : ${item.tags}`)
+        .join('<br/>')
 
-      }
+      Dialog.create({
+        title: '<span class="text-red">ยืนยันการลบข้อมูลต่อไปนี้ !</span>',
+        message: `<span class="text-yellow">${html}</span>`,
+        html: true,
+        style:'minWidth:600px',
+        ok: {
+          push: true,
+          color: 'primary'
+        },
+        cancel: {
+          push: true,
+          color: 'negative'
+        },
+        persistent: true
+      }).onOk(async () => {
+        // console.log('>>>> OK')
+        for (let index = 0; index < data.length; index++) {
+          await this.deleteData(data[index].blacklistId)
+
+        }
+      }).onCancel(() => {
+        // console.log('>>>> Cancel')
+      }).onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+      })
+      // for (let index = 0; index < data.length; index++) {
+      //   await this.deleteData(data[index].ruleId)
+
+      // }
       console.log(data)
     },
     async getRulesById(ruleId) {

@@ -5,6 +5,14 @@
         <h5 class="q-ma-none q-pt-none">ภาพรวม</h5>
       </q-card-section> -->
       <q-card-section>
+        <div v-if="overViewOnLoad[0].link" class="loading-container q-pt-lx">
+                <q-spinner size="50px" />
+              </div>
+              <iframe sandbox="allow-scripts allow-same-origin" :src="overViewArray[0].link" width="100%"  height="800"
+                :onLoad="isFrameLoad(0)" style="border: none;">
+              </iframe>
+      </q-card-section>
+      <!-- <q-card-section>
         <div class="row q-ma-none">
           <div class="col-12 col-md-6" style="height: 480px">
             <div class="q-pa-sm">
@@ -49,7 +57,7 @@
             </div>
           </div>
         </div>
-      </q-card-section>
+      </q-card-section> -->
     </q-card>
 
   </q-page>
