@@ -335,7 +335,7 @@ rule:
 export default {
   mounted() {
     this.loading = false
-    Loading.hide()
+    // Loading.hide()
   },
   setup() {
 
@@ -499,23 +499,13 @@ export default {
         case 'saveEditIngredient':
           console.log('saveEditIngredient')
           console.log(this.edit_ingredient_detail)
-          // this.fn_updateIngredient(this.edit_ingredient_detail.id, this.edit_ingredient_detail)
           this.updateData()
-          // Notify.create({
-          //   position: "top",
-          //   type: 'positive',
-          //   message: 'บันทึกสำเร็จ'
-          // });
-          // this.edit_ingredient_detail_isOpen = false;
+
           break;
-        // const data = updateIngredient(this.edit_ingredient_detail.id, this.edit_ingredient_detail);
         case 'saveAddTable':
           this.add_ingredient_detail.ruleCreatedDate = this.getCurrentTimestamp()
           this.addData()
-          // console.log(mock_data)
-          // this.loadMenu()
-          // this.clearAddTable()
-          // this.add_ingredient_detail_isOpen = false
+
           break;
 
         case 'deleteSelectedTable':

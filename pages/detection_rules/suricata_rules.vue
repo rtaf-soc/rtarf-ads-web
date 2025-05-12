@@ -335,7 +335,7 @@ rule:
 export default {
   mounted() {
     this.loading = false
-    Loading.hide()
+    // Loading.hide()
   },
   setup() {
 
