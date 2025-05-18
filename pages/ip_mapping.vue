@@ -1,27 +1,28 @@
 <template>
   <q-page v-if="auth.isAuthenticated">
     <q-card>
-      <!-- <q-card-section class="q-pb-none">
-        <h5 class="q-pa-none q-ma-none">
-          Destination IP</h5>
-      </q-card-section> -->
+
       <q-card-section class="q-pa-none q-ma-none">
         <div class="row">
           <div class="col-12 col-md-12 q-pa-none">
-            <q-table class="my-sticky-header-table" style="height: 87vh;" flat bordered title="เมนู"
-              :rows="table_rows_menu" :columns="table_columns_menu" row-key="id" :pagination="pagination_menu"
-              separator="cell" :loading="loading">
+            <q-table class="my-sticky-header-table" style="height: 87vh;" flat bordered title="เมนู" color="amber"
+              :rows="table_rows_menu" :columns="table_columns_menu" row-key="id" v-model:pagination="pagination_menu"
+              v-model:selected="selected" selection="multiple" :rows-per-page-options="[5, 10, 15, 20, 30, 50, 0]"
+              @request="loadNextData" separator="cell" :loading="loading">
               <template v-slot:top-left>
                 <!-- <div class="text-h5 q-mr-md">Black list IP Address</div> -->
-                <q-input outlined dense debounce="300" placeholder="ค้นหา" v-model="filter_menu_table" bg-color="dark">
+                <q-input outlined dense debounce="300" placeholder="ค้นหา" v-model="filter_menu_table" bg-color="dark"
+                  @keyup.enter="onClick(`tableSearch`)">
                   <template v-slot:append>
                     <q-btn round dense flat icon="search" @click="onClick(`tableSearch`)" />
                   </template>
                 </q-input>
+                <q-badge class="q-ml-md text-bold q-pa-sm" align="middle" color="dark" style="font-size:20px;">
+                  ข้อมูลทั้งหมด : {{ Number(pagination_menu.rowsNumber).toLocaleString('en-US') }}
+                </q-badge>
               </template>
               <template v-slot:top-right>
-                <q-btn class="q-mr-lg" icon="add" rounded color="green-7"
-                  @click="this.add_ingredient_detail_isOpen = true" />
+                <q-btn class="q-mr-lg" icon="add" rounded color="green-7" @click="onClick(`addTable`)" />
                 <q-btn :disable="selectedTable <= 0" icon="delete" rounded color="negative"
                   @click="onClick(`deleteSelectedTable`)" />
               </template>
@@ -76,12 +77,8 @@
       <q-card style="width: 800px; max-width: 800vw;">
 
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">แก้ไขข้อมูล
-            <!-- <q-badge outline class="text-h6" align="middle" color="negative">
-              {{edit_ingredient_detail.cidr }} 
-
-            </q-badge> -->
-          </div>
+          <div class="text-h6">แก้ไขข้อมูลของ ID : <q-badge outline class="text-h6" align="middle" color="positive">{{
+            edit_ingredient_detail.ipMapId }} </q-badge></div>
 
           <!-- <div class="text-h7 q-mt-sm">Destination IP Address : <q-badge class="text-h5" color="primary">{{
             edit_ingredient_detail.blacklistCode }} </q-badge></div> -->
@@ -92,7 +89,8 @@
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
             <q-input class="q-pb-lg" v-model="edit_ingredient_detail.cidr" outlined label="CIDR" />
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.network_zone" outlined label="Network Zone" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.zone" outlined label="Network Zone" />
+            <!-- <q-input class="q-pb-lg" v-model="edit_ingredient_detail.description" outlined label="Description" /> -->
             <q-input v-model="edit_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -123,7 +121,8 @@
                 </q-btn>
               </template>
             </q-input>
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.network_zone" outlined label="Network Zone" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.zone" outlined label="Network Zone" />
+            <!-- <q-input class="q-pb-lg" v-model="add_ingredient_detail.description" outlined label="Description" /> -->
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -149,7 +148,7 @@ const table_columns_menu = [
   { name: 'id', align: 'center', label: 'Action', field: 'index', headerStyle: 'width: 30px' },
   // { name: 'blacklistId', label: 'ชื่อ', align: 'left', field: 'blacklistId', sortable: true },
   { name: 'cidr', align: 'left', label: 'CIDR', field: 'cidr', sortable: true, },
-  { name: 'network_zone', align: 'center', label: 'Network Zone', field: 'network_zone', sortable: true, },
+  { name: 'zone', align: 'center', label: 'Network Zone', field: 'zone', sortable: true, },
   { name: 'tags', align: 'left', label: 'tags', field: 'tags', sortable: true, },
   // { name: 'blacklistType', align: 'center', label: 'type', field: 'blacklistType', sortable: true, },
 
@@ -158,56 +157,19 @@ const table_columns_menu = [
 ]
 
 
-const mock_data = [
-  {
-    "cidr": "192.168.1.1/32",
-    "network_zone": "Internal",
-    "tags": "corporate, intranet",
-    "createdDate": "2023-09-01T12:00:00Z",
-    "update_at": "2023-09-01T12:00:00Z"
-  },
-  {
-    "cidr": "10.10.9.0/24",
-    "network_zone": "DMZ",
-    "tags": "public, testing",
-    "createdDate": "2023-08-01T08:30:00Z",
-    "update_at": "2023-08-05T09:45:00Z"
-  },
-  {
-    "cidr": "172.16.0.0/16",
-    "network_zone": "VPN",
-    "tags": "remote, secure",
-    "createdDate": "2023-07-10T10:00:00Z",
-    "update_at": "2023-07-12T10:00:00Z"
-  },
-  {
-    "cidr": "192.168.100.0/24",
-    "network_zone": "Guest",
-    "tags": "wifi, guest",
-    "createdDate": "2023-06-20T15:00:00Z",
-    "update_at": "2023-06-25T15:00:00Z"
-  },
-  {
-    "cidr": "10.0.0.0/8",
-    "network_zone": "Corporate",
-    "tags": "enterprise, main",
-    "createdDate": "2023-05-15T11:00:00Z",
-    "update_at": "2023-05-20T11:00:00Z"
-  }
-]
-
-
+const mock_data = []
 
 const table_rows_menu = ref([])
 const table_rows_ingredients = ref([])
 const filter_menu_table = ref('')
 const filter_ingredient_table = ref('')
-const pagination_menu = {
+const pagination_menu = ref({
   sortBy: 'desc',
   descending: false,
   page: 1,
-  rowsPerPage: 10
-}
+  rowsPerPage: 10,
+  rowsNumber: 0
+})
 
 const pagination_ingredient = {
   sortBy: 'desc',
@@ -218,18 +180,25 @@ const pagination_ingredient = {
 const loading = ref(true)
 const edit_ingredient_detail_isOpen = ref(false)
 const edit_ingredient_detail = {
+  ipMapId: "",
+  orgId: "default",
   cidr: "",
-  network_zone: "",
-  tag: 0,
+  tags: "",
+  zone: "",
+  description: "",
+  createdDate: "2024-10-12T09:24:30.125001Z"
+
 
 }
 const add_ingredient_detail_isOpen = ref(false)
 const add_ingredient_detail = {
+  ipMapId: "",
+  orgId: "default",
   cidr: "",
-  network_zone: "",
   tags: "",
-  createdDate: "2024-10-12T09:24:30.125001Z",
-  update_at: "2023-05-20T11:00:00Z"
+  zone: "",
+  description: "",
+  createdDate: "2024-10-12T09:24:30.125001Z"
 
 }
 
@@ -245,13 +214,13 @@ const selectedTable = ref([])
 // Loading.show()
 
 export default {
+  mounted() {
+    console.log('mounted')
+    this.loading = false
+    // Loading.hide()
+  },
   setup() {
-    onMounted(() => {
-      // console.log('onMount1')
-      // this.loadMenu()
-      loading.value = false
-      Loading.hide()
-    })
+
     const auth = useAuthStore();
     return {
       auth,
@@ -292,29 +261,33 @@ export default {
   //   return formattedDate // Output: 26-12-2023
   // },
 
-  async onMounted() {
-    // console.log('onMount2')
-    loading.value = false
-    Loading.hide()
-    // console.log('load menu');
-    // await this.loadMenu();
-  },
+  // async onMounted() {
+  //   console.log('onMount2')
+  //   loading.value = false
+  //   Loading.hide()
+  //   await this.fetchData()
+  //   // console.log('load menu');
+  //   // await this.loadMenu();
+  // },
   beforeMount() {
     // console.log('beformount')
     definePageMeta({
       middleware: 'auth'
     })
-    this.loadMenu();
+    this.loadData();
   },
   // onMounted() {
   //   loadMenu()
   //   // Loading.hide()
   // },
   methods: {
-    async loadMenu() {
+    async loadMenu(data) {
       try {
         // const data = await fetchMenu();
-        let mockdata = [...mock_data];
+        console.log("load menu")
+        console.log(data)
+        let mockdata = [...data];
+        console.log("load menu from data")
         // console.log(mockdata)
         // console.log(filteredData);
         this.menus = mockdata;
@@ -324,7 +297,7 @@ export default {
         for (let index = 0; index < data_rows.length; index++) {
           this.selectedTable.push({ value: false })
           const element = data_rows[index];
-          element.index = index + 1;
+          element.index = index + 1 + ((pagination_menu.value.page - 1) * pagination_menu.value.rowsPerPage);
         }
         // console.log(data_rows)
         this.table_rows_menu = data_rows;
@@ -362,11 +335,13 @@ export default {
     },
     clearAddTable() {
       this.add_ingredient_detail = {
+        ipMapId: "",
+        orgId: "default",
         cidr: "",
-        network_zone: "",
         tags: "",
-        createdDate: "2024-10-12T09:24:30.125001Z",
-        update_at: "2023-05-20T11:00:00Z"
+        zone: "",
+        description: "",
+        createdDate: "2024-10-12T09:24:30.125001Z"
 
       }
     },
@@ -385,24 +360,14 @@ export default {
         selectedTable.value = selectedTable.value.filter(id => id !== row.index)
       }
     },
-    deleteSelectedRows() {
-      // Filter out rows that have been selected
-      table_rows_menu.value = table_rows_menu.value.filter(row => !selectedTable.value.includes(row.index))
-      // Clear the selection after deletion
-      selectedTable.value = []
-    },
 
-    onClick(fn_name, param = null) {
+    async onClick(fn_name, param = null) {
       switch (fn_name) {
         case 'tableSearch':
-          if (this.filter_menu_table.trim().length > 0) {
-            console.log(`have search text ${this.filter_menu_table}`)
-          } else {
-            console.log(`no search test`)
-          }
-          // edit_ingredient_detail 
+          this.loadData()
           break;
         case 'editIngredient':
+          this.showEditor = false
           console.log(param);
           this.edit_ingredient_detail = param;
           this.edit_ingredient_detail_isOpen = true;
@@ -412,27 +377,29 @@ export default {
         case 'saveEditIngredient':
           console.log('saveEditIngredient')
           console.log(this.edit_ingredient_detail)
-          this.fn_updateIngredient(this.edit_ingredient_detail.id, this.edit_ingredient_detail)
-          Notify.create({
-            position: "top",
-            type: 'positive',
-            message: 'บันทึกสำเร็จ'
-          });
-          this.edit_ingredient_detail_isOpen = false;
+          this.updateData()
+
           break;
-        // const data = updateIngredient(this.edit_ingredient_detail.id, this.edit_ingredient_detail);
         case 'saveAddTable':
           this.add_ingredient_detail.createdDate = this.getCurrentTimestamp()
-          mock_data.push(this.add_ingredient_detail)
-          // console.log(mock_data)
-          this.loadMenu()
-          this.clearAddTable()
-          this.add_ingredient_detail_isOpen = false
+          this.addData()
+
           break;
 
         case 'deleteSelectedTable':
           console.log(`deleteTable`)
           this.deleteSelectedRows()
+          break;
+        case 'addTable':
+          this.showEditor = false
+          this.add_ingredient_detail_isOpen = true
+          break;
+        case 'editRule':
+          if (!this.showEditor) {
+            this.edit_ingredient_detail.ruleDefinition = await this.getRulesById(this.edit_ingredient_detail.ruleId)
+          }
+          this.showEditor = !this.showEditor
+          // this.edit_ingredient_detail_isOpen = true
           break;
 
         default:
@@ -443,22 +410,368 @@ export default {
       // const resData = await updateIngredient(id, data);
       // console.log(resData)
 
+    },
+    async deleteSelectedRows() {
+      // table_rows_menu.value.filter(row => !selectedTable.value.includes(row.ruleId)
+      // table_rows_menu.value = table_rows_menu.value.filter(row => !selectedTable.value.includes(row.index))
+      // selectedTable.value = []
+      let data = table_rows_menu.value.filter(row => selectedTable.value.includes(row.index))
+      // console.log(data.length)
+      let html = data
+        .map(item => `${item.index}. CIDR : ${item.cidr} , TAGS : ${item.tags}`)
+        .join('<br/>')
+
+      Dialog.create({
+        title: '<span class="text-red">ยืนยันการลบข้อมูลต่อไปนี้ !</span>',
+        message: `<span class="text-yellow">${html}</span>`,
+        html: true,
+        style: 'minWidth:600px',
+        ok: {
+          push: true,
+          color: 'primary'
+        },
+        cancel: {
+          push: true,
+          color: 'negative'
+        },
+        persistent: true
+      }).onOk(async () => {
+        // console.log('>>>> OK')
+        for (let index = 0; index < data.length; index++) {
+          await this.deleteData(data[index].ipMapId)
+
+        }
+      }).onCancel(() => {
+        // console.log('>>>> Cancel')
+      }).onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+      })
+
+      // for (let index = 0; index < data.length; index++) {
+      //   await this.deleteData(data[index].ruleId)
+
+      // }
+      console.log(data)
+    },
+    async getRulesById(ruleId) {
+
+      Loading.show()
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        let body = { ruleId: ruleId }
+
+        console.log(body)
+        let data = await $fetch('/api/blacklist/get_by_id', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+          body: JSON.stringify(body)
+
+
+        });
+        // Notify.create({
+        //   position: "top",
+        //   type: 'positive',
+        //   message: 'ลบมูลสำเร็จ'
+        // });
+        // this.edit_ingredient_detail_isOpen = false;
+        // await this.loadData()
+        return data.ruleDefinition
+      } catch (error) {
+        console.error('Error delete data:', error);
+        Notify.create({
+          position: "top",
+          type: 'negative',
+          message: 'Error delete data:' + error
+        });
+      } finally {
+        Loading.hide()
+      }
+    },
+    async deleteData(id) {
+      Loading.show()
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        let body = {
+          id: id,
+          apiComponent: "IpMap",
+          orgName: "default",
+          actionName: "DeleteIpMapById",
+          apiMethod: "DELETE"
+        }
+
+        console.log(body)
+        let countData = await $fetch('/api/apiClient', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+          body: JSON.stringify(body)
+
+
+        });
+        Notify.create({
+          position: "top",
+          type: 'positive',
+          message: 'ลบมูลสำเร็จ'
+        });
+        this.edit_ingredient_detail_isOpen = false;
+        await this.loadData()
+      } catch (error) {
+        console.error('Error delete data:', error);
+        Notify.create({
+          position: "top",
+          type: 'negative',
+          message: 'Error delete data:' + error
+        });
+      } finally {
+        Loading.hide()
+      }
+    },
+    async updateData() {
+      console.log('add data')
+      Loading.show()
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        let body = this.edit_ingredient_detail
+        body['id'] = this.edit_ingredient_detail.ipMapId
+        body['apiComponent'] = "IpMap"
+        body['orgName'] = "default"
+        body['actionName'] = "UpdateIpMapById"
+
+        console.log(body)
+        console.log('start addd')
+        let countData = await $fetch('/api/apiClient', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+          body: JSON.stringify(body)
+
+
+        });
+        Notify.create({
+          position: "top",
+          type: 'positive',
+          message: 'อัพเดขข้อมูลสำเร็จ'
+        });
+        this.edit_ingredient_detail_isOpen = false;
+        await this.loadData()
+      } catch (error) {
+        console.error('Error create data:', error);
+        Notify.create({
+          position: "top",
+          type: 'negative',
+          message: 'Error create data:' + error
+        });
+      } finally {
+        Loading.hide()
+      }
+    },
+    async addData() {
+      console.log('add data')
+      Loading.show()
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        let body = {
+          orgId: "default",
+          createdDate: add_ingredient_detail.createdDate,
+          cidr: add_ingredient_detail.cidr,
+          zone: add_ingredient_detail.zone,
+          tags: add_ingredient_detail.tags,
+          apiComponent: "IpMap",
+          orgName: "default",
+          actionName: "AddIpMap"
+
+        }
+        console.log(body)
+        console.log('start addd')
+        let countData = await $fetch('/api/apiClient', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+          body: JSON.stringify(body)
+
+
+        });
+        Notify.create({
+          position: "top",
+          type: 'positive',
+          message: 'เพิ่มข้อมูลสำเร็จ'
+        });
+        this.add_ingredient_detail_isOpen = false
+        this.clearAddTable()
+        this.loadData()
+      } catch (error) {
+        console.error('Error create data:', error);
+
+      } finally {
+        Loading.hide()
+      }
+    },
+
+    async loadData() {
+      Loading.show()
+      try {
+        // const countApi = config.apiPath + `/api/${data.apiComponent}/org/${data.orgName}/action/${data.actionName}`
+        const accessToken = localStorage.getItem('accessToken');
+
+
+        let countData = await $fetch('/api/apiClient', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+
+          body: JSON.stringify({
+            offset: 0,
+            fromDate: "2025-05-05T17:56:35.528Z",
+            toDate: "2025-05-06T17:56:35.528Z",
+            limit: 10,
+            fullTextSearch: filter_menu_table.value,
+            cidr: "",
+            zone: "",
+            apiComponent: "IpMap",
+            orgName: "default",
+            actionName: "GetIpMapCount"
+
+          })
+
+
+        });
+        console.log("count")
+
+        console.log(countData)
+
+        pagination_menu.value.rowsNumber = countData
+        pagination_menu.value.page = 1
+
+        console.log(pagination_menu.page)
+        console.log('before load data')
+        let data = await $fetch('/api/apiClient', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+
+          body: JSON.stringify({
+            offset: 0,
+            fromDate: "2025-05-05T17:56:35.528Z",
+            toDate: "2025-05-06T17:56:35.528Z",
+            limit: 10,
+            fullTextSearch: filter_menu_table.value,
+            cidr: "",
+            zone: "",
+            apiComponent: "IpMap",
+            orgName: "default",
+            actionName: "GetIpMaps"
+
+          })
+
+
+        });
+        // console.log('load data')
+        // console.log(data)
+        await this.loadMenu(data)
+        // for (let index = 0; index < 4; index++) {
+        //   overViewArray.value[index]['link'] = overviewData.value[index].variableValue;
+        //   console.log(data)
+        // }
+      } catch (error) {
+        console.error('Error fetching overview data:', error);
+      } finally {
+        Loading.hide()
+      }
+    },
+
+    async loadNextData(props) {
+      const { page, rowsPerPage, sortBy, descending } = props.pagination
+      Loading.show()
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        let countData = await $fetch('/api/apiClient', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+
+          body: JSON.stringify({
+            offset: 0,
+            fromDate: "2025-05-05T17:56:35.528Z",
+            toDate: "2025-05-06T17:56:35.528Z",
+            limit: 10,
+            fullTextSearch: filter_menu_table.value,
+            cidr: "",
+            zone: "",
+            apiComponent: "IpMap",
+            orgName: "default",
+            actionName: "GetIpMapCount"
+
+          })
+
+
+        });
+        console.log(page - 1)
+        console.log(countData)
+        pagination_menu.value.rowsNumber = countData
+        pagination_menu.value.page = page
+        pagination_menu.value.rowsPerPage = rowsPerPage
+        console.log(pagination_menu.page)
+        let data = await $fetch('/api/apiClient', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          // Use a raw JSON body as expected by your API:
+
+          body: JSON.stringify({
+            offset: pagination_menu.value.page - 1,
+            fromDate: "2025-05-05T17:56:35.528Z",
+            toDate: "2025-05-06T17:56:35.528Z",
+            limit: pagination_menu.value.rowsPerPage,
+            fullTextSearch: filter_menu_table.value,
+            cidr: "",
+            zone: "",
+            apiComponent: "IpMap",
+            orgName: "default",
+            actionName: "GetIpMaps"
+
+          })
+
+
+        });
+        console.log(data)
+        console.log("loadNextData")
+        await this.loadMenu(data)
+        // for (let index = 0; index < 4; index++) {
+        //   overViewArray.value[index]['link'] = overviewData.value[index].variableValue;
+        //   console.log(data)
+        // }
+      } catch (error) {
+        console.error('Error fetching overview data:', error);
+      } finally {
+        Loading.hide()
+      }
     }
-    // async handleAddMenu() {
-    //   try {
-    //     const response = await createMenu({ name: this.newMenuName });
-    //     const menuId = response.data.id;
-    //     for (const ingredient of this.newIngredients) {
-    //       await createIngredient({ ...ingredient, menu_id: menuId });
-    //     }
-    //     this.menus.push(response.data);
-    //     this.isAddMenuDialogOpen = false;
-    //     this.newMenuName = '';
-    //     this.newIngredients = [{ name: '', weight: '', tolerance: '' }];
-    //   } catch (error) {
-    //     console.error('Error adding menu:', error);
-    //   }
-    // }
+
+
   },
 
 };

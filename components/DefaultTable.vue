@@ -108,8 +108,8 @@
                         </q-chip>
                       </template>
   
-                      <template v-else-if="col.name === 'ruleCreatedDate'">
-                        {{ convertTimestamp(props.row.ruleCreatedDate) }}
+                      <template v-else-if="col.name === 'createdDate'">
+                        {{ convertTimestamp(props.row.createdDate) }}
                       </template>
   
                       <template v-else>
@@ -142,7 +142,7 @@
             <q-item-section>
               <q-input
                 class="q-pb-lg"
-                v-model="edit_ingredient_detail.ruleName"
+                v-model="edit_ingredient_detail.name"
                 outlined
                 label="Rule Name"
                 disable
@@ -191,7 +191,7 @@
             <q-item-section>
               <q-input
                 class="q-pb-lg"
-                v-model="add_ingredient_detail.ruleName"
+                v-model="add_ingredient_detail.name"
                 outlined
                 label="Rule Name"
               />
@@ -237,7 +237,10 @@
   
   // 1️⃣ declare prop to make this reusable
   const props = defineProps({
-    refType: { type: String, required: true }
+    refType: { type: String, required: true },
+    apiComponent: { type: String, required: true },
+    orgName: { type: String, required: true },
+    actionName: { type: String, required: true },
   })
   
   // 2️⃣ protect with auth middleware
@@ -247,7 +250,7 @@
   const auth = useAuthStore()
   const table_columns_menu = [
     { name: 'id', align: 'center', label: 'Action',    field: 'index', headerStyle: 'width: 30px' },
-    { name: 'ruleName', align: 'left',   label: 'Rule Name', field: 'ruleName', sortable: true },
+    { name: 'name', align: 'left',   label: 'Name', field: 'name', sortable: true },
     { name: 'refUrl',    align: 'center',label: 'URL',      field: 'refUrl', sortable: true },
     { name: 'tags',      align: 'left',   label: 'tags',     field: 'tags', sortable: true }
   ]
@@ -262,14 +265,14 @@
   const table_rows_menu             = ref([])
   const edit_ingredient_detail_isOpen = ref(false)
   const edit_ingredient_detail      = ref({
-    ruleName: '', ruleDefinition: '', refUrl: '', tags: '',
-    ruleCreatedDate: '2024-10-12T09:24:30.125001Z',
+    name: '', ruleDefinition: '', refUrl: '', tags: '',
+    createdDate: '2024-10-12T09:24:30.125001Z',
     update_at: '2023-05-20T11:00:00Z'
   })
   const add_ingredient_detail_isOpen = ref(false)
   const add_ingredient_detail       = ref({
-    ruleName: '', ruleDefinition: '', refUrl: '', tags: '',
-    ruleCreatedDate: '2024-10-12T09:24:30.125001Z',
+    name: '', ruleDefinition: '', refUrl: '', tags: '',
+    createdDate: '2024-10-12T09:24:30.125001Z',
     update_at: '2023-05-20T11:00:00:Z'
   })
   
@@ -290,7 +293,7 @@
     return now.format('YYYY-MM-DDTHH:mm:ss.') + ms + '000Z'
   }
   function clearAddTable() {
-    add_ingredient_detail.value = { ...add_ingredient_detail.value, ruleName: '', ruleDefinition: '', refUrl: '', tags: '' }
+    add_ingredient_detail.value = { ...add_ingredient_detail.value, name: '', ruleDefinition: '', refUrl: '', tags: '' }
   }
   function isRowSelected(row) {
     return selectedTable.value.includes(row.index)
@@ -322,7 +325,7 @@
         break
   
       case 'saveAddTable':
-        add_ingredient_detail.value.ruleCreatedDate = getCurrentTimestamp()
+        add_ingredient_detail.value.createdDate = getCurrentTimestamp()
         await addData()
         break
   
@@ -423,7 +426,7 @@
   
   async function deleteSelectedRows() {
     const toDel = table_rows_menu.value.filter(r => selectedTable.value.includes(r.index))
-    const html = toDel.map(i => `${i.index}. Rule Name: ${i.ruleName}`).join('<br/>')
+    const html = toDel.map(i => `${i.index}. Rule Name: ${i.name}`).join('<br/>')
   
     await Dialog.create({
       title: '<span class="text-red">ยืนยันการลบข้อมูล !</span>',
@@ -490,32 +493,4 @@
     finally { Loading.hide() }
   }
   </script>
-  
-  <style lang="sass" scoped>
-  @import '~/assets/quasar-variables.sass'
-  
-  .my-sticky-header-table
-    /* height or max-height is important */
-    height: 310px
-  
-    .q-table__top,
-    .q-table__bottom,
-    thead tr:first-child th
-      /* bg color is important for th; just specify one */
-      background-color: $primary
-  
-    thead tr th
-      position: sticky
-      z-index: 1
-  
-    thead tr:first-child th
-      top: 0
-  
-    &.q-table--loading thead tr:last-child th
-      top: 48px
-  
-    tbody
-      scroll-margin-top: 48px
-  </style>
-  
   

@@ -3,7 +3,6 @@ import { Buffer } from 'buffer'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
-  const rulesApi = config.apiPath + '/api/Blacklist/org/default/action/GetBlackListById'
 
   const authHeader = event.node.req.headers.authorization
   if (!authHeader) {
@@ -24,32 +23,36 @@ export default defineEventHandler(async (event) => {
 
   // ✅ Parse body sent from client
   const data = await readBody(event)
-  // console.log(data)
+  console.log(data)
   try {
-    if (config.debugMode) {
-      console.log('📡 Sending Request:')
-      console.log('URL:', rulesApi)
-      console.log('Headers:', {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${encodedToken}`
-      })
-      console.log('Body:', data)
+    let apiPath = config.apiPath + `/api/${data.apiComponent}/org/${data.orgName}/action/${data.actionName}`
+    if (data.apiMethod === "DELETE" || data.actionName.toLowerCase().includes("update")) {
+      apiPath = apiPath + `/${data.id}`
     }
-
-    const response = await $fetch(rulesApi+`/${data.ruleId}`, {
-      method: 'GET',
+    console.log(apiPath)
+    const response = await $fetch(apiPath, {
+      method: data.apiMethod || "POST",
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${encodedToken}`
       },
+      body: JSON.stringify(
+        data
+      )
     })
-
+    console.log(data.actionName)
+    if (data.actionName == "GetIpMapCount") {
+      console.log('count')
+      console.log(response)
+    }
+    // console.log('count')
+    // console.log(response)
     return response
   } catch (error) {
-    console.error('Error calling get rules API:', error)
+    console.error('Error calling apiClient API:', error)
     throw createError({
       statusCode: error.response?.status || 500,
-      statusMessage: 'Failed to fetch blacklist by id'
+      statusMessage: 'Failed to fetch apiClient data'
     })
   }
 })
