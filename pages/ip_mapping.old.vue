@@ -1,10 +1,6 @@
 <template>
   <q-page v-if="auth.isAuthenticated">
     <q-card>
-      <!-- <q-card-section class="q-pb-none">
-        <h5 class="q-pa-none q-ma-none">
-          Destination IP</h5>
-      </q-card-section> -->
 
       <q-card-section class="q-pa-none q-ma-none">
         <div class="row">
@@ -21,7 +17,8 @@
                 </q-input>
               </template>
               <template v-slot:top-right>
-                <q-btn class="q-mr-lg" icon="add" rounded color="green-7" @click="onClick(`addTable`)" />
+                <q-btn class="q-mr-lg" icon="add" rounded color="green-7"
+                  @click="this.add_ingredient_detail_isOpen = true" />
                 <q-btn :disable="selectedTable <= 0" icon="delete" rounded color="negative"
                   @click="onClick(`deleteSelectedTable`)" />
               </template>
@@ -91,9 +88,8 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.name" outlined label="Name" />
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.permissions" outlined label="Permissions" />
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.description" outlined label="Description" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.cidr" outlined label="CIDR" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.network_zone" outlined label="Network Zone" />
             <q-input v-model="edit_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -104,7 +100,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-dialog v-model="add_ingredient_detail_isOpen" @show="onDialogShow">
+    <q-dialog v-model="add_ingredient_detail_isOpen">
       <q-card style="width: 800px; max-width: 800vw;">
 
         <q-card-section class="row items-center q-pb-none">
@@ -115,10 +111,16 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.name" outlined label="Name" />
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.permissions" outlined label="Permission" />
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.description" outlined label="Description" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.cidr" outlined label="CIDR">
+              <template v-slot:after>
+                <q-btn round dense flat icon="error">
+                  <q-tooltip class="bg-red text-body2">
+                    example : 192.168.1.1/32
+                  </q-tooltip>
+                </q-btn>
+              </template>
+            </q-input>
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.network_zone" outlined label="Network Zone" />
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -135,15 +137,16 @@
 <script>
 import moment from 'moment';
 import { useAuthStore } from '~/stores/auth'
-import mock_roles from './mock_roles.json'
+
+// import { fetchMenu, createMenu } from '~/api/menuService';
+// import { createIngredient, fetchIngredients, updateIngredient } from '~/api/ingredientService';
 
 const table_columns_menu = [
 
   { name: 'id', align: 'center', label: 'Action', field: 'index', headerStyle: 'width: 30px' },
-  { name: 'name', align: 'center', label: 'Role Name', field: 'name', sortable: true, },
-  { name: 'premissions', align: 'center', label: 'Permission', field: 'premissions', sortable: true, },
-  { name: 'description', align: 'left', label: 'Description', field: 'description', sortable: true, },
-
+  // { name: 'blacklistId', label: 'ชื่อ', align: 'left', field: 'blacklistId', sortable: true },
+  { name: 'cidr', align: 'left', label: 'CIDR', field: 'cidr', sortable: true, },
+  { name: 'network_zone', align: 'center', label: 'Network Zone', field: 'network_zone', sortable: true, },
   { name: 'tags', align: 'left', label: 'tags', field: 'tags', sortable: true, },
   // { name: 'blacklistType', align: 'center', label: 'type', field: 'blacklistType', sortable: true, },
 
@@ -151,20 +154,44 @@ const table_columns_menu = [
 
 ]
 
-const monacoEditor = ref(null)
-const showEditor = ref(false)
-const editorOptions = {
-  automaticLayout: true,
-  theme: 'vs-dark',
-}
 
-
-const mock_data = mock_roles
-
-
-
-
-
+const mock_data = [
+  {
+    "cidr": "192.168.1.1/32",
+    "network_zone": "Internal",
+    "tags": "corporate, intranet",
+    "createdDate": "2023-09-01T12:00:00Z",
+    "update_at": "2023-09-01T12:00:00Z"
+  },
+  {
+    "cidr": "10.10.9.0/24",
+    "network_zone": "DMZ",
+    "tags": "public, testing",
+    "createdDate": "2023-08-01T08:30:00Z",
+    "update_at": "2023-08-05T09:45:00Z"
+  },
+  {
+    "cidr": "172.16.0.0/16",
+    "network_zone": "VPN",
+    "tags": "remote, secure",
+    "createdDate": "2023-07-10T10:00:00Z",
+    "update_at": "2023-07-12T10:00:00Z"
+  },
+  {
+    "cidr": "192.168.100.0/24",
+    "network_zone": "Guest",
+    "tags": "wifi, guest",
+    "createdDate": "2023-06-20T15:00:00Z",
+    "update_at": "2023-06-25T15:00:00Z"
+  },
+  {
+    "cidr": "10.0.0.0/8",
+    "network_zone": "Corporate",
+    "tags": "enterprise, main",
+    "createdDate": "2023-05-15T11:00:00Z",
+    "update_at": "2023-05-20T11:00:00Z"
+  }
+]
 
 
 
@@ -188,19 +215,15 @@ const pagination_ingredient = {
 const loading = ref(true)
 const edit_ingredient_detail_isOpen = ref(false)
 const edit_ingredient_detail = {
-  name: "",
-  permissions: "",
-  description: "",
-  tags: "",
-  createdDate: "2024-10-12T09:24:30.125001Z",
-  update_at: "2023-05-20T11:00:00Z"
+  cidr: "",
+  network_zone: "",
+  tag: 0,
 
 }
 const add_ingredient_detail_isOpen = ref(false)
 const add_ingredient_detail = {
-  name: "",
-  permissions: "",
-  description: "",
+  cidr: "",
+  network_zone: "",
   tags: "",
   createdDate: "2024-10-12T09:24:30.125001Z",
   update_at: "2023-05-20T11:00:00Z"
@@ -215,6 +238,7 @@ const add_ingredient_detail = {
 //           "createdDate": "2024-10-12T09:24:30.125001Z"
 
 const selectedTable = ref([])
+
 // Loading.show()
 
 export default {
@@ -254,12 +278,7 @@ export default {
       edit_ingredient_detail,
       selectedTable,
       add_ingredient_detail_isOpen,
-      add_ingredient_detail,
-
-      editorOptions,
-      monacoEditor,
-      showEditor
-
+      add_ingredient_detail
       // rowsNumber: xx if getting data from a server
     };
   },
@@ -340,9 +359,8 @@ export default {
     },
     clearAddTable() {
       this.add_ingredient_detail = {
-        name: "",
-        permissions: "",
-        description: "",
+        cidr: "",
+        network_zone: "",
         tags: "",
         createdDate: "2024-10-12T09:24:30.125001Z",
         update_at: "2023-05-20T11:00:00Z"
@@ -371,25 +389,6 @@ export default {
       selectedTable.value = []
     },
 
-    async copyToClipboard(textToCopy) {
-      try {
-        // Use the Clipboard API to write the text
-        await navigator.clipboard.writeText(textToCopy)
-        Notify.create({
-          message: 'Text copied successfully!',
-          color: 'positive',
-          position: 'top'
-        })
-      } catch (error) {
-        console.error('Failed to copy:', error)
-        Notify.create({
-          message: 'Failed to copy text',
-          color: 'negative',
-          position: 'top'
-        })
-      }
-    },
-
     onClick(fn_name, param = null) {
       switch (fn_name) {
         case 'tableSearch':
@@ -401,7 +400,6 @@ export default {
           // edit_ingredient_detail 
           break;
         case 'editIngredient':
-          this.showEditor = false
           console.log(param);
           this.edit_ingredient_detail = param;
           this.edit_ingredient_detail_isOpen = true;
@@ -433,10 +431,7 @@ export default {
           console.log(`deleteTable`)
           this.deleteSelectedRows()
           break;
-        case 'addTable':
-          this.showEditor = false
-          this.add_ingredient_detail_isOpen = true
-          break;
+
         default:
           break;
       }

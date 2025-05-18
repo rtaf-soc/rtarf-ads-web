@@ -4,7 +4,7 @@
       <!-- <q-card-section>
         <h5 class="q-ma-none q-pt-none">ภาพรวม</h5>
       </q-card-section> -->
-      <q-card-section>
+      <q-card-section class="q-pa-none q-ma-none">
         <div v-if="overViewOnLoad[0].link" class="loading-container q-pt-lx">
                 <q-spinner size="50px" />
               </div>

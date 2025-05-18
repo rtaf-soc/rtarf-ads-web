@@ -5,9 +5,9 @@
         <h5 class="q-pa-none q-ma-none">
           Source IP</h5>
       </q-card-section> -->
-      <q-card-section>
+      <q-card-section class="q-pa-none q-ma-none">
         <div class="row">
-          <div class="col-12 col-md-12 q-pa-sm">
+          <div class="col-12 col-md-12 q-pa-none">
             <q-table class="my-sticky-header-table" style="height: 75vh;" flat bordered title="เมนู"
               :rows="table_rows_menu" :columns="table_columns_menu" row-key="id" :filter="filter_menu_table"
               :pagination="pagination_menu" separator="cell" :loading="loading">

@@ -91,9 +91,13 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.name" outlined label="Name" />
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.permissions" outlined label="Permissions" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.url" outlined label="URL" />
             <q-input class="q-pb-lg" v-model="edit_ingredient_detail.description" outlined label="Description" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.api_key" outlined label="API Key" type="password">
+              <template v-slot:append>
+                <q-btn flat round dense icon="content_copy" @click="copyToClipboard(edit_ingredient_detail.api_key)" />
+              </template>
+            </q-input>
             <q-input v-model="edit_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -116,9 +120,13 @@
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
 
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.name" outlined label="Name" />
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.permissions" outlined label="Permission" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.url" outlined label="URL" />
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.description" outlined label="Description" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.api_key" outlined label="API Key" type="password">
+              <template v-slot:append>
+                <q-btn flat round dense icon="content_copy" @click="copyToClipboard(add_ingredient_detail.api_key)" />
+              </template>
+            </q-input>
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -135,13 +143,11 @@
 <script>
 import moment from 'moment';
 import { useAuthStore } from '~/stores/auth'
-import mock_roles from './mock_roles.json'
 
 const table_columns_menu = [
 
   { name: 'id', align: 'center', label: 'Action', field: 'index', headerStyle: 'width: 30px' },
-  { name: 'name', align: 'center', label: 'Role Name', field: 'name', sortable: true, },
-  { name: 'premissions', align: 'center', label: 'Permission', field: 'premissions', sortable: true, },
+  { name: 'url', align: 'center', label: 'URL', field: 'url', sortable: true, },
   { name: 'description', align: 'left', label: 'Description', field: 'description', sortable: true, },
 
   { name: 'tags', align: 'left', label: 'tags', field: 'tags', sortable: true, },
@@ -159,10 +165,88 @@ const editorOptions = {
 }
 
 
-const mock_data = mock_roles
-
-
-
+const mock_data = [
+  {
+    "url": "http://10.10.9.0/abcde/sxxxss",
+    "description": "This is the first record, providing sample information for testing purposes.",
+    "api_key": "sk_1a2b3c4d",
+    "tags": "sample, test, first",
+    "createdDate": "2023-01-10T09:00:00Z",
+    "update_at": "2023-02-10T09:00:00Z"
+  },
+  {
+    "url": "http://10.10.9.1/abcde/xyz123",
+    "description": "This is the second record with additional information.",
+    "api_key": "sk_2b3c4d5e",
+    "tags": "example, second, node",
+    "createdDate": "2023-02-15T11:30:00Z",
+    "update_at": "2023-03-01T11:30:00Z"
+  },
+  {
+    "url": "http://10.10.9.2/abcde/route66",
+    "description": "This is the third record that includes a unique endpoint detail.",
+    "api_key": "sk_3c4d5e6f",
+    "tags": "api, test, third",
+    "createdDate": "2023-03-20T14:45:00Z",
+    "update_at": "2023-04-05T14:45:00Z"
+  },
+  {
+    "url": "http://10.10.9.3/abcde/path987",
+    "description": "The fourth record is designed for testing edge cases.",
+    "api_key": "sk_4d5e6f7g",
+    "tags": "edge, scenario, fourth",
+    "createdDate": "2023-04-15T08:00:00Z",
+    "update_at": "2023-04-20T08:00:00Z"
+  },
+  {
+    "url": "http://10.10.9.4/abcde/endpoint55",
+    "description": "Fifth sample record used for backend testing.",
+    "api_key": "sk_5e6f7g8h",
+    "tags": "backend, test, fifth",
+    "createdDate": "2023-05-01T10:15:00Z",
+    "update_at": "2023-05-05T10:15:00Z"
+  },
+  {
+    "url": "http://10.10.9.5/abcde/service77",
+    "description": "The sixth entry handles specific service integration scenarios.",
+    "api_key": "sk_6f7g8h9i",
+    "tags": "service, integration, sixth",
+    "createdDate": "2023-05-10T13:20:00Z",
+    "update_at": "2023-05-15T13:20:00Z"
+  },
+  {
+    "url": "http://10.10.9.6/abcde/access88",
+    "description": "Seventh record carrying additional access information.",
+    "api_key": "sk_7g8h9i0j",
+    "tags": "access, security, seventh",
+    "createdDate": "2023-06-01T16:30:00Z",
+    "update_at": "2023-06-10T16:30:00Z"
+  },
+  {
+    "url": "http://10.10.9.7/abcde/module99",
+    "description": "The eighth record integrates different modules and functions.",
+    "api_key": "sk_8h9i0j1k",
+    "tags": "module, integration, eighth",
+    "createdDate": "2023-06-15T18:40:00Z",
+    "update_at": "2023-06-20T18:40:00Z"
+  },
+  {
+    "url": "http://10.10.9.8/abcde/api101",
+    "description": "Ninth record is used for testing API connectivity.",
+    "api_key": "sk_9i0j1k2l",
+    "tags": "api, connectivity, ninth",
+    "createdDate": "2023-07-01T20:00:00Z",
+    "update_at": "2023-07-05T20:00:00Z"
+  },
+  {
+    "url": "http://10.10.9.9/abcde/interface202",
+    "description": "The tenth record acts as a final endpoint in the service suite.",
+    "api_key": "sk_0j1k2l3m",
+    "tags": "interface, endpoint, tenth",
+    "createdDate": "2023-07-10T22:00:00Z",
+    "update_at": "2023-07-15T22:00:00Z"
+  }
+]
 
 
 
@@ -188,9 +272,9 @@ const pagination_ingredient = {
 const loading = ref(true)
 const edit_ingredient_detail_isOpen = ref(false)
 const edit_ingredient_detail = {
-  name: "",
-  permissions: "",
+  url: "",
   description: "",
+  api_key: "",
   tags: "",
   createdDate: "2024-10-12T09:24:30.125001Z",
   update_at: "2023-05-20T11:00:00Z"
@@ -198,9 +282,9 @@ const edit_ingredient_detail = {
 }
 const add_ingredient_detail_isOpen = ref(false)
 const add_ingredient_detail = {
-  name: "",
-  permissions: "",
+  url: "",
   description: "",
+  api_key: "",
   tags: "",
   createdDate: "2024-10-12T09:24:30.125001Z",
   update_at: "2023-05-20T11:00:00Z"
@@ -340,9 +424,9 @@ export default {
     },
     clearAddTable() {
       this.add_ingredient_detail = {
-        name: "",
-        permissions: "",
+        url: "",
         description: "",
+        api_key: "",
         tags: "",
         createdDate: "2024-10-12T09:24:30.125001Z",
         update_at: "2023-05-20T11:00:00Z"
