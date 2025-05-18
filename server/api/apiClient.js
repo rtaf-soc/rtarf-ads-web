@@ -46,7 +46,10 @@ export default defineEventHandler(async (event) => {
       console.log(response)
     }
     // console.log('count')
-    // console.log(response)
+    console.log(response)
+    // if (response.status.toLowerCase() != "success") {
+    //   throw response.description
+    // }
     return response
   } catch (error) {
     console.error('Error calling apiClient API:', error)
