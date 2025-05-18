@@ -5,7 +5,7 @@
         <h5 class="q-pa-none q-ma-none">
           หน้าหลัก</h5>
       </q-card-section>
-      <q-card-section>
+      <q-card-section class="q-pa-none q-ma-none">
         <div class="row">
           <div class="col-12 col-md-4 q-pa-sm">
             <q-table class="my-sticky-header-table" style="height: 75vh;" flat bordered title="เมนู"

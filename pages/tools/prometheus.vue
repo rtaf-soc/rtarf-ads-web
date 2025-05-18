@@ -5,7 +5,7 @@
         <h5 class="q-pa-none q-ma-none">
           Prometheus</h5>
       </q-card-section>
-      <q-card-section>
+      <q-card-section class="q-pa-none q-ma-none">
         <iframe sandbox="allow-scripts allow-same-origin" :src="url08" width="100%" height="800"
           style="border: none;"></iframe>
       </q-card-section>

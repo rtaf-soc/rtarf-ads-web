@@ -1,15 +1,10 @@
 <template>
   <q-page v-if="auth.isAuthenticated">
     <q-card>
-      <!-- <q-card-section class="q-pb-none">
-        <h5 class="q-pa-none q-ma-none">
-          Destination IP</h5>
-      </q-card-section> -->
-
-      <q-card-section>
+      <q-card-section  class="q-pa-none q-ma-none">
         <div class="row">
 
-          <div class="col-12 col-md-12 q-pa-sm">
+          <div class="col-12 col-md-12 q-pa-none">
 
             <q-table class="my-sticky-header-table" style="height: 87vh;" flat bordered title="เมนู" color="amber"
               :rows="table_rows_menu" :columns="table_columns_menu" row-key="id" v-model:pagination="pagination_menu"
@@ -27,7 +22,7 @@
                   </template>
                 </q-input>
                 <q-badge class="q-ml-md text-bold q-pa-sm" align="middle" color="dark" style="font-size:20px;">
-                  ข้อมูลทั้งหมด : {{ Number(pagination_menu.rowsNumber).toLocaleString('en-US') }} ชุด
+                  ข้อมูลทั้งหมด : {{ Number(pagination_menu.rowsNumber).toLocaleString('en-US') }} 
                 </q-badge>
               </template>
               <template v-slot:top-right>
