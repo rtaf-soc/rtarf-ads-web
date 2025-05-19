@@ -5,8 +5,8 @@
         <h5 class="q-pa-none q-ma-none">
           Metalog #3</h5>
       </q-card-section>
-      <q-card-section class="q-pa-none q-ma-none">
-        <iframe sandbox="allow-scripts allow-same-origin" :src="url033" width="100%" height="800"
+      <q-card-section class="q-pa-none q-ma-none" style="height: 100vh;">
+        <iframe sandbox="allow-scripts allow-same-origin" :src="url033" width="100%" height="100%"
           style="border: none;"></iframe>
       </q-card-section>
     </q-card>

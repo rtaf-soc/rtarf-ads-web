@@ -1,14 +1,12 @@
 <template>
   <q-page v-if="auth.isAuthenticated">
-    <q-card>
-      <!-- <q-card-section>
-        <h5 class="q-ma-none q-pt-none">ภาพรวม</h5>
-      </q-card-section> -->
-      <q-card-section class="q-pa-none q-ma-none">
+    <q-card >
+
+      <q-card-section class="q-pa-none q-ma-none" style="height: 100vh;">
         <div v-if="overViewOnLoad[0].link" class="loading-container q-pt-lx">
                 <q-spinner size="50px" />
               </div>
-              <iframe sandbox="allow-scripts allow-same-origin" :src="overViewArray[0].link" width="100%"  height="800"
+              <iframe sandbox="allow-scripts allow-same-origin" :src="overViewArray[0].link" width="100%"  height="100%"
                 :onLoad="isFrameLoad(0)" style="border: none;">
               </iframe>
       </q-card-section>
