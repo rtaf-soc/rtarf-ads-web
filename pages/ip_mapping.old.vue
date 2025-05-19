@@ -2,7 +2,7 @@
   <q-page v-if="auth.isAuthenticated">
     <q-card>
 
-      <q-card-section class="q-pa-none q-ma-none">
+      <q-card-section class="q-pa-none q-ma-none" style="height: 100vh;">
         <div class="row">
           <div class="col-12 col-md-12 q-pa-none">
             <q-table class="my-sticky-header-table" style="height: 87vh;" flat bordered title="เมนู"
