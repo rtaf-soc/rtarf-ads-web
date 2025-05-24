@@ -9,7 +9,7 @@
       <q-card-section class="q-pa-none q-ma-none" style="height: 100vh;">
         <div class="row">
           <div class="col-12 col-md-12 q-pa-none">
-            <q-table class="my-sticky-header-table" style="height: 87vh;" flat bordered title="เมนู"
+            <q-table class="my-sticky-header-table" style="height: 95vh;" flat bordered title="เมนู"
               :rows="table_rows_menu" :columns="table_columns_menu" row-key="id" :pagination="pagination_menu"
               separator="cell" :loading="loading">
               <template v-slot:top-left>

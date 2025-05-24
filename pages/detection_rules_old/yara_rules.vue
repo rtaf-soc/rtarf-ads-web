@@ -7,7 +7,7 @@
 
           <div class="col-12 col-md-12 q-pa-none">
 
-            <q-table class="my-sticky-header-table" style="height: 87vh;" flat bordered title="เมนู" color="amber"
+            <q-table class="my-sticky-header-table" style="height: 95vh;" flat bordered title="เมนู" color="amber"
               :rows="table_rows_menu" :columns="table_columns_menu" row-key="id" v-model:pagination="pagination_menu"
               v-model:selected="selected" selection="multiple" :rows-per-page-options="[5, 10, 15, 20, 30, 50, 0]"
               @request="loadNextData" separator="cell" :loading="loading">
