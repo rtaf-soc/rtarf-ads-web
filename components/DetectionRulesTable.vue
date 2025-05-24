@@ -162,6 +162,7 @@ const props = defineProps({
   refType: { type: String, required: true }
 })
 
+const apiComponent = "HuntingRule"
 // 2️⃣ protect with auth middleware
 definePageMeta({ middleware: 'auth' })
 
@@ -322,11 +323,56 @@ async function loadData() {
   }
 }
 
-async function loadNextData({ pagination: { page, rowsPerPage } }) {
-  pagination_menu.value.page = page
-  pagination_menu.value.rowsPerPage = rowsPerPage
-  await loadData()
+
+async function loadNextData(props) {
+  // console.log(props)
+  const { page, rowsPerPage, sortBy, descending } = props.pagination
+  Loading.show()
+  try {
+
+
+    const accessToken = localStorage.getItem('accessToken');
+    let countData = await $fetch('/api/hunting_rules/count', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + accessToken
+      },
+      // Use a raw JSON body as expected by your API:
+      body: JSON.stringify({
+        offset: 0,
+        fromDate: "2025-05-05T17:56:35.528Z",
+        toDate: "2025-05-06T17:56:35.528Z",
+        limit: 0,
+        fullTextSearch: filter_menu_table.value,
+        refType: props.refType
+      })
+
+
+    });
+    pagination_menu.value.rowsNumber = countData
+    pagination_menu.value.page = page
+    pagination_menu.value.rowsPerPage = rowsPerPage
+
+    const data = await $fetch('/api/hunting_rules/rules', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${accessToken}` },
+      body: JSON.stringify({
+        offset: pagination_menu.value.page - 1,
+        limit: pagination_menu.value.rowsPerPage,
+        fullTextSearch: filter_menu_table.value,
+        refType: props.refType
+      })
+    })
+    await loadMenu(data)
+  } catch (error) {
+    console.error('Error fetching overview data:', error);
+  } finally {
+    Loading.hide()
+  }
+  // await loadData()
 }
+
 
 // CRUD calls
 async function getRulesById(ruleId) {

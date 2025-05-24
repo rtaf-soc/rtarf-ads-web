@@ -342,13 +342,8 @@ async function loadData() {
 
 
         })
-        // console.log('load data')
-        // console.log(data)
         await loadMenu(data)
-        // for (let index = 0; index < 4; index++) {
-        //   overViewArray.value[index]['link'] = overviewData.value[index].variableValue;
-        //   console.log(data)
-        // }
+
     } catch (error) {
         console.error('Error fetching overview data:', error);
     } finally {
@@ -357,10 +352,75 @@ async function loadData() {
 }
 
 
-async function loadNextData({ pagination: { page, rowsPerPage } }) {
-    pagination_menu.value.page = page
-    pagination_menu.value.rowsPerPage = rowsPerPage
-    await loadData()
+async function loadNextData(props) {
+    const { page, rowsPerPage, sortBy, descending } = props.pagination
+    Loading.show()
+    try {
+        // const countApi = config.apiPath + `/api/${data.apiComponent}/org/${data.orgName}/action/${data.actionName}`
+        const accessToken = localStorage.getItem('accessToken');
+
+
+        let countData = await $fetch('/api/apiClient', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken
+            },
+            // Use a raw JSON body as expected by your API:
+
+            body: JSON.stringify({
+                offset: 0,
+                fromDate: "2025-05-05T17:56:35.528Z",
+                toDate: "2025-05-06T17:56:35.528Z",
+                limit: 10,
+                fullTextSearch: filter_menu_table.value,
+                blacklistCode: "",
+                blacklistType: props.blacklistType,
+                apiComponent: apiComponent,
+                orgName: "default",
+                actionName: "GetBlackListCount"
+
+            })
+
+
+        })
+        pagination_menu.value.rowsNumber = countData
+        pagination_menu.value.page = page
+        pagination_menu.value.rowsPerPage = rowsPerPage
+
+        console.log(pagination_menu.page)
+        console.log('before load data')
+        let data = await $fetch('/api/apiClient', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken
+            },
+            // Use a raw JSON body as expected by your API:
+
+            body: JSON.stringify({
+                offset: pagination_menu.value.page - 1,
+                limit: pagination_menu.value.rowsPerPage,
+                fromDate: "2025-05-05T17:56:35.528Z",
+                toDate: "2025-05-06T17:56:35.528Z",
+                fullTextSearch: filter_menu_table.value,
+                blacklistCode: "",
+                blacklistType: props.blacklistType,
+                apiComponent: apiComponent,
+                orgName: "default",
+                actionName: "GetBlacklists"
+
+            })
+
+
+        })
+        await loadMenu(data)
+
+    } catch (error) {
+        console.error('Error fetching overview data:', error);
+    } finally {
+        Loading.hide()
+    }
 }
 
 async function deleteSelectedRows() {
