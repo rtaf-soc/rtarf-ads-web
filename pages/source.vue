@@ -70,7 +70,7 @@
       <q-card style="width: 800px; max-width: 800vw;">
 
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">แก้ไขข้อมูลของ ID : <q-badge class="text-h5" color="primary">{{
+          <div class="text-h6">แก้ไขข้อมูลของ ID : <q-badge class="text-h5" color="positive">{{
             edit_ingredient_detail.blacklistId }} </q-badge></div>
 
           <div class="text-h7 q-mt-sm">IP Address : <q-badge class="text-h5" color="primary">{{
