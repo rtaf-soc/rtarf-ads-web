@@ -90,7 +90,8 @@ export default defineNuxtConfig({
       },
       commander:{
         url01:"https://www.google.co.th/commander"
-      }
+      },
+      monitoringWebUrl:"https://www.zabbix.com"
 
     },
   },
