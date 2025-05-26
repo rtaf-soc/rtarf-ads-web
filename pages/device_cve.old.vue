@@ -91,18 +91,10 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.name" outlined label="Name" />
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.roles" outlined label="Roles" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.device_no" outlined label="Device No." />
             <q-input class="q-pb-lg" v-model="edit_ingredient_detail.description" outlined label="Description" />
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.api_key" outlined label="API Key" type="password">
-
-              <template v-slot:append>
-                <q-btn flat round dense icon="content_copy" @click="copyToClipboard(edit_ingredient_detail.api_key)" />
-                <q-btn flat round dense icon="lock_reset"
-                  @click="edit_ingredient_detail.api_key = generateRandomPassword()" />
-              </template>
-            </q-input>
-            <q-input v-model="edit_ingredient_detail.tags" outlined label="tags" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.ip_address" outlined label="IP Address" />
+            <q-input v-model="edit_ingredient_detail.cve" outlined label="CVE" />
           </q-item-section>
         </q-item>
 
@@ -123,20 +115,10 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.name" outlined label="Name" />
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.roles" outlined label="Roles" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.device_no" outlined label="Device No." />
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.description" outlined label="Description" />
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.api_key" outlined label="API Key" type="password">
-              <template v-slot:append>
-                <q-btn flat round dense icon="content_copy" @click="copyToClipboard(add_ingredient_detail.api_key)" />
-                <q-btn flat round dense icon="lock_reset"
-                @click="add_ingredient_detail.api_key = generateRandomPassword()" />
-              </template>
-            </q-input>
-
-
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.tags" outlined label="tags" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.ip_address" outlined label="IP Address" />
+            <q-input v-model="add_ingredient_detail.cve" outlined label="CVE" />
           </q-item-section>
         </q-item>
 
@@ -152,18 +134,15 @@
 <script>
 import moment from 'moment';
 import { useAuthStore } from '~/stores/auth'
-import mock_roles from './mock_roles.json'
-
 
 const table_columns_menu = [
 
   { name: 'id', align: 'center', label: 'Action', field: 'index', headerStyle: 'width: 30px' },
-  { name: 'name', align: 'center', label: 'Key Name', field: 'name', sortable: true, },
-  { name: 'roles', align: 'center', label: 'Roles', field: 'roles', sortable: true, },
-  // { name: 'api_key', align: 'center', label: 'API Key', field: 'api_key', sortable: true, },
-  { name: 'description', align: 'left', label: 'Description', field: 'description', sortable: true, },
-
-  // { name: 'tags', align: 'left', label: 'tags', field: 'tags', sortable: true, },
+  // { name: 'blacklistId', label: 'ชื่อ', align: 'left', field: 'blacklistId', sortable: true },
+  { name: 'device_no', align: 'left', label: 'Device No.', field: 'device_no', sortable: true, },
+  { name: 'ip_address', align: 'left', label: 'IP Address', field: 'ip_address', sortable: true, },
+  { name: 'description', align: 'center', label: 'Description', field: 'description', sortable: true, },
+  { name: 'cve', align: 'left', label: 'CVE', field: 'cve', sortable: true, },
   // { name: 'blacklistType', align: 'center', label: 'type', field: 'blacklistType', sortable: true, },
 
   // { name: 'createdDate', align: 'center', label: 'สร้างเมื่อ', field: 'createdDate', sortable: true, },
@@ -180,79 +159,96 @@ const editorOptions = {
 
 const mock_data = [
   {
-    "name": "Alpha Service",
-    "roles": "User Management,Reporting Module",
-    "description": "Handles user accounts and report generation",
-    "api_key": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    "tags": "user,report"
+    "device_no": "DEV-001",
+    "description": "Edge router for main office",
+    "ip_address": "192.168.0.1",
+    "cve": "CVE-2021-34527",
+    "tags": "network, routing, critical",
+    "createdDate": "2024-10-10T12:00:00Z",
+    "update_at": "2024-12-05T15:30:00Z"
   },
   {
-    "name": "Beta Processor",
-    "roles": "Data Import",
-    "description": "Imports external data into the system",
-    "api_key": "4cb65e27-1f4d-4b12-b8d1-7e4e2d2a9c8f",
-    "tags": "data,import"
+    "device_no": "DEV-002",
+    "description": "Wireless access point in warehouse",
+    "ip_address": "10.0.1.25",
+    "cve": "CVE-2020-1472",
+    "tags": "wireless, security, high-priority",
+    "createdDate": "2024-09-20T09:15:00Z",
+    "update_at": "2024-11-01T11:45:00Z"
   },
   {
-    "name": "Gamma API",
-    "roles": "API Access,File Manager",
-    "description": "Gateway API for file operations",
-    "api_key": "7e9d2c56-9f0b-4e7d-a0f4-3c2d9f5b8e21",
-    "tags": "api,files"
+    "device_no": "DEV-003",
+    "description": "Database server",
+    "ip_address": "172.16.5.10",
+    "cve": "CVE-2019-0708",
+    "tags": "database, backup, maintenance",
+    "createdDate": "2024-08-05T14:00:00Z",
+    "update_at": "2024-10-12T08:20:00Z"
   },
   {
-    "name": "Delta Billing",
-    "roles": "Billing,Audit Logs",
-    "description": "Processes billing and maintains audit logs",
-    "api_key": "d1f3a2b4-8c9e-4a5b-9d0f-6e7a8c9b0d1e",
-    "tags": "billing,audit"
+    "device_no": "DEV-004",
+    "description": "VPN concentrator",
+    "ip_address": "192.168.100.2",
+    "cve": "CVE-2022-0615",
+    "tags": "vpn, encryption, secure",
+    "createdDate": "2024-07-18T16:30:00Z",
+    "update_at": "2024-09-25T13:10:00Z"
   },
   {
-    "name": "Epsilon Notifications",
-    "roles": "Notification",
-    "description": "Dispatches system notifications",
-    "api_key": "a2b3c4d5-e6f7-4890-ab1c-2d3e4f5a6b7c",
-    "tags": "alert,notify"
+    "device_no": "DEV-005",
+    "description": "Application load balancer",
+    "ip_address": "10.0.2.50",
+    "cve": "CVE-2021-44228",
+    "tags": "load-balancing, performance, critical",
+    "createdDate": "2024-06-30T10:00:00Z",
+    "update_at": "2024-08-15T12:55:00Z"
   },
   {
-    "name": "Zeta Storage",
-    "roles": "File Manager,Data Import",
-    "description": "Manages object storage and ingestion",
-    "api_key": "b3c4d5e6-f7a8-4901-bc2d-3e4f5a6b7c9d",
-    "tags": "storage,ingest"
+    "device_no": "DEV-006",
+    "description": "IoT gateway",
+    "ip_address": "172.16.10.5",
+    "cve": "CVE-2020-0796",
+    "tags": "iot, edge, vulnerable",
+    "createdDate": "2024-05-22T11:45:00Z",
+    "update_at": "2024-07-30T09:40:00Z"
   },
   {
-    "name": "Eta Config",
-    "roles": "Settings",
-    "description": "Application configuration manager",
-    "api_key": "c4d5e6f7-a8b9-4012-cd3e-4f5a6b7c8d9e",
-    "tags": "config,settings"
+    "device_no": "DEV-007",
+    "description": "Firewall appliance",
+    "ip_address": "192.168.50.1",
+    "cve": "CVE-2021-20090",
+    "tags": "firewall, perimeter, security",
+    "createdDate": "2024-04-10T13:20:00Z",
+    "update_at": "2024-06-05T14:10:00Z"
   },
   {
-    "name": "Theta Security",
-    "roles": "User Management,API Access,Audit Trail",
-    "description": "Security and compliance module",
-    "api_key": "e5f6a7b8-c9d0-4123-de4f-5a6b7c8d9e0f",
-    "tags": "security,compliance"
+    "device_no": "DEV-008",
+    "description": "Core switch",
+    "ip_address": "10.0.0.254",
+    "cve": "CVE-2018-13379",
+    "tags": "switching, infrastructure, network",
+    "createdDate": "2024-03-15T09:05:00Z",
+    "update_at": "2024-05-01T10:25:00Z"
   },
   {
-    "name": "Iota Analytics",
-    "roles": "Reporting Module",
-    "description": "Analytics and report generation",
-    "api_key": "f6a7b8c9-d0e1-5234-ef5a-6b7c8d9e0f1a",
-    "tags": "analytics,report"
+    "device_no": "DEV-009",
+    "description": "Backup NAS",
+    "ip_address": "172.16.20.20",
+    "cve": "CVE-2017-0144",
+    "tags": "storage, backup, high-availability",
+    "createdDate": "2024-02-28T15:00:00Z",
+    "update_at": "2024-04-10T16:50:00Z"
   },
   {
-    "name": "Kappa CICD",
-    "roles": "Notification,API Access",
-    "description": "CI/CD pipeline integration service",
-    "api_key": "0a1b2c3d-4e5f-6347-fa6b-7c8d9e0f1a2b",
-    "tags": "ci,cd,automation"
+    "device_no": "DEV-010",
+    "description": "Remote management console",
+    "ip_address": "192.168.200.5",
+    "cve": "CVE-2023-0669",
+    "tags": "management, remote-access, critical",
+    "createdDate": "2024-01-12T08:30:00Z",
+    "update_at": "2024-03-20T11:15:00Z"
   }
 ]
-
-
-
 
 
 
@@ -278,28 +274,24 @@ const pagination_ingredient = {
 const loading = ref(true)
 const edit_ingredient_detail_isOpen = ref(false)
 const edit_ingredient_detail = {
-  name: "",
-  roles: "",
+  device_no: "",
   description: "",
-  api_key: "",
-  tags: "",
+  ip_address: "",
+  cve: "",
   createdDate: "2024-10-12T09:24:30.125001Z",
   update_at: "2023-05-20T11:00:00Z"
 
 }
 const add_ingredient_detail_isOpen = ref(false)
 const add_ingredient_detail = {
-  name: "",
-  roles: "",
+  device_no: "",
   description: "",
-  api_key: "",
-  tags: "",
+  ip_address: "",
+  cve: "",
   createdDate: "2024-10-12T09:24:30.125001Z",
   update_at: "2023-05-20T11:00:00Z"
 
 }
-
-const masked = ref('')
 
 // "blacklistId": "8d2b7f6c-49a9-43db-86fa-ff123c8e5e77",
 //   "orgId": "default",
@@ -309,6 +301,15 @@ const masked = ref('')
 //           "createdDate": "2024-10-12T09:24:30.125001Z"
 
 const selectedTable = ref([])
+const code = ref(`# Write your YAML code here...
+rule:
+  description: "Ensure all required fields are filled."
+  conditions:
+    - field: username
+      required: true
+    - field: password
+      required: true
+`)
 // Loading.show()
 
 export default {
@@ -351,9 +352,10 @@ export default {
       add_ingredient_detail,
 
       editorOptions,
+      code,
       monacoEditor,
-      showEditor,
-      masked
+      showEditor
+
       // rowsNumber: xx if getting data from a server
     };
   },
@@ -434,11 +436,10 @@ export default {
     },
     clearAddTable() {
       this.add_ingredient_detail = {
-        name: "",
-        roles: "",
+        device_no: "",
         description: "",
-        api_key: "",
-        tags: "",
+        ip_address: "",
+        cve: "",
         createdDate: "2024-10-12T09:24:30.125001Z",
         update_at: "2023-05-20T11:00:00Z"
 
@@ -464,25 +465,6 @@ export default {
       table_rows_menu.value = table_rows_menu.value.filter(row => !selectedTable.value.includes(row.index))
       // Clear the selection after deletion
       selectedTable.value = []
-    },
-
-    async copyToClipboard(textToCopy) {
-      try {
-        // Use the Clipboard API to write the text
-        await navigator.clipboard.writeText(textToCopy)
-        Notify.create({
-          message: 'Text copied successfully!',
-          color: 'positive',
-          position: 'top'
-        })
-      } catch (error) {
-        console.error('Failed to copy:', error)
-        Notify.create({
-          message: 'Failed to copy text',
-          color: 'negative',
-          position: 'top'
-        })
-      }
     },
 
     onClick(fn_name, param = null) {
@@ -540,53 +522,7 @@ export default {
       // const resData = await updateIngredient(id, data);
       // console.log(resData)
 
-    },
-    generateRandomPassword(length = 48) {
-      const charset =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-        'abcdefghijklmnopqrstuvwxyz' +
-        '0123456789' +
-        '!@#$%^&*()_+[]{}<>?';
-      let password = '';
-
-      // Use Web Crypto API if available (more secure)
-      const cryptoObj =
-        typeof globalThis !== 'undefined' && globalThis.crypto && globalThis.crypto.getRandomValues
-          ? globalThis.crypto
-          : null;
-
-      if (cryptoObj) {
-        const randomValues = new Uint32Array(length);
-        cryptoObj.getRandomValues(randomValues);
-        for (let i = 0; i < length; i++) {
-          password += charset[randomValues[i] % charset.length];
-        }
-      } else {
-        // Fallback to Math.random()
-        for (let i = 0; i < length; i++) {
-          password += charset.charAt(Math.floor(Math.random() * charset.length));
-        }
-      }
-
-      return password;
-    },
-    updateMasked(password) {
-      console.log('call nask')
-      // const val = password.value
-      if (val.length <= 4) {
-        // too short to mask
-        this.masked.value = password
-      } else {
-        const stars = '*'.repeat(password.length - 4)
-        this.masked.value = password.slice(0, 2) + stars + password.slice(-2)
-  
-      }
-      console.log(this.masked)
-    },
-
-    // initialize masked if you preload a password
-
-
+    }
     // async handleAddMenu() {
     //   try {
     //     const response = await createMenu({ name: this.newMenuName });

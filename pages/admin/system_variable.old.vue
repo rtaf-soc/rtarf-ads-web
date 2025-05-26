@@ -91,17 +91,9 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.name" outlined label="Name" />
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.roles" outlined label="Roles" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.name" outlined label="Variable Name" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.value" outlined label="Value" />
             <q-input class="q-pb-lg" v-model="edit_ingredient_detail.description" outlined label="Description" />
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.api_key" outlined label="API Key" type="password">
-
-              <template v-slot:append>
-                <q-btn flat round dense icon="content_copy" @click="copyToClipboard(edit_ingredient_detail.api_key)" />
-                <q-btn flat round dense icon="lock_reset"
-                  @click="edit_ingredient_detail.api_key = generateRandomPassword()" />
-              </template>
-            </q-input>
             <q-input v-model="edit_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -124,18 +116,9 @@
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
 
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.name" outlined label="Name" />
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.roles" outlined label="Roles" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.name" outlined label="Variable Name" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.value" outlined label="Value" />
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.description" outlined label="Description" />
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.api_key" outlined label="API Key" type="password">
-              <template v-slot:append>
-                <q-btn flat round dense icon="content_copy" @click="copyToClipboard(add_ingredient_detail.api_key)" />
-                <q-btn flat round dense icon="lock_reset"
-                @click="add_ingredient_detail.api_key = generateRandomPassword()" />
-              </template>
-            </q-input>
-
-
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -158,12 +141,11 @@ import mock_roles from './mock_roles.json'
 const table_columns_menu = [
 
   { name: 'id', align: 'center', label: 'Action', field: 'index', headerStyle: 'width: 30px' },
-  { name: 'name', align: 'center', label: 'Key Name', field: 'name', sortable: true, },
-  { name: 'roles', align: 'center', label: 'Roles', field: 'roles', sortable: true, },
-  // { name: 'api_key', align: 'center', label: 'API Key', field: 'api_key', sortable: true, },
+  { name: 'name', align: 'center', label: 'Variable Name', field: 'name', sortable: true, },
+  { name: 'value', align: 'center', label: 'Value', field: 'value', sortable: true, },
   { name: 'description', align: 'left', label: 'Description', field: 'description', sortable: true, },
 
-  // { name: 'tags', align: 'left', label: 'tags', field: 'tags', sortable: true, },
+  { name: 'tags', align: 'left', label: 'tags', field: 'tags', sortable: true, },
   // { name: 'blacklistType', align: 'center', label: 'type', field: 'blacklistType', sortable: true, },
 
   // { name: 'createdDate', align: 'center', label: 'สร้างเมื่อ', field: 'createdDate', sortable: true, },
@@ -180,77 +162,66 @@ const editorOptions = {
 
 const mock_data = [
   {
-    "name": "Alpha Service",
-    "roles": "User Management,Reporting Module",
-    "description": "Handles user accounts and report generation",
-    "api_key": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    "tags": "user,report"
+    "name": "Item Alpha",
+    "description": "First item in the dataset",
+    "value": "1",
+    "tags": "alpha,beta,gamma"
   },
   {
-    "name": "Beta Processor",
-    "roles": "Data Import",
-    "description": "Imports external data into the system",
-    "api_key": "4cb65e27-1f4d-4b12-b8d1-7e4e2d2a9c8f",
-    "tags": "data,import"
+    "name": "Item Beta",
+    "description": "Second item, with experimental status",
+    "value": "2",
+    "tags": "beta,delta,epsilon"
   },
   {
-    "name": "Gamma API",
-    "roles": "API Access,File Manager",
-    "description": "Gateway API for file operations",
-    "api_key": "7e9d2c56-9f0b-4e7d-a0f4-3c2d9f5b8e21",
-    "tags": "api,files"
+    "name": "Item Gamma",
+    "description": "Feature toggle for new UI",
+    "value": "true",
+    "tags": "feature,ui,toggle"
   },
   {
-    "name": "Delta Billing",
-    "roles": "Billing,Audit Logs",
-    "description": "Processes billing and maintains audit logs",
-    "api_key": "d1f3a2b4-8c9e-4a5b-9d0f-6e7a8c9b0d1e",
-    "tags": "billing,audit"
+    "name": "Item Delta",
+    "description": "Flag for maintenance mode",
+    "value": "false",
+    "tags": "maintenance,mode,system"
   },
   {
-    "name": "Epsilon Notifications",
-    "roles": "Notification",
-    "description": "Dispatches system notifications",
-    "api_key": "a2b3c4d5-e6f7-4890-ab1c-2d3e4f5a6b7c",
-    "tags": "alert,notify"
+    "name": "Item Epsilon",
+    "description": "Retry limit for API calls",
+    "value": "2",
+    "tags": "api,retry,limit"
   },
   {
-    "name": "Zeta Storage",
-    "roles": "File Manager,Data Import",
-    "description": "Manages object storage and ingestion",
-    "api_key": "b3c4d5e6-f7a8-4901-bc2d-3e4f5a6b7c9d",
-    "tags": "storage,ingest"
+    "name": "Item Zeta",
+    "description": "Enable verbose logging",
+    "value": "true",
+    "tags": "logging,verbose,debug"
   },
   {
-    "name": "Eta Config",
-    "roles": "Settings",
-    "description": "Application configuration manager",
-    "api_key": "c4d5e6f7-a8b9-4012-cd3e-4f5a6b7c8d9e",
-    "tags": "config,settings"
+    "name": "Item Eta",
+    "description": "Maximum upload size (MB)",
+    "value": "1",
+    "tags": "upload,size,limit"
   },
   {
-    "name": "Theta Security",
-    "roles": "User Management,API Access,Audit Trail",
-    "description": "Security and compliance module",
-    "api_key": "e5f6a7b8-c9d0-4123-de4f-5a6b7c8d9e0f",
-    "tags": "security,compliance"
+    "name": "Item Theta",
+    "description": "Use legacy authentication",
+    "value": "false",
+    "tags": "auth,legacy,security"
   },
   {
-    "name": "Iota Analytics",
-    "roles": "Reporting Module",
-    "description": "Analytics and report generation",
-    "api_key": "f6a7b8c9-d0e1-5234-ef5a-6b7c8d9e0f1a",
-    "tags": "analytics,report"
+    "name": "Item Iota",
+    "description": "Cache expiration (minutes)",
+    "value": "2",
+    "tags": "cache,expiration,time"
   },
   {
-    "name": "Kappa CICD",
-    "roles": "Notification,API Access",
-    "description": "CI/CD pipeline integration service",
-    "api_key": "0a1b2c3d-4e5f-6347-fa6b-7c8d9e0f1a2b",
-    "tags": "ci,cd,automation"
+    "name": "Item Kappa",
+    "description": "Enable beta features",
+    "value": "true",
+    "tags": "beta,features,release"
   }
 ]
-
 
 
 
@@ -279,9 +250,8 @@ const loading = ref(true)
 const edit_ingredient_detail_isOpen = ref(false)
 const edit_ingredient_detail = {
   name: "",
-  roles: "",
+  value: "",
   description: "",
-  api_key: "",
   tags: "",
   createdDate: "2024-10-12T09:24:30.125001Z",
   update_at: "2023-05-20T11:00:00Z"
@@ -290,16 +260,13 @@ const edit_ingredient_detail = {
 const add_ingredient_detail_isOpen = ref(false)
 const add_ingredient_detail = {
   name: "",
-  roles: "",
+  value: "",
   description: "",
-  api_key: "",
   tags: "",
   createdDate: "2024-10-12T09:24:30.125001Z",
   update_at: "2023-05-20T11:00:00Z"
 
 }
-
-const masked = ref('')
 
 // "blacklistId": "8d2b7f6c-49a9-43db-86fa-ff123c8e5e77",
 //   "orgId": "default",
@@ -352,8 +319,8 @@ export default {
 
       editorOptions,
       monacoEditor,
-      showEditor,
-      masked
+      showEditor
+
       // rowsNumber: xx if getting data from a server
     };
   },
@@ -435,9 +402,8 @@ export default {
     clearAddTable() {
       this.add_ingredient_detail = {
         name: "",
-        roles: "",
+        value: "",
         description: "",
-        api_key: "",
         tags: "",
         createdDate: "2024-10-12T09:24:30.125001Z",
         update_at: "2023-05-20T11:00:00Z"
@@ -540,53 +506,7 @@ export default {
       // const resData = await updateIngredient(id, data);
       // console.log(resData)
 
-    },
-    generateRandomPassword(length = 48) {
-      const charset =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-        'abcdefghijklmnopqrstuvwxyz' +
-        '0123456789' +
-        '!@#$%^&*()_+[]{}<>?';
-      let password = '';
-
-      // Use Web Crypto API if available (more secure)
-      const cryptoObj =
-        typeof globalThis !== 'undefined' && globalThis.crypto && globalThis.crypto.getRandomValues
-          ? globalThis.crypto
-          : null;
-
-      if (cryptoObj) {
-        const randomValues = new Uint32Array(length);
-        cryptoObj.getRandomValues(randomValues);
-        for (let i = 0; i < length; i++) {
-          password += charset[randomValues[i] % charset.length];
-        }
-      } else {
-        // Fallback to Math.random()
-        for (let i = 0; i < length; i++) {
-          password += charset.charAt(Math.floor(Math.random() * charset.length));
-        }
-      }
-
-      return password;
-    },
-    updateMasked(password) {
-      console.log('call nask')
-      // const val = password.value
-      if (val.length <= 4) {
-        // too short to mask
-        this.masked.value = password
-      } else {
-        const stars = '*'.repeat(password.length - 4)
-        this.masked.value = password.slice(0, 2) + stars + password.slice(-2)
-  
-      }
-      console.log(this.masked)
-    },
-
-    // initialize masked if you preload a password
-
-
+    }
     // async handleAddMenu() {
     //   try {
     //     const response = await createMenu({ name: this.newMenuName });

@@ -69,6 +69,7 @@ const ThreatBlacklistLink: MenuRedirectProps[] = [
   },
 ];
 
+
 const ThreatHuntingLink: MenuRedirectProps[] = [
 
   {
@@ -87,6 +88,17 @@ const overviewLink: MenuRedirectProps[] = [
     // caption: 'จัดหา',
     icon: 'settings_overscan',
     link: "/overview",
+    inset: 0.0
+  },
+];
+
+const zabbixLink: MenuRedirectProps[] = [
+
+  {
+    title: 'Zabbix',
+    // caption: 'จัดหา',
+    icon: "monitor_heart",
+    link: "/zabbix",
     inset: 0.0
   },
 ];
@@ -460,9 +472,11 @@ function handleLogout() {
         <q-card>
           <MenuRedirect v-for="link in overviewLink" :key="link.title" v-bind="link" />
         </q-card>
-
         <q-card>
           <MenuRedirect v-for="link in commanderLink" :key="link.title" v-bind="link" />
+        </q-card>
+        <q-card>
+          <MenuRedirect v-for="link in zabbixLink" :key="link.title" v-bind="link" />
         </q-card>
 
         <!-- <q-card>

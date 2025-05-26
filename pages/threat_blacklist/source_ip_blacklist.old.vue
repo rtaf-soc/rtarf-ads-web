@@ -1,22 +1,22 @@
 <template>
   <q-page v-if="auth.isAuthenticated">
     <q-card>
+      <!-- <q-card-section class="q-pb-none">
+        <h5 class="q-pa-none q-ma-none">
+          Destination IP</h5>
+      </q-card-section> -->
       <q-card-section  class="q-pa-none q-ma-none">
         <div class="row">
-
           <div class="col-12 col-md-12 q-pa-none">
-
             <q-table class="my-sticky-header-table" style="height: 95vh;" flat bordered title="เมนู" color="amber"
               :rows="table_rows_menu" :columns="table_columns_menu" row-key="id" v-model:pagination="pagination_menu"
               v-model:selected="selected" selection="multiple" :rows-per-page-options="[5, 10, 15, 20, 30, 50, 0]"
               @request="loadNextData" separator="cell" :loading="loading">
-
               <template v-slot:top-left>
-
+                <!-- <div class="text-h5 q-mr-md">Black list IP Address</div> -->
                 <q-input outlined dense debounce="300" placeholder="ค้นหา" v-model="filter_menu_table" bg-color="dark"
                   @keyup.enter="onClick(`tableSearch`)">
                   <template v-slot:append>
-
                     <q-btn round dense flat icon="search" @click="onClick(`tableSearch`)" />
                   </template>
                 </q-input>
@@ -25,7 +25,6 @@
                 </q-badge>
               </template>
               <template v-slot:top-right>
-
                 <q-btn class="q-mr-lg" icon="add" rounded color="green-7" @click="onClick(`addTable`)" />
                 <q-btn :disable="selectedTable <= 0" icon="delete" rounded color="negative"
                   @click="onClick(`deleteSelectedTable`)" />
@@ -47,7 +46,6 @@
               </template>
 
               <template v-slot:body="props">
-
                 <q-tr :props="props" class="cursor-pointer"
                   :class="(props.row.index % 2 === 0) ? 'bg-grey-10' : 'bg-grey-9'">
                   <q-td v-for="(col, colIndex) in props.cols" :key="col.name" :props="props">
@@ -62,8 +60,8 @@
                       </q-chip>
                     </template>
 
-                    <template v-else-if="col.name === 'ruleCreatedDate'">
-                      {{ convertTimestamp(props.row.ruleCreatedDate) }}
+                    <template v-else-if="col.name === 'createdDate'">
+                      {{ convertTimestamp(props.row.CreatedDate) }}
                     </template>
 
                     <template v-else>
@@ -82,31 +80,18 @@
       <q-card style="width: 800px; max-width: 800vw;">
 
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">แก้ไขข้อมูลของ ID :
-            <q-badge outline class="text-h6 q-ml-md" align="middle" color="positive">
-              {{ edit_ingredient_detail.ruleId }}
+          <div class="text-h6">แก้ไขข้อมูลของ ID : <q-badge outline class="text-h6" align="middle" color="positive">{{
+            edit_ingredient_detail.blacklistId }} </q-badge></div>
 
-            </q-badge>
-          </div>
-
-   
+          <!-- <div class="text-h7 q-mt-sm">Destination IP Address : <q-badge class="text-h5" color="primary">{{
+            edit_ingredient_detail.blacklistCode }} </q-badge></div> -->
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.ruleName" outlined label="Rule Name" disable />
-
-            <q-btn @click="onClick('editRule')" color="green">
-              แก้ไข code</q-btn>
-            <div v-if="showEditor">
-              <MonacoEditor v-model="edit_ingredient_detail.ruleDefinition" lang="yaml" style="height: 400px;"
-                :options="editorOptions" />
-            </div>
-            <q-input v-if="!showEditor" class="q-pb-lg" v-model="edit_ingredient_detail.ruleDefinition" outlined
-              label="Rule Definition" disable />
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.refUrl" outlined label="URL" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.blacklistCode" outlined label="Source IP" />
             <q-input v-model="edit_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -117,7 +102,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-dialog v-model="add_ingredient_detail_isOpen" @show="onDialogShow">
+    <q-dialog v-model="add_ingredient_detail_isOpen">
       <q-card style="width: 800px; max-width: 800vw;">
 
         <q-card-section class="row items-center q-pb-none">
@@ -128,20 +113,7 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.ruleName" outlined label="Rule Name">
-
-            </q-input>
-
-            <q-btn @click="this.showEditor = !this.showEditor" color="green">
-              แก้ไข code</q-btn>
-            <div v-if="showEditor">
-              <MonacoEditor v-model="add_ingredient_detail.ruleDefinition" lang="yaml" style="height: 400px;"
-                :options="editorOptions" />
-            </div>
-            <q-input v-if="!showEditor" class="q-pb-lg" v-model="add_ingredient_detail.ruleDefinition" outlined
-              label="Rule Definition" disable />
-
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.refUrl" outlined label="URL" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.blacklistCode" outlined label="Source IP" />
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.tags" outlined label="tags" />
           </q-item-section>
         </q-item>
@@ -159,108 +131,24 @@
 import moment from 'moment';
 import { useAuthStore } from '~/stores/auth'
 
+// import { fetchMenu, createMenu } from '~/api/menuService';
+// import { createIngredient, fetchIngredients, updateIngredient } from '~/api/ingredientService';
+
 const table_columns_menu = [
 
   { name: 'id', align: 'center', label: 'Action', field: 'index', headerStyle: 'width: 30px' },
-  { name: 'ruleName', align: 'left', label: 'Rule Name', field: 'ruleName', sortable: true, },
-  { name: 'refUrl', align: 'center', label: 'URL', field: 'refUrl', sortable: true, },
+  // { name: 'blacklistId', label: 'ชื่อ', align: 'left', field: 'blacklistId', sortable: true },
+  { name: 'blacklistCode', align: 'left', label: 'Source IP', field: 'blacklistCode', sortable: true, },
+  // { name: 'orgId', align: 'center', label: 'รหัสสถานที่', field: 'orgId', sortable: true, },
   { name: 'tags', align: 'left', label: 'tags', field: 'tags', sortable: true, },
+  // { name: 'blacklistType', align: 'center', label: 'type', field: 'blacklistType', sortable: true, },
+
+  { name: 'createdDate', align: 'center', label: 'สร้างเมื่อ', field: 'createdDate', sortable: true, },
 
 ]
-const selected = ref([])
-const monacoEditor = ref(null)
-const showEditor = ref(false)
-const editorOptions = {
-  automaticLayout: true,
-  theme: 'vs-dark',
-}
 
 
-const mock_data = [
-  {
-    "ruleName": "NoEmptyFields",
-    "ruleDefinition": "|\n  description: Ensure that all required fields are filled\n  conditions:\n    - field: username\n      required: true\n    - field: password\n      required: true",
-    "refUrl": "https://example.com/rules/no-empty-fields",
-    "tags": "validation, form, data",
-    "ruleCreatedDate": "2023-09-01T08:00:00Z",
-    "update_at": "2023-09-10T08:00:00Z"
-  },
-  {
-    "ruleName": "MaxInputLength",
-    "ruleDefinition": "|\n  description: Limit the input length to prevent overflow issues\n  max_length: 100\n  note: 'Ensures UI stability'",
-    "refUrl": "https://example.com/rules/max-input-length",
-    "tags": "validation, input, UI",
-    "ruleCreatedDate": "2023-08-20T09:00:00Z",
-    "update_at": "2023-08-25T09:00:00Z"
-  },
-  {
-    "ruleName": "UniqueEmail",
-    "ruleDefinition": "|\n  description: Ensure that the email address is unique in the system\n  check:\n    - field: email\n      uniqueness: true",
-    "refUrl": "https://example.com/rules/unique-email",
-    "tags": "validation, email, uniqueness",
-    "ruleCreatedDate": "2023-07-15T10:00:00Z",
-    "update_at": "2023-07-20T10:00:00Z"
-  },
-  {
-    "ruleName": "ValidDateFormat",
-    "ruleDefinition": "|\n  description: Date should follow the format YYYY-MM-DD\n  pattern: '^\\d{4}-\\d{2}-\\d{2}$'\n  example: 2023-01-01",
-    "refUrl": "https://example.com/rules/valid-date-format",
-    "tags": "validation, date, format",
-    "ruleCreatedDate": "2023-06-01T11:00:00Z",
-    "update_at": "2023-06-05T11:00:00Z"
-  },
-  {
-    "ruleName": "PositiveNumbers",
-    "ruleDefinition": "|\n  description: Ensure that numeric values are positive\n  conditions:\n    - value: must be > 0",
-    "refUrl": "https://example.com/rules/positive-numbers",
-    "tags": "validation, numeric, logic",
-    "ruleCreatedDate": "2023-05-10T12:00:00Z",
-    "update_at": "2023-05-15T12:00:00Z"
-  },
-  {
-    "ruleName": "NoSQLInjection",
-    "ruleDefinition": "|\n  description: Prevent SQL injection by sanitizing all database inputs\n  methods:\n    - parameterized queries\n    - input sanitization",
-    "refUrl": "https://example.com/rules/no-sql-injection",
-    "tags": "security, database, injection",
-    "ruleCreatedDate": "2023-04-01T13:00:00Z",
-    "update_at": "2023-04-05T13:00:00Z"
-  },
-  {
-    "ruleName": "StrongPassword",
-    "ruleDefinition": "|\n  description: Password must be strong and secure\n  criteria:\n    - minimum: 8 characters\n    - mix: letters, numbers, and symbols",
-    "refUrl": "https://example.com/rules/strong-password",
-    "tags": "security, password, validation",
-    "ruleCreatedDate": "2023-03-20T14:00:00Z",
-    "update_at": "2023-03-25T14:00:00Z"
-  },
-  {
-    "ruleName": "SecureProtocol",
-    "ruleDefinition": "|\n  description: All external communications must use HTTPS\n  note: 'Ensures data encryption and integrity'",
-    "refUrl": "https://example.com/rules/secure-protocol",
-    "tags": "security, network, protocol",
-    "ruleCreatedDate": "2023-02-10T15:00:00Z",
-    "update_at": "2023-02-15T15:00:00Z"
-  },
-  {
-    "ruleName": "SafeRedirect",
-    "ruleDefinition": "|\n  description: Validate redirect URLs to prevent open redirect vulnerabilities\n  checks:\n    - verify domain\n    - allow-list trusted URLs",
-    "refUrl": "https://example.com/rules/safe-redirect",
-    "tags": "security, redirect, validation",
-    "ruleCreatedDate": "2023-01-05T16:00:00Z",
-    "update_at": "2023-01-10T16:00:00Z"
-  },
-  {
-    "ruleName": "ValidURLFormat",
-    "ruleDefinition": "|\n  description: refUrl must adhere to a valid format\n  pattern: '^(https?|ftp)://[^\\s/$.?#].[^\\s]*$'\n  example: https://example.com",
-    "refUrl": "https://example.com/rules/valid-refUrl-format",
-    "tags": "validation, refUrl, format",
-    "ruleCreatedDate": "2023-12-01T17:00:00Z",
-    "update_at": "2023-12-05T17:00:00Z"
-  }
-]
-
-
-
+const mock_data = []
 
 const table_rows_menu = ref([])
 const table_rows_ingredients = ref([])
@@ -283,46 +171,46 @@ const pagination_ingredient = {
 const loading = ref(true)
 const edit_ingredient_detail_isOpen = ref(false)
 const edit_ingredient_detail = {
-  ruleName: "",
-  ruleDefinition: "",
-  refUrl: "",
+  blacklistId: "",
+  orgId: "default",
+  blacklistCode: "",
   tags: "",
-  ruleCreatedDate: "2024-10-12T09:24:30.125001Z",
-  update_at: "2023-05-20T11:00:00Z"
+  blacklistType: 1,
+  createdDate: "2024-10-12T09:24:30.125001Z"
+
 
 }
 const add_ingredient_detail_isOpen = ref(false)
 const add_ingredient_detail = {
-  ruleName: "",
-  ruleDefinition: "",
-  refUrl: "",
+  blacklistId: "",
+  orgId: "default",
+  blacklistCode: "",
   tags: "",
-  ruleCreatedDate: "2024-10-12T09:24:30.125001Z",
-  update_at: "2023-05-20T11:00:00Z"
+  blacklistType: 1,
+  createdDate: "2024-10-12T09:24:30.125001Z"
 
 }
 
+// "blacklistId": "8d2b7f6c-49a9-43db-86fa-ff123c8e5e77",
+//   "orgId": "default",
+//     "blacklistCode": "192.168.1.1",
+//       "tags": "Automatic-Scan",
+//         "blacklistType": 1,
+//           "createdDate": "2024-10-12T09:24:30.125001Z"
 
 const selectedTable = ref([])
-const code = ref(`# Write your YAML code here...
-rule:
-  description: "Ensure all required fields are filled."
-  conditions:
-    - field: username
-      required: true
-    - field: password
-      required: true
-`)
+
+// Loading.show()
 
 export default {
   mounted() {
+    console.log('mounted')
     this.loading = false
     // Loading.hide()
   },
   setup() {
 
     const auth = useAuthStore();
-
     return {
       auth,
       loading
@@ -338,7 +226,9 @@ export default {
       ],
       loading,
       visible_menu_columns: ref(['index', 'name', 'price', 'description']),
+      // visible_ingredient_columns: ref(['index', 'name', 'weight', 'tolerance']),
       table_columns_menu,
+      // table_columns_ingredients,
       table_rows_menu,
       table_rows_ingredients,
       filter_menu_table,
@@ -349,34 +239,46 @@ export default {
       edit_ingredient_detail,
       selectedTable,
       add_ingredient_detail_isOpen,
-      add_ingredient_detail,
-
-      editorOptions,
-      code,
-      monacoEditor,
-      showEditor,
-
-
+      add_ingredient_detail
+      // rowsNumber: xx if getting data from a server
     };
   },
 
+  // convertTimestamp(datetime) {
+  //   let dbtime = moment(datetime);
+  //   let formattedDate = dbtime.format("DD/MM/YYYY");
+  //   return formattedDate // Output: 26-12-2023
+  // },
 
-  async onMounted() {
-    loading.value = false
-    Loading.hide()
-    await this.fetchData()
-  },
+  // async onMounted() {
+  //   console.log('onMount2')
+  //   loading.value = false
+  //   Loading.hide()
+  //   await this.fetchData()
+  //   // console.log('load menu');
+  //   // await this.loadMenu();
+  // },
   beforeMount() {
+    // console.log('beformount')
     definePageMeta({
       middleware: 'auth'
     })
     this.loadData();
   },
-
+  // onMounted() {
+  //   loadMenu()
+  //   // Loading.hide()
+  // },
   methods: {
     async loadMenu(data) {
       try {
+        // const data = await fetchMenu();
+        console.log("load menu")
+        console.log(data)
         let mockdata = [...data];
+        console.log("load menu from data")
+        // console.log(mockdata)
+        // console.log(filteredData);
         this.menus = mockdata;
         console.log(this.menus);
         let data_rows = mockdata
@@ -386,7 +288,9 @@ export default {
           const element = data_rows[index];
           element.index = index + 1 + ((pagination_menu.value.page - 1) * pagination_menu.value.rowsPerPage);
         }
+        // console.log(data_rows)
         this.table_rows_menu = data_rows;
+        // console.log(this.table_rows_menu)
       }
       catch (error) {
         console.error('Error fetching menu:', error);
@@ -408,6 +312,7 @@ export default {
       this.newIngredients.push({ name: '', weight: '', tolerance: '' });
     },
     callApiIngredients(menuId) {
+      // this.$router.push({ path: '/ingredient', query: { menu_id: menuId } });
     },
     getCurrentTimestamp() {
       // Get the current UTC time using moment
@@ -419,12 +324,12 @@ export default {
     },
     clearAddTable() {
       this.add_ingredient_detail = {
-        ruleName: "",
-        ruleDefinition: "",
-        refUrl: "",
+        blacklistId: "",
+        orgId: "default",
+        blacklistCode: "",
         tags: "",
-        ruleCreatedDate: "2024-10-12T09:24:30.125001Z",
-        update_at: "2023-05-20T11:00:00Z"
+        blacklistType: 1,
+        createdDate: "2024-10-12T09:24:30.125001Z"
 
       }
     },
@@ -464,7 +369,7 @@ export default {
 
           break;
         case 'saveAddTable':
-          this.add_ingredient_detail.ruleCreatedDate = this.getCurrentTimestamp()
+          this.add_ingredient_detail.CreatedDate = this.getCurrentTimestamp()
           this.addData()
 
           break;
@@ -501,8 +406,11 @@ export default {
       let data = table_rows_menu.value.filter(row => selectedTable.value.includes(row.index))
       // console.log(data.length)
       let html = data
-        .map(item => `${item.index}. Rule Name : ${item.ruleName} , URL : ${item.refUrl} , TAGS : ${item.tags}`)
+        .map(item => `${item.index}. IP : ${item.blacklistCode} , TAGS : ${item.tags}`)
         .join('<br/>')
+
+
+
 
       Dialog.create({
         title: '<span class="text-red">ยืนยันการลบข้อมูลต่อไปนี้ !</span>',
@@ -529,6 +437,7 @@ export default {
       }).onDismiss(() => {
         // console.log('I am triggered on both OK and Cancel')
       })
+
       // for (let index = 0; index < data.length; index++) {
       //   await this.deleteData(data[index].ruleId)
 
@@ -543,7 +452,7 @@ export default {
         let body = { ruleId: ruleId }
 
         console.log(body)
-        let data = await $fetch('/api/hunting_rules/get_by_id', {
+        let data = await $fetch('/api/blacklist/get_by_id', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -573,15 +482,14 @@ export default {
         Loading.hide()
       }
     },
-    async deleteData(ruleId) {
-
+    async deleteData(id) {
       Loading.show()
       try {
         const accessToken = localStorage.getItem('accessToken');
-        let body = { ruleId: ruleId }
+        let body = { blacklistId: id }
 
         console.log(body)
-        let countData = await $fetch('/api/hunting_rules/delete', {
+        let countData = await $fetch('/api/blacklist/delete', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -620,7 +528,7 @@ export default {
 
         console.log(body)
         console.log('start addd')
-        let countData = await $fetch('/api/hunting_rules/update', {
+        let countData = await $fetch('/api/blacklist/update', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -655,19 +563,15 @@ export default {
       try {
         const accessToken = localStorage.getItem('accessToken');
         let body = {
-          // ruleId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          ruleName: add_ingredient_detail.ruleName,
           orgId: "default",
-          ruleCreatedDate: add_ingredient_detail.ruleCreatedDate,
-          ruleDescription: "",
-          ruleDefinition: add_ingredient_detail.ruleDefinition,
-          refUrl: add_ingredient_detail.refUrl,
-          refType: "Sigma",
+          CreatedDate: add_ingredient_detail.CreatedDate,
+          blacklistCode: add_ingredient_detail.blacklistCode,
+          blacklistType: 1,
           tags: add_ingredient_detail.tags
         }
         console.log(body)
         console.log('start addd')
-        let countData = await $fetch('/api/hunting_rules/create', {
+        let countData = await $fetch('/api/blacklist/create', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -684,6 +588,7 @@ export default {
           message: 'เพิ่มข้อมูลสำเร็จ'
         });
         this.add_ingredient_detail_isOpen = false
+        this.clearAddTable()
         this.loadData()
       } catch (error) {
         console.error('Error create data:', error);
@@ -697,7 +602,7 @@ export default {
       Loading.show()
       try {
         const accessToken = localStorage.getItem('accessToken');
-        let countData = await $fetch('/api/hunting_rules/count', {
+        let countData = await $fetch('/api/blacklist/count', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -710,7 +615,8 @@ export default {
             toDate: "2025-05-06T17:56:35.528Z",
             limit: 0,
             fullTextSearch: filter_menu_table.value,
-            refType: "Sigma"
+            blacklistCode: "",
+            blacklistType: 1
           })
 
 
@@ -721,7 +627,8 @@ export default {
         pagination_menu.value.page = 1
 
         console.log(pagination_menu.page)
-        let data = await $fetch('/api/hunting_rules/rules', {
+        console.log('before load data')
+        let data = await $fetch('/api/blacklist/rules', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -735,12 +642,14 @@ export default {
             toDate: "2025-05-06T17:56:35.528Z",
             limit: pagination_menu.value.rowsPerPage,
             fullTextSearch: filter_menu_table.value,
-            refType: "Sigma"
+            blacklistCode: "",
+            blacklistType: 1
           })
 
 
         });
-        // console.log(data)
+        console.log('load data')
+        console.log(data)
         await this.loadMenu(data)
         // for (let index = 0; index < 4; index++) {
         //   overViewArray.value[index]['link'] = overviewData.value[index].variableValue;
@@ -758,7 +667,7 @@ export default {
       Loading.show()
       try {
         const accessToken = localStorage.getItem('accessToken');
-        let countData = await $fetch('/api/hunting_rules/count', {
+        let countData = await $fetch('/api/blacklist/count', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -771,7 +680,8 @@ export default {
             toDate: "2025-05-06T17:56:35.528Z",
             limit: 0,
             fullTextSearch: filter_menu_table.value,
-            refType: "Sigma"
+            blacklistCode: "",
+            blacklistType: 1
           })
 
 
@@ -782,7 +692,7 @@ export default {
         pagination_menu.value.page = page
         pagination_menu.value.rowsPerPage = rowsPerPage
         console.log(pagination_menu.page)
-        let data = await $fetch('/api/hunting_rules/rules', {
+        let data = await $fetch('/api/blacklist/rules', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -796,12 +706,14 @@ export default {
             toDate: "2025-05-06T17:56:35.528Z",
             limit: pagination_menu.value.rowsPerPage,
             fullTextSearch: filter_menu_table.value,
-            refType: "Sigma"
+            blacklistCode: "",
+            blacklistType: 1
           })
 
 
         });
-        // console.log(data)
+        console.log(data)
+        console.log("loadNextData")
         await this.loadMenu(data)
         // for (let index = 0; index < 4; index++) {
         //   overViewArray.value[index]['link'] = overviewData.value[index].variableValue;
@@ -813,21 +725,8 @@ export default {
         Loading.hide()
       }
     }
-    // async handleAddMenu() {
-    //   try {
-    //     const response = await createMenu({ name: this.newMenuName });
-    //     const menuId = response.data.id;
-    //     for (const ingredient of this.newIngredients) {
-    //       await createIngredient({ ...ingredient, menu_id: menuId });
-    //     }
-    //     this.menus.push(response.data);
-    //     this.isAddMenuDialogOpen = false;
-    //     this.newMenuName = '';
-    //     this.newIngredients = [{ name: '', weight: '', tolerance: '' }];
-    //   } catch (error) {
-    //     console.error('Error adding menu:', error);
-    //   }
-    // }
+
+
   },
 
 };

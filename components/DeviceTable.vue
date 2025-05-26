@@ -1,7 +1,8 @@
 <template>
   <q-page v-if="auth.isAuthenticated">
+
     <q-table class="my-sticky-header-table" style="height: calc(100vh - 50px);" flat bordered title="เมนู" color="amber"
-      :rows="table_rows_menu" :columns="table_columns_menu" row-key="ruleId" v-model:pagination="pagination_menu"
+      :rows="table_rows_menu" :columns="table_columns_menu" row-key="id" v-model:pagination="pagination_menu"
       selection="multiple" :rows-per-page-options="[5, 10, 15, 20, 30, 50, 0]" @request="loadNextData" separator="cell"
       :loading="loading">
       <!-- top-left slot -->
@@ -63,7 +64,6 @@
           </q-td>
         </q-tr>
       </template>
-
     </q-table>
 
 
@@ -74,7 +74,7 @@
           <div class="text-h6">
             แก้ไขข้อมูลของ ID :
             <q-badge outline class="text-h6 q-ml-md" align="middle" color="positive">
-              {{ edit_ingredient_detail.ruleId }}
+              {{ edit_ingredient_detail.id }}
             </q-badge>
           </div>
           <q-space />
@@ -83,18 +83,12 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.ruleName" outlined label="Rule Name" disable />
-
-            <q-btn @click="onClick('editRule')" color="green">แก้ไข code</q-btn>
-            <div v-if="showEditor">
-              <MonacoEditor v-model="edit_ingredient_detail.ruleDefinition" lang="yaml" style="height: 400px;"
-                :options="editorOptions" />
-            </div>
-            <q-input v-else class="q-pb-lg" v-model="edit_ingredient_detail.ruleDefinition" outlined
-              label="Rule Definition" disable />
-
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.refUrl" outlined label="URL" />
-            <q-input v-model="edit_ingredient_detail.tags" outlined label="tags" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.name" outlined label="Device Name." />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.ipAddress" outlined label="IP Address" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.brand" outlined label="Brand" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.model" outlined label="Model" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.description" outlined label="Description" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.tags" outlined label="Tags" />
           </q-item-section>
         </q-item>
 
@@ -116,17 +110,12 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.ruleName" outlined label="Rule Name" />
-            <q-btn @click="showEditor = !showEditor" color="green">แก้ไข code</q-btn>
-            <div v-if="showEditor">
-              <MonacoEditor v-model="add_ingredient_detail.ruleDefinition" lang="yaml" style="height: 400px;"
-                :options="editorOptions" />
-            </div>
-            <q-input v-else class="q-pb-lg" v-model="add_ingredient_detail.ruleDefinition" outlined
-              label="Rule Definition" disable />
-
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.refUrl" outlined label="URL" />
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.tags" outlined label="tags" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.name" outlined label="Device Name." />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.ipAddress" outlined label="IP Address" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.brand" outlined label="Brand" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.model" outlined label="Model" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.description" outlined label="Description" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.tags" outlined label="Tags" />
           </q-item-section>
         </q-item>
 
@@ -149,21 +138,24 @@ import { definePageMeta } from '#imports'
 
 // 1️⃣ declare prop to make this reusable
 const props = defineProps({
-  refType: { type: String, required: true }
+  blacklistType: { type: Number, required: true }
 })
 
-const apiComponent = "HuntingRule"
 // 2️⃣ protect with auth middleware
 definePageMeta({ middleware: 'auth' })
 
 // — state & config (exactly as before)
 const auth = useAuthStore()
 const table_columns_menu = [
+
   { name: 'id', align: 'center', label: 'Action', field: 'index', headerStyle: 'width: 30px' },
-  { name: 'ruleName', align: 'left', label: 'Rule Name', field: 'ruleName', sortable: true },
-  { name: 'refUrl', align: 'center', label: 'URL', field: 'refUrl', sortable: true },
-  { name: 'tags', align: 'left', label: 'tags', field: 'tags', sortable: true }
+  { name: 'name', align: 'center', label: 'Name', field: 'name', sortable: true, },
+  { name: 'brand', align: 'center', label: 'Brand', field: 'brand', sortable: true, },
+  { name: 'description', align: 'left', label: 'Description', field: 'description', sortable: true, },
+  { name: 'tags', align: 'left', label: 'tags', field: 'tags', sortable: true, },
+
 ]
+const apiComponent = "Device"
 const selectedTable = ref([])
 const monacoEditor = ref(null)
 const showEditor = ref(false)
@@ -175,15 +167,28 @@ const loading = ref(true)
 const table_rows_menu = ref([])
 const edit_ingredient_detail_isOpen = ref(false)
 const edit_ingredient_detail = ref({
-  ruleName: '', ruleDefinition: '', refUrl: '', tags: '',
-  ruleCreatedDate: '2024-10-12T09:24:30.125001Z',
-  update_at: '2023-05-20T11:00:00Z'
+  id: "",
+  name: "",
+  orgId: 'default',
+  description: "",
+  ipAddress: "",
+  brand: "",
+  model: "",
+  tags: "",
+  createdDate: "2024-10-12T09:24:30.125001Z"
 })
+
 const add_ingredient_detail_isOpen = ref(false)
 const add_ingredient_detail = ref({
-  ruleName: '', ruleDefinition: '', refUrl: '', tags: '',
-  ruleCreatedDate: '2024-10-12T09:24:30.125001Z',
-  update_at: '2023-05-20T11:00:00:Z'
+  name: "",
+  orgId: 'default',
+  description: "",
+  ipAddress: "",
+  brand: "",
+  model: "",
+  tags: "",
+  createdDate: "2024-10-12T09:24:30.125001Z"
+
 })
 
 // — lifecycle: load on mount
@@ -203,7 +208,17 @@ function getCurrentTimestamp() {
   return now.format('YYYY-MM-DDTHH:mm:ss.') + ms + '000Z'
 }
 function clearAddTable() {
-  add_ingredient_detail.value = { ...add_ingredient_detail.value, ruleName: '', ruleDefinition: '', refUrl: '', tags: '' }
+  add_ingredient_detail.value = {
+    id: "",
+    name: "",
+    orgId: 'default',
+    description: "",
+    ipAddress: "",
+    brand: "",
+    model: "",
+    tags: "",
+    createdDate: "2024-10-12T09:24:30.125001Z"
+  }
 }
 function isRowSelected(row) {
   return selectedTable.value.includes(row.index)
@@ -250,7 +265,7 @@ async function onClick(fn_name, param = null) {
 
     case 'editRule':
       if (!showEditor.value) {
-        edit_ingredient_detail.value.ruleDefinition = await getRulesById(edit_ingredient_detail.value.ruleId)
+        edit_ingredient_detail.value.ruleDefinition = await getRulesById(edit_ingredient_detail.value.id)
       }
       showEditor.value = !showEditor.value
       break
@@ -259,6 +274,7 @@ async function onClick(fn_name, param = null) {
 
 // fetch & pagination helpers
 async function loadMenu(data) {
+  console.log('loadMenu')
   try {
     const mockdata = [...data]
     selectedTable.value = []
@@ -277,174 +293,251 @@ async function loadMenu(data) {
 async function loadData() {
   Loading.show()
   try {
-    const token = localStorage.getItem('accessToken')
-    const count = await $fetch('/api/hunting_rules/count', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify({
-        offset: 0,
-        fromDate: '2025-05-05T17:56:35.528Z',
-        toDate: '2025-05-06T17:56:35.528Z',
-        limit: 0,
-        fullTextSearch: filter_menu_table.value,
-        refType: props.refType
-      })
-    })
-    pagination_menu.value.rowsNumber = count
-    pagination_menu.value.page = 1
-
-    const data = await $fetch('/api/hunting_rules/rules', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify({
-        offset: pagination_menu.value.page - 1,
-        limit: pagination_menu.value.rowsPerPage,
-        fullTextSearch: filter_menu_table.value,
-        refType: props.refType
-      })
-    })
-    await loadMenu(data)
-  }
-  catch (err) {
-    console.error('Error fetching data:', err)
-  }
-  finally {
-    Loading.hide()
-  }
-}
-
-
-async function loadNextData(props) {
-  // console.log(props)
-  const { page, rowsPerPage, sortBy, descending } = props.pagination
-  Loading.show()
-  try {
-
-
+    // const countApi = config.apiPath + `/api/${data.apiComponent}/org/${data.orgName}/action/${data.actionName}`
     const accessToken = localStorage.getItem('accessToken');
-    let countData = await $fetch('/api/hunting_rules/count', {
+
+
+    let countData = await $fetch('/api/apiClient', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + accessToken
       },
       // Use a raw JSON body as expected by your API:
+
       body: JSON.stringify({
         offset: 0,
         fromDate: "2025-05-05T17:56:35.528Z",
         toDate: "2025-05-06T17:56:35.528Z",
-        limit: 0,
+        limit: 10,
         fullTextSearch: filter_menu_table.value,
-        refType: props.refType
+        apiComponent: apiComponent,
+        orgName: "default",
+        actionName: "GetDeviceCount"
+
       })
 
 
-    });
-    pagination_menu.value.rowsNumber = countData
-    pagination_menu.value.page = page
-    pagination_menu.value.rowsPerPage = rowsPerPage
-
-    const data = await $fetch('/api/hunting_rules/rules', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${accessToken}` },
-      body: JSON.stringify({
-        offset: pagination_menu.value.page - 1,
-        limit: pagination_menu.value.rowsPerPage,
-        fullTextSearch: filter_menu_table.value,
-        refType: props.refType
-      })
     })
+    console.log("count")
+
+    console.log(countData)
+
+    pagination_menu.value.rowsNumber = countData
+    pagination_menu.value.page = 1
+
+    console.log(pagination_menu.page)
+    console.log('before load data')
+    let data = await $fetch('/api/apiClient', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + accessToken
+      },
+      // Use a raw JSON body as expected by your API:
+
+      body: JSON.stringify({
+        offset: 0,
+        fromDate: "2025-05-05T17:56:35.528Z",
+        toDate: "2025-05-06T17:56:35.528Z",
+        limit: 10,
+        fullTextSearch: filter_menu_table.value,
+        apiComponent: apiComponent,
+        orgName: "default",
+        actionName: "GetDevices"
+
+      })
+
+
+    })
+    // console.log('load data')
+    // console.log(data)
     await loadMenu(data)
+    // for (let index = 0; index < 4; index++) {
+    //   overViewArray.value[index]['link'] = overviewData.value[index].brand;
+    //   console.log(data)
+    // }
   } catch (error) {
     console.error('Error fetching overview data:', error);
   } finally {
     Loading.hide()
   }
-  // await loadData()
 }
 
 
-// CRUD calls
-async function getRulesById(ruleId) {
-  Loading.show()
-  try {
-    const token = localStorage.getItem('accessToken')
-    const res = await $fetch('/api/hunting_rules/get_by_id', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify({ ruleId })
-    })
-    return res.ruleDefinition
-  }
-  finally { Loading.hide() }
+async function loadNextData({ pagination: { page, rowsPerPage } }) {
+  pagination_menu.value.page = page
+  pagination_menu.value.rowsPerPage = rowsPerPage
+  await loadData()
 }
 
 async function deleteSelectedRows() {
-  const toDel = table_rows_menu.value.filter(r => selectedTable.value.includes(r.index))
-  const html = toDel.map(i => `${i.index}. Rule Name: ${i.ruleName}`).join('<br/>')
 
-  await Dialog.create({
-    title: '<span class="text-red">ยืนยันการลบข้อมูล !</span>',
-    html: true,
+  let data = table_rows_menu.value.filter(row => selectedTable.value.includes(row.index))
+  let html = data
+    .map(item => `${item.index}. URL : ${item.name} , TAGS : ${item.brand}`)
+    .join('<br/>')
+
+  Dialog.create({
+    title: '<span class="text-red">ยืนยันการลบข้อมูลต่อไปนี้ !</span>',
     message: `<span class="text-yellow">${html}</span>`,
-    ok: { color: 'primary' },
-    cancel: { color: 'negative' },
+    html: true,
+    style: 'minWidth:600px',
+    ok: {
+      push: true,
+      color: 'primary'
+    },
+    cancel: {
+      push: true,
+      color: 'negative'
+    },
     persistent: true
   }).onOk(async () => {
-    for (const row of toDel) {
-      await deleteData(row.ruleId)
+    // console.log('>>>> OK')
+    for (let index = 0; index < data.length; index++) {
+      await deleteData(data[index].id)
+
     }
+  }).onCancel(() => {
+    // console.log('>>>> Cancel')
+  }).onDismiss(() => {
+    // console.log('I am triggered on both OK and Cancel')
   })
+
+  console.log(data)
 }
 
-async function deleteData(ruleId) {
+async function deleteData(id) {
   Loading.show()
   try {
-    const token = localStorage.getItem('accessToken')
-    await $fetch('/api/hunting_rules/delete', {
+    const accessToken = localStorage.getItem('accessToken');
+    let body = {
+      id: id,
+      apiComponent: apiComponent,
+      orgName: "default",
+      actionName: "DeleteDeviceById",
+      apiMethod: "DELETE"
+    }
+
+    console.log(body)
+    let countData = await $fetch('/api/apiClient', {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify({ ruleId })
-    })
-    Notify.create({ type: 'positive', message: 'ลบข้อมูลสำเร็จ' })
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + accessToken
+      },
+      // Use a raw JSON body as expected by your API:
+      body: JSON.stringify(body)
+
+
+    });
+    Notify.create({
+      position: "top",
+      type: 'positive',
+      message: 'ลบมูลสำเร็จ'
+    });
+    edit_ingredient_detail_isOpen.value = false;
     await loadData()
+  } catch (error) {
+    console.error('Error delete data:', error);
+    Notify.create({
+      position: "top",
+      type: 'negative',
+      message: 'Error delete data:' + error
+    });
+  } finally {
+    Loading.hide()
   }
-  finally { Loading.hide() }
 }
 
 async function updateData() {
+  console.log('add data')
   Loading.show()
   try {
-    const token = localStorage.getItem('accessToken')
-    await $fetch('/api/hunting_rules/update', {
+    const accessToken = localStorage.getItem('accessToken');
+    let body = edit_ingredient_detail.value
+    body['id'] = edit_ingredient_detail.value.id
+    body['apiComponent'] = apiComponent
+    body['orgName'] = "default"
+    body['actionName'] = "UpdateDeviceById"
+
+    console.log(body)
+    console.log('start update')
+    let countData = await $fetch('/api/apiClient', {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify(edit_ingredient_detail.value)
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + accessToken
+      },
+      // Use a raw JSON body as expected by your API:
+      body: JSON.stringify(body)
+
+
     })
-    Notify.create({ type: 'positive', message: 'อัพเดตข้อมูลสำเร็จ' })
-    edit_ingredient_detail_isOpen.value = false
+    Notify.create({
+      position: "top",
+      type: 'positive',
+      message: 'อัพเดขข้อมูลสำเร็จ'
+    })
+    edit_ingredient_detail_isOpen.value = false;
     await loadData()
+  } catch (error) {
+    console.error('Error create data:', error);
+    Notify.create({
+      position: "top",
+      type: 'negative',
+      message: 'Error create data:' + error
+    });
+  } finally {
+    Loading.hide()
   }
-  finally { Loading.hide() }
 }
 
+
 async function addData() {
+  console.log('add data')
   Loading.show()
   try {
-    const token = localStorage.getItem('accessToken')
-    await $fetch('/api/hunting_rules/create', {
+    const accessToken = localStorage.getItem('accessToken');
+
+    let body = add_ingredient_detail.value
+    body['apiComponent'] = apiComponent
+    body['orgName'] = "default"
+    body['actionName'] = "AddDevice"
+
+    console.log(body)
+    console.log('start addd')
+    let data = await $fetch('/api/apiClient', {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify({
-        ...add_ingredient_detail.value,
-        orgId: 'default',
-        refType: props.refType
-      })
-    })
-    Notify.create({ type: 'positive', message: 'เพิ่มข้อมูลสำเร็จ' })
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + accessToken
+      },
+      // Use a raw JSON body as expected by your API:
+      body: JSON.stringify(body)
+    });
+
+    if (data.status.toLowerCase() != "ok") {
+      throw data.description
+    }
+    Notify.create({
+      position: "top",
+      type: 'positive',
+      message: 'เพิ่มข้อมูลสำเร็จ'
+    });
     add_ingredient_detail_isOpen.value = false
-    await loadData()
+    clearAddTable()
+    loadData()
+  } catch (error) {
+    Notify.create({
+      position: "top",
+      type: 'negative',
+      message: error
+    });
+    console.error('Error create data:', error);
+
+  } finally {
+    Loading.hide()
   }
-  finally { Loading.hide() }
 }
 </script>
