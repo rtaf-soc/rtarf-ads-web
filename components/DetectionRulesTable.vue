@@ -1,81 +1,71 @@
 <template>
   <q-page v-if="auth.isAuthenticated">
-    <q-card>
-      <q-card-section class="q-pa-none q-ma-none" style="height: 100vh;">
-        <div class="row">
-          <div class="col-12 col-md-12 q-pa-none">
-            <q-table class="my-sticky-header-table" style="height: 95vh;" flat bordered title="เมนู" color="amber"
-              :rows="table_rows_menu" :columns="table_columns_menu" row-key="ruleId"
-              v-model:pagination="pagination_menu" selection="multiple"
-              :rows-per-page-options="[5, 10, 15, 20, 30, 50, 0]" @request="loadNextData" separator="cell"
-              :loading="loading">
-              <!-- top-left slot -->
-              <template #top-left>
-                <q-input outlined dense debounce="300" placeholder="ค้นหา" v-model="filter_menu_table" bg-color="dark"
-                  @keyup.enter="onClick('tableSearch')">
-                  <template #append>
-                    <q-btn round dense flat icon="search" @click="onClick('tableSearch')" />
-                  </template>
-                </q-input>
-                <q-badge class="q-ml-md text-bold q-pa-sm" align="middle" color="dark" style="font-size:20px;">
-                  ข้อมูลทั้งหมด : {{ pagination_menu.rowsNumber.toLocaleString('en-US') }}
-                </q-badge>
-              </template>
+    <q-table class="my-sticky-header-table" style="height: calc(100vh - 50px);" flat bordered title="เมนู" color="amber"
+      :rows="table_rows_menu" :columns="table_columns_menu" row-key="ruleId" v-model:pagination="pagination_menu"
+      selection="multiple" :rows-per-page-options="[5, 10, 15, 20, 30, 50, 0]" @request="loadNextData" separator="cell"
+      :loading="loading">
+      <!-- top-left slot -->
+      <template #top-left>
+        <q-input outlined dense debounce="300" placeholder="ค้นหา" v-model="filter_menu_table" bg-color="dark"
+          @keyup.enter="onClick('tableSearch')">
+          <template #append>
+            <q-btn round dense flat icon="search" @click="onClick('tableSearch')" />
+          </template>
+        </q-input>
+        <q-badge class="q-ml-md text-bold q-pa-sm" align="middle" color="dark" style="font-size:20px;">
+          ข้อมูลทั้งหมด : {{ pagination_menu.rowsNumber.toLocaleString('en-US') }}
+        </q-badge>
+      </template>
 
-              <!-- top-right slot -->
-              <template #top-right>
-                <q-btn class="q-mr-lg" icon="add" rounded color="green-7" @click="onClick('addTable')" />
-                <q-btn :disable="selectedTable.length === 0" icon="delete" rounded color="negative"
-                  @click="onClick('deleteSelectedTable')" />
-              </template>
+      <!-- top-right slot -->
+      <template #top-right>
+        <q-btn class="q-mr-lg" icon="add" rounded color="green-7" @click="onClick('addTable')" />
+        <q-btn :disable="selectedTable.length === 0" icon="delete" rounded color="negative"
+          @click="onClick('deleteSelectedTable')" />
+      </template>
 
-              <!-- default header -->
-              <template #header="props">
-                <q-tr :props="props">
-                  <q-th v-for="col in props.cols" :key="col.name" :props="props" class="text-bold"
-                    style="font-size: medium;">
-                    {{ col.label }}
-                  </q-th>
-                </q-tr>
-              </template>
+      <!-- default header -->
+      <template #header="props">
+        <q-tr :props="props">
+          <q-th v-for="col in props.cols" :key="col.name" :props="props" class="text-bold" style="font-size: medium;">
+            {{ col.label }}
+          </q-th>
+        </q-tr>
+      </template>
 
-              <!-- body cell fallback -->
-              <template #body-cell="props">
-                <q-td :props="props" :class="(props.row.index % 2 === 0) ? 'bg-grey-1' : 'bg-white'">
-                  {{ props.value }}
-                </q-td>
-              </template>
+      <!-- body cell fallback -->
+      <template #body-cell="props">
+        <q-td :props="props" :class="(props.row.index % 2 === 0) ? 'bg-grey-1' : 'bg-white'">
+          {{ props.value }}
+        </q-td>
+      </template>
 
-              <!-- full body override so we can render checkboxes and edit chips -->
-              <template #body="props">
-                <q-tr :props="props" class="cursor-pointer"
-                  :class="(props.row.index % 2 === 0) ? 'bg-grey-10' : 'bg-grey-9'">
-                  <q-td v-for="col in props.cols" :key="col.name" :props="props">
-                    <template v-if="col.name === 'id'">
-                      <q-checkbox :model-value="selectedTable.includes(props.row.index)"
-                        @update:model-value="val => toggleRowSelection(props.row, val)" />
-                      <q-chip class="shadow-up-3 q-pr-sm" clickable rounded
-                        @click="onClick('editIngredient', props.row)">
-                        <q-avatar icon="edit" color="blue" text-color="white" />
-                        <div class="text-center text-bold">{{ props.row.index }}</div>
-                      </q-chip>
-                    </template>
+      <!-- full body override so we can render checkboxes and edit chips -->
+      <template #body="props">
+        <q-tr :props="props" class="cursor-pointer" :class="(props.row.index % 2 === 0) ? 'bg-grey-10' : 'bg-grey-9'">
+          <q-td v-for="col in props.cols" :key="col.name" :props="props">
+            <template v-if="col.name === 'id'">
+              <q-checkbox :model-value="selectedTable.includes(props.row.index)"
+                @update:model-value="val => toggleRowSelection(props.row, val)" />
+              <q-chip class="shadow-up-3 q-pr-sm" clickable rounded @click="onClick('editIngredient', props.row)">
+                <q-avatar icon="edit" color="blue" text-color="white" />
+                <div class="text-center text-bold">{{ props.row.index }}</div>
+              </q-chip>
+            </template>
 
-                    <template v-else-if="col.name === 'ruleCreatedDate'">
-                      {{ convertTimestamp(props.row.ruleCreatedDate) }}
-                    </template>
+            <template v-else-if="col.name === 'ruleCreatedDate'">
+              {{ convertTimestamp(props.row.ruleCreatedDate) }}
+            </template>
 
-                    <template v-else>
-                      {{ props.row[col.field] }}
-                    </template>
-                  </q-td>
-                </q-tr>
-              </template>
-            </q-table>
-          </div>
-        </div>
-      </q-card-section>
-    </q-card>
+            <template v-else>
+              {{ props.row[col.field] }}
+            </template>
+          </q-td>
+        </q-tr>
+      </template>
+
+    </q-table>
+
 
     <!-- Edit Dialog -->
     <q-dialog v-model="edit_ingredient_detail_isOpen">

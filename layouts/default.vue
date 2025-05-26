@@ -97,8 +97,8 @@ const zabbixLink: MenuRedirectProps[] = [
   {
     title: 'Zabbix',
     // caption: 'จัดหา',
-    icon: 'keyboard_command_key',
-    link: "/commander",
+    icon: "monitor_heart",
+    link: "/zabbix",
     inset: 0.0
   },
 ];

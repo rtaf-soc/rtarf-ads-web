@@ -5,7 +5,7 @@
         <h5 class="q-pa-none q-ma-none">Geo-IP Attack Map</h5>
       </q-card-section> -->
       <q-card-section class="q-pa-none q-ma-none" style="height: 100vh;">
-        <iframe sandbox="allow-scripts allow-same-origin" :src="geoIpURL" width="100%" height="100%"
+        <iframe sandbox="allow-scripts allow-same-origin" :src="monitoringWebUrl" width="100%" height="100%"
           style="border: none;"></iframe>
       </q-card-section>
     </q-card>
@@ -22,7 +22,7 @@ export default {
     onMounted(() => {
       // Loading.hide()
     })
-    const { public: { geoIpURL } } = useRuntimeConfig();
+    const { public: { monitoringWebUrl } } = useRuntimeConfig();
     const auth = useAuthStore();
     return {
       geoIpURL,
