@@ -11,3 +11,4 @@ COPY --from=builder /app ./
 EXPOSE 3000
 
 ENTRYPOINT ["node", ".output/server/index.mjs"]
+
