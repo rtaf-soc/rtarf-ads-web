@@ -9,3 +9,14 @@ run-example.sh
 .nitro
 .cache
 dist
+.nuxt/components.d.ts
+.nuxt/nitro.json
+.nuxt/dev/index.mjs
+.nuxt/dev/index.mjs.map
+.nuxt/manifest/latest.json
+.nuxt/manifest/meta/dev.json
+.nuxt/types/middleware.d.ts
+.nuxt/types/nitro-routes.d.ts
+.nuxt/types/plugins.d.ts
+.nuxt/types/schema.d.ts
+.nuxt/
