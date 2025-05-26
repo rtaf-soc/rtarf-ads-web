@@ -25,7 +25,7 @@ export default {
     const { public: { monitoringWebUrl } } = useRuntimeConfig();
     const auth = useAuthStore();
     return {
-      geoIpURL,
+      monitoringWebUrl,
       auth
     }
   },
