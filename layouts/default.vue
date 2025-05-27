@@ -95,7 +95,7 @@ const overviewLink: MenuRedirectProps[] = [
 const zabbixLink: MenuRedirectProps[] = [
 
   {
-    title: 'Zabbix',
+    title: 'RTARF Monitoring',
     // caption: 'จัดหา',
     icon: "monitor_heart",
     link: "/zabbix",
