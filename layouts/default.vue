@@ -400,12 +400,12 @@ const adminLink: MenuRedirectProps[] = [
     icon: 'group',
     link: "/admin/users"
   },
-  {
-    title: 'Roles',
-    // caption: 'จัดหา',
-    icon: 'manage_accounts',
-    link: "/admin/roles"
-  },
+  // {
+  //   title: 'Roles',
+
+  //   icon: 'manage_accounts',
+  //   link: "/admin/roles"
+  // },
   {
     title: 'API Keys',
     icon: 'vpn_key',
