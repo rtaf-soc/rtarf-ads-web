@@ -68,7 +68,7 @@
 
 
     <!-- Edit Dialog -->
-    <q-dialog v-model="edit_ingredient_detail_isOpen">
+    <q-dialog v-model="edit_ingredient_detail_isOpen" @show="onEditDialogShow">
       <q-card style="width: 800px; max-width: 800vw;">
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6">
@@ -797,7 +797,7 @@ async function addData() {
   font-weight: 500;
   line-height: 1;
   color: rgba(0, 0, 0, 0.6);
-  
+
   /* Use transparent background to inherit dialog background */
   background-color: inherit;
   /* Or alternatively, use the exact same background as your q-card */
