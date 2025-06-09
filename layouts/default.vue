@@ -129,9 +129,11 @@ const dashboardLink: MenuRedirectProps[] = [
   //   link: "/dashboard/event_summary",
   // },
   {
-    title: 'Zeek Event Summary',
+    title: 'Cambodia Focused Attack',
     // caption: 'จัดหา',
     icon: 'dashboard',
+
+    // TODO : change the link name accordingly
     link: "/dashboard/zeek_event_summary",
   },
   {
