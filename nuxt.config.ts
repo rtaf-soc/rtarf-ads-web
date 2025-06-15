@@ -100,22 +100,22 @@ export default defineNuxtConfig({
       
       // Add new environment variables for Cyber Kill Chain
       ckc: {
-        url01: "https://example.com/reconnaissance",
-        url02: "https://example.com/weaponization",
-        url03: "https://example.com/delivery",
-        url04: "https://example.com/exploitation",
-        url05: "https://example.com/installation",
-        url06: "https://example.com/command-control",
-        url07: "https://example.com/actions-objectives"
+        url01: "https://www.google.co.th/reconnaissance",
+        url02: "https://www.google.co.th/weaponization",
+        url03: "https://www.google.co.th/delivery",
+        url04: "https://www.google.co.th/exploitation",
+        url05: "https://www.google.co.th/installation",
+        url06: "https://www.google.co.th/command-control",
+        url07: "https://www.google.co.th/actions-objectives"
       },
       
       // Add new environment variables for ASEAN Cyber Operations
       aco: {
-        url01: "https://example.com/cambodia",
-        url02: "https://example.com/myanmar",
-        url03: "https://example.com/malaysia",
-        url04: "https://example.com/laos",
-        url05: "https://example.com/vietnam"
+        url01: "https://www.google.co.th/cambodia",
+        url02: "https://www.google.co.th/myanmar",
+        url03: "https://www.google.co.th/malaysia",
+        url04: "https://www.google.co.th/laos",
+        url05: "https://www.google.co.th/vietnam"
       }
     },
   },
