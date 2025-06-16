@@ -103,24 +103,23 @@ const zabbixLink: MenuRedirectProps[] = [
   },
 ];
 
-// const commanderLink: MenuRedirectProps[] = [
+const commanderLink: MenuRedirectProps[] = [
 
-//   {
-//     title: 'Commander',
-//     // caption: 'จัดหา',
-//     icon: 'keyboard_command_key',
-//     link: "/commander",
-//     inset: 0.0
-//   },
-// ];
+  {
+    title: 'Commander',
+    // caption: 'จัดหา',
+    icon: 'keyboard_command_key',
+    link: "/commander/main",
+    inset: 0.0
+  },
+];
 
 // New MITRE ATT&CK Link
 const mitreAttackLink: MenuRedirectProps[] = [
   {
     title: 'MITRE ATT&CK',
     icon: 'security',
-    link: "/commander/mitre_attack/main",
-    inset: 0.3
+    link: "/mitre_attack/main",
   },
 ];
 
@@ -129,44 +128,44 @@ const cyberKillChainLink: MenuRedirectProps[] = [
   {
     title: 'Reconnaissance',
     icon: 'search',
-    link: "/commander/cyber_kill_chain/reconnaissance",
-    inset: 0.6
+    link: "/cyber_kill_chain/reconnaissance",
+
   },
   {
     title: 'Weaponization',
     icon: 'build',
-    link: "/commander/cyber_kill_chain/weaponization",
-    inset: 0.6
+    link: "/cyber_kill_chain/weaponization",
+
   },
   {
     title: 'Delivery',
     icon: 'local_shipping',
-    link: "/commander/cyber_kill_chain/delivery",
-    inset: 0.6
+    link: "/cyber_kill_chain/delivery",
+
   },
   {
     title: 'Exploitation',
     icon: 'bug_report',
-    link: "/commander/cyber_kill_chain/exploitation",
-    inset: 0.6
+    link: "/cyber_kill_chain/exploitation",
+
   },
   {
     title: 'Installation',
     icon: 'download',
-    link: "/commander/cyber_kill_chain/installation",
-    inset: 0.6
+    link: "/cyber_kill_chain/installation",
+
   },
   {
     title: 'Command and Control',
     icon: 'dns',
-    link: "/commander/cyber_kill_chain/command_control",
-    inset: 0.6
+    link: "/cyber_kill_chain/command_control",
+
   },
   {
     title: 'Actions on Objectives',
     icon: 'flag',
-    link: "/commander/cyber_kill_chain/actions_objectives",
-    inset: 0.6
+    link: "/cyber_kill_chain/actions_objectives",
+
   },
 ];
 
@@ -175,32 +174,32 @@ const aseanCyberOpsLink: MenuRedirectProps[] = [
   {
     title: 'Cambodia',
     icon: 'public',
-    link: "/commander/asean_cyber_operations/cambodia",
-    inset: 0.6
+    link: "/asean_cyber_operations/cambodia",
+
   },
   {
     title: 'Myanmar',
     icon: 'public',
-    link: "/commander/asean_cyber_operations/myanmar",
-    inset: 0.6
+    link: "/asean_cyber_operations/myanmar",
+
   },
   {
     title: 'Malaysia',
     icon: 'public',
-    link: "/commander/asean_cyber_operations/malaysia",
-    inset: 0.6
+    link: "/asean_cyber_operations/malaysia",
+
   },
   {
     title: 'Laos',
     icon: 'public',
-    link: "/commander/asean_cyber_operations/laos",
-    inset: 0.6
+    link: "/asean_cyber_operations/laos",
+
   },
   {
     title: 'Vietnam',
     icon: 'public',
-    link: "/commander/asean_cyber_operations/vietnam",
-    inset: 0.6
+    link: "/asean_cyber_operations/vietnam",
+
   },
 ];
 
@@ -564,29 +563,31 @@ function handleLogout() {
         <q-card>
           <MenuRedirect v-for="link in overviewLink" :key="link.title" v-bind="link" />
         </q-card>
-        <!-- <q-card>
+        <q-card>
           <MenuRedirect v-for="link in commanderLink" :key="link.title" v-bind="link" />
-        </q-card> -->
+        </q-card>
 
         <!-- New menu items underneath Commander -->
-        <q-expansion-item expand-separator icon="keyboard_command_key" label="Commander">
+
+        <q-expansion-item expand-separator icon="security" label="MITRE ATT&CK">
           <q-card>
             <MenuRedirect v-for="link in mitreAttackLink" :key="link.title" v-bind="link" />
           </q-card>
-
-
-          <q-expansion-item expand-separator icon="timeline" label="Cyber Kill Chain" :header-inset-level="0.3">
-            <q-card>
-              <MenuRedirect v-for="link in cyberKillChainLink" :key="link.title" v-bind="link" />
-            </q-card>
-          </q-expansion-item>
-
-          <q-expansion-item expand-separator icon="language" label="ASEAN Cyber Operations" :header-inset-level="0.3">
-            <q-card>
-              <MenuRedirect v-for="link in aseanCyberOpsLink" :key="link.title" v-bind="link" />
-            </q-card>
-          </q-expansion-item>
         </q-expansion-item>
+
+
+        <q-expansion-item expand-separator icon="timeline" label="Cyber Kill Chain">
+          <q-card>
+            <MenuRedirect v-for="link in cyberKillChainLink" :key="link.title" v-bind="link" />
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item expand-separator icon="language" label="ASEAN Cyber Operations">
+          <q-card>
+            <MenuRedirect v-for="link in aseanCyberOpsLink" :key="link.title" v-bind="link" />
+          </q-card>
+        </q-expansion-item>
+
 
         <q-card>
           <MenuRedirect v-for="link in zabbixLink" :key="link.title" v-bind="link" />
