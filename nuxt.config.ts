@@ -91,8 +91,32 @@ export default defineNuxtConfig({
       commander:{
         url01:"https://www.google.co.th/commander"
       },
-      monitoringWebUrl:"https://www.zabbix.com"
-
+      monitoringWebUrl:"https://www.zabbix.com",
+      
+      // Add new environment variables for MITRE ATT&CK
+      mitr: {
+        url01: "https://attack.mitre.org"
+      },
+      
+      // Add new environment variables for Cyber Kill Chain
+      ckc: {
+        url01: "https://www.google.co.th/reconnaissance",
+        url02: "https://www.google.co.th/weaponization",
+        url03: "https://www.google.co.th/delivery",
+        url04: "https://www.google.co.th/exploitation",
+        url05: "https://www.google.co.th/installation",
+        url06: "https://www.google.co.th/command-control",
+        url07: "https://www.google.co.th/actions-objectives"
+      },
+      
+      // Add new environment variables for ASEAN Cyber Operations
+      aco: {
+        url01: "https://www.google.co.th/cambodia",
+        url02: "https://www.google.co.th/myanmar",
+        url03: "https://www.google.co.th/malaysia",
+        url04: "https://www.google.co.th/laos",
+        url05: "https://www.google.co.th/vietnam"
+      }
     },
   },
 
