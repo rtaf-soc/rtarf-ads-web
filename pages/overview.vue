@@ -1,63 +1,21 @@
 <template>
   <q-page v-if="auth.isAuthenticated">
-    <q-card >
-
+    <q-card>
       <q-card-section class="q-pa-none q-ma-none" style="height: 100vh;">
-        <div v-if="overViewOnLoad[0].link" class="loading-container q-pt-lx">
-                <q-spinner size="50px" />
-              </div>
-              <iframe sandbox="allow-scripts allow-same-origin" :src="overViewArray[0].link" width="100%"  height="100%"
-                :onLoad="isFrameLoad(0)" style="border: none;">
-              </iframe>
+        <div v-if="!overViewArray[0].link || overViewArray[0].link === 'mockx.com'" class="flex flex-center q-pa-xl">
+          <q-spinner size="3em" color="primary" />
+          <p class="q-ml-md">Loading...</p>
+        </div>
+        <iframe 
+          v-else 
+          sandbox="allow-scripts allow-same-origin" 
+          :src="overViewArray[0].link" 
+          width="100%" 
+          height="100%"
+          style="border: none;">
+        </iframe>
       </q-card-section>
-      <!-- <q-card-section>
-        <div class="row q-ma-none">
-          <div class="col-12 col-md-6" style="height: 480px">
-            <div class="q-pa-sm">
-              <div v-if="overViewOnLoad[0].link" class="loading-container q-pt-lx">
-                <q-spinner size="50px" />
-              </div>
-              <iframe sandbox="allow-scripts allow-same-origin" :src="overViewArray[0].link" width="100%" height="480"
-                :onLoad="isFrameLoad(0)" style="border: none;">
-              </iframe>
-            </div>
-          </div>
-          <div class="col-12 col-md-6" style="height: 480px">
-            <div class="q-pa-sm">
-              <div v-if="overViewOnLoad[1].link" class="loading-container q-pt-lx">
-                <q-spinner size="50px" />
-              </div>
-              <iframe sandbox="allow-scripts allow-same-origin" :src="overViewArray[1].link" width="100%" height="480"
-                :onload="isFrameLoad(1)" style="border: none;">
-              </iframe>
-            </div>
-          </div>
-        </div>
-        <div class="row q-pa-none q-ma-none q-pt-md">
-          <div class="col-12 col-md-6" style="height: 480px">
-            <div class="q-pa-sm">
-              <div v-if="overViewOnLoad[2].link" class="loading-container q-pt-lx">
-                <q-spinner size="50px" />
-              </div>
-              <iframe sandbox="allow-scripts allow-same-origin" :src="overViewArray[2].link" width="100%" height="480"
-                :onload="isFrameLoad(2)" style="border: none;">
-              </iframe>
-            </div>
-          </div>
-          <div class="col-12 col-md-6" style="height: 480px">
-            <div class="q-pa-sm">
-              <div v-if="overViewOnLoad[3].link" class="loading-container q-pt-lx">
-                <q-spinner size="50px" />
-              </div>
-              <iframe sandbox="allow-scripts allow-same-origin" :src="overViewArray[3].link" width="100%" height="480"
-                :onload="isFrameLoad(3)" style="border: none;">
-              </iframe>
-            </div>
-          </div>
-        </div>
-      </q-card-section> -->
     </q-card>
-
   </q-page>
 </template>
 
@@ -74,16 +32,16 @@ export default {
     const overviewData = ref(null);
     const overViewArray = ref([
       {
-        link: 'mockx.com'
+        link: ''
       },
       {
-        link: 'mockx.com'
+        link: ''
       },
       {
-        link: 'mockx.com'
+        link: ''
       },
       {
-        link: 'mockx.com'
+        link: ''
       }
     ])
 
@@ -101,9 +59,11 @@ export default {
         link: true
       }
     ])
+    
     function isFrameLoad(index) {
       overViewOnLoad.value[index].link = false
     }
+    
     async function fetchOverview() {
       Loading.show()
       overViewOnLoad.value[0].link = true
@@ -119,9 +79,7 @@ export default {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + accessToken
           },
-          // Use a raw JSON body as expected by your API:
           body: JSON.stringify({ FullTextSearch: "" })
-
         });
 
         for (let index = 0; index < 4; index++) {
@@ -134,10 +92,6 @@ export default {
         Loading.hide()
       }
     }
-    // mounted(() => {
-    //   Loading.hide()
-    //   fetchOverview();
-    // });
 
     return {
       overviewData,
@@ -148,7 +102,6 @@ export default {
     };
   },
   beforeMount() {
-    // This registers your global auth middleware which checks if the user is authenticated.
     definePageMeta({
       middleware: 'auth'
     });
