@@ -477,6 +477,17 @@ const toolsLink: MenuRedirectProps[] = [
   },
 ];
 
+
+const miscellaneousLink: MenuRedirectProps[] = [
+
+  {
+    title: 'Note',
+    icon: 'add_notes',
+    link: "/miscellaneous/note"
+  },
+
+];
+
 const adminLink: MenuRedirectProps[] = [
 
   {
@@ -639,6 +650,12 @@ function handleLogout() {
         <q-expansion-item expand-separator icon="construction" label="Tools">
           <q-card>
             <MenuRedirect v-for="link in toolsLink" :key="link.title" v-bind="link" />
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item expand-separator icon="miscellaneous_services" label="Miscellaneous">
+          <q-card>
+            <MenuRedirect v-for="link in miscellaneousLink" :key="link.title" v-bind="link" />
           </q-card>
         </q-expansion-item>
 
