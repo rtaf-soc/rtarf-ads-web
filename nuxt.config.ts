@@ -115,7 +115,9 @@ export default defineNuxtConfig({
         url02: "https://www.google.co.th/myanmar",
         url03: "https://www.google.co.th/malaysia",
         url04: "https://www.google.co.th/laos",
-        url05: "https://www.google.co.th/vietnam"
+        url05: "https://www.google.co.th/vietnam",
+        url06: "https://www.google.co.th/chaina",
+        url07: "https://www.google.co.th/north-korea",
       }
     },
   },

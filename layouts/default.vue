@@ -201,6 +201,18 @@ const aseanCyberOpsLink: MenuRedirectProps[] = [
     link: "/asean_cyber_operations/vietnam",
 
   },
+  {
+    title: 'China',
+    icon: 'public',
+    link: "/asean_cyber_operations/china",
+
+  },
+  {
+    title: 'North Korea',
+    icon: 'public',
+    link: "/asean_cyber_operations/north_korea",
+
+  },
 ];
 
 const dashboardLink: MenuRedirectProps[] = [

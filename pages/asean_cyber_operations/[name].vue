@@ -27,10 +27,10 @@ export default {
 
     onMounted(() => {
       const name = route.params.name;
-      
-      // Set page title based on route
-      titleStore.setTitle(`ASEAN Cyber Operations - ${name.charAt(0).toUpperCase() + name.slice(1)}`);
-      
+      // Format name: replace underscores with spaces and capitalize each word
+      const formattedName = name.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      // Set page title based on formatted name
+      titleStore.setTitle(`ASEAN Cyber Operations - ${formattedName}`);
       // Map the route parameter to the corresponding URL in the config
       switch (name) {
         case 'cambodia':
@@ -51,6 +51,12 @@ export default {
           break;
         case 'vietnam':
           externalUrl.value = aco.url05;
+          break;
+        case 'china':
+          externalUrl.value = aco.url06;
+          break;
+        case 'north_korea':
+          externalUrl.value = aco.url07;
           break;
         default:
           // Default fallback URL
