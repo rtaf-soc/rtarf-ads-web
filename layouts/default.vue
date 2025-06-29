@@ -494,7 +494,7 @@ const miscellaneousLink: MenuRedirectProps[] = [
 
   {
     title: 'Note',
-    icon: 'add_notes',
+    icon: 'edit_note',
     link: "/miscellaneous/note"
   },
 

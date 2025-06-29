@@ -88,13 +88,18 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.iocHostCode" outlined label="CODE" readonly/>
             <q-input class="q-pb-lg" v-model="edit_ingredient_detail.iocEndpoint" outlined label="URL" />
             <q-input class="q-pb-lg" v-model="edit_ingredient_detail.description" outlined label="Description" />
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.authenticationKey" outlined label="API Key"
-              type="password">
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.authenticationKey" outlined :type="showEditApiKey ? 'text' : 'password'" label="API Key">
               <template v-slot:append>
-                <q-btn flat round dense icon="content_copy"
-                  @click="copyToClipboard(edit_ingredient_detail.authenticationKey)" />
+                <q-btn flat round dense icon="content_copy" @click="copyToClipboard(edit_ingredient_detail.authenticationKey)" />
+                <q-btn flat round dense icon="vpn_key" @click="generateApiKey('edit')" />
+                <q-btn flat round dense :icon="showEditApiKey ? 'visibility_off' : 'visibility'"
+                  @mousedown="showEditApiKey = true"
+                  @mouseup="showEditApiKey = false"
+                  @mouseleave="showEditApiKey = false"
+                />
               </template>
             </q-input>
             <q-input v-model="edit_ingredient_detail.tags" outlined label="tags" />
@@ -118,16 +123,19 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.iocHostCode" outlined label="CODE" />
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.iocEndpoint" outlined label="URL" />
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.description" outlined label="Description" />
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.iocHostCode" outlined label="CIDR Code" />
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.iocType" outlined label="CIDR Type" />
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.authenticationKey" outlined label="API Key"
-              type="password">
+            <!-- <q-input class="q-pb-lg" v-model="add_ingredient_detail.iocType" outlined label="CIDR Type" /> -->
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.authenticationKey" outlined :type="showAddApiKey ? 'text' : 'password'" label="API Key">
               <template v-slot:append>
-                <q-btn flat round dense icon="content_copy"
-                  @click="copyToClipboard(add_ingredient_detail.authenticationKey)" />
+                <q-btn flat round dense icon="content_copy" @click="copyToClipboard(add_ingredient_detail.authenticationKey)" />
+                <q-btn flat round dense icon="vpn_key" @click="generateApiKey('add')" />
+                <q-btn flat round dense :icon="showAddApiKey ? 'visibility_off' : 'visibility'"
+                  @mousedown="showAddApiKey = true"
+                  @mouseup="showAddApiKey = false"
+                  @mouseleave="showAddApiKey = false"
+                />
               </template>
             </q-input>
             <q-input class="q-pb-lg" v-model="add_ingredient_detail.tags" outlined label="tags" />
@@ -204,7 +212,7 @@ const add_ingredient_detail = {
   // iocHostId: "",
   orgId: "default",
   iocHostCode: "",
-  iocType: "",
+  // iocType: "",
   iocEndpoint: "",
   authenticationKey: "",
   isTlsRequired: true,
@@ -263,7 +271,9 @@ export default {
       selectedTable,
       add_ingredient_detail_isOpen,
       add_ingredient_detail,
-      apiComponent
+      apiComponent,
+      showEditApiKey: false,
+      showAddApiKey: false,
       // rowsNumber: xx if getting data from a server
     };
   },
@@ -351,7 +361,6 @@ export default {
         // iocHostId: "",
         orgId: "default",
         iocHostCode: "",
-        iocType: "",
         iocEndpoint: "",
         authenticationKey: "",
         isTlsRequired: true,
@@ -783,9 +792,43 @@ export default {
       } finally {
         Loading.hide()
       }
-    }
-
-
+    },
+    generateApiKey(type) {
+      // Simple random API key generator (32 chars, alphanumeric)
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let key = '';
+      for (let i = 0; i < 32; i++) {
+        key += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      if (type === 'edit') {
+        this.edit_ingredient_detail.authenticationKey = key;
+      } else {
+        this.add_ingredient_detail.authenticationKey = key;
+      }
+    },
+    copyToClipboard(value) {
+      if (navigator && navigator.clipboard) {
+        navigator.clipboard.writeText(value)
+          .then(() => {
+            if (typeof Notify !== 'undefined') {
+              Notify.create({
+                position: 'top',
+                type: 'positive',
+                message: 'คัดลอก API Key แล้ว!'
+              });
+            }
+          })
+          .catch(() => {
+            if (typeof Notify !== 'undefined') {
+              Notify.create({
+                position: 'top',
+                type: 'negative',
+                message: 'Copy failed!'
+              });
+            }
+          });
+      }
+    },
   },
 
 };

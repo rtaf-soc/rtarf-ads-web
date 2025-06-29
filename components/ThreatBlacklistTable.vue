@@ -2,7 +2,7 @@
     <q-page v-if="auth.isAuthenticated">
 
         <q-table class="my-sticky-header-table" style="height: calc(100vh - 50px);" flat bordered title="เมนู"
-            color="amber" :rows="table_rows_menu" :columns="table_columns_menu" row-key="ruleId"
+            color="amber" :rows="table_rows_menu" :columns="table_columns_menu" row-key="blacklistId"
             v-model:pagination="pagination_menu" selection="multiple"
             :rows-per-page-options="[5, 10, 15, 20, 30, 50, 0]" @request="loadNextData" separator="cell"
             :loading="loading">
@@ -76,7 +76,7 @@
                     <div class="text-h6">
                         แก้ไขข้อมูลของ ID :
                         <q-badge outline class="text-h6 q-ml-md" align="middle" color="positive">
-                            {{ edit_ingredient_detail.ruleId }}
+                            {{ edit_ingredient_detail.blacklistId }}
                         </q-badge>
                     </div>
                     <q-space />
@@ -243,7 +243,7 @@ async function onClick(fn_name, param = null) {
 
         case 'editRule':
             if (!showEditor.value) {
-                edit_ingredient_detail.value.ruleDefinition = await getRulesById(edit_ingredient_detail.value.ruleId)
+                edit_ingredient_detail.value.ruleDefinition = await getRulesById(edit_ingredient_detail.value.blacklistId)
             }
             showEditor.value = !showEditor.value
             break
