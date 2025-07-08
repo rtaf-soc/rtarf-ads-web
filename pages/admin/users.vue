@@ -694,6 +694,7 @@ export default {
         const payload = {
           apiComponent: this.apiComponent,
           orgName: "default",
+          orgCustomId: "default",
           actionName: "AddUser",
           apiMethod: "POST",  // Specify POST method explicitly
           userName: this.add_ingredient_detail.userName,
@@ -858,10 +859,35 @@ export default {
           return
         }
 
+        let html = selectedUsers
+          .map(item => `${item.index}. Username : ${item.userName}, E-mail : ${item.userEmail} , Role : ${item.rolesList} `)
+          .join('<br/>')
+
         // Delete each selected user
-        for (const user of selectedUsers) {
-          await this.deleteUser(user.orgUserId)
-        }
+        Dialog.create({
+          title: '<span class="text-red">ยืนยันการลบข้อมูลต่อไปนี้ !</span>',
+          message: `<span class="text-yellow">${html}</span>`,
+          html: true,
+          style: 'minWidth:600px',
+          ok: {
+            push: true,
+            color: 'primary'
+          },
+          cancel: {
+            push: true,
+            color: 'negative'
+          },
+          persistent: true
+        }).onOk(async () => {
+          for (const user of selectedUsers) {
+            await this.deleteUser(user.orgUserId)
+          }
+
+        }).onCancel(() => {
+          // console.log('>>>> Cancel')
+        }).onDismiss(() => {
+          // console.log('I am triggered on both OK and Cancel')
+        })
 
         // Clear selection after deletion
         this.selectedTable = []
