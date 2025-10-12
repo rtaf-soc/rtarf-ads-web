@@ -10,3 +10,12 @@ run-example.sh
 .cache
 dist
 .nuxt/
+
+
+# Ignore vscode AI rules
+.github/instructions/codacy.instructions.md
+
+# GitHub Copilot working files
+.github/copilot-instructions.md
+.github/tasks/
+.github/memory/
