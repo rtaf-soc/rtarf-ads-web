@@ -47,10 +47,19 @@
             <template v-if="col.name === 'id'">
               <q-checkbox :model-value="selectedTable.includes(props.row.index)"
                 @update:model-value="val => toggleRowSelection(props.row, val)" />
-              <q-chip class="shadow-up-3 q-pr-sm" clickable rounded @click="onClick('editIngredient', props.row)">
+              <!-- <q-chip class="shadow-up-3 q-pr-sm" clickable rounded @click="onClick('editIngredient', props.row)">
                 <q-avatar icon="edit" color="blue" text-color="white" />
                 <div class="text-center text-bold">{{ props.row.index }}</div>
-              </q-chip>
+              </q-chip> -->
+
+              <q-fab v-model="props.row.fabOpen" label-position="top" external-label color="blue"
+                icon="keyboard_arrow_right" direction="right" padding="xs">
+                <q-fab-action padding="5px" external-label label-position="top" color="primary"
+                  @click="onClick('editIngredient', props.row)" icon="edit" label="แก้ไขข้อมูล" />
+                <q-fab-action padding="5px" external-label label-position="top" color="orange"
+                  @click="onClick('getLucene', props.row)" icon="dataset" label="Lucene คิวรี่" />
+              </q-fab>
+
             </template>
 
             <template v-else-if="col.name === 'ruleCreatedDate'">
@@ -65,7 +74,52 @@
       </template>
 
     </q-table>
+    <q-dialog v-model="show_lucene_value_isOpen">
+      <q-card style="width: 800px; max-width: 800vw;">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">
+            ข้อมูลของ ID :
+            <q-badge outline class="text-h6 q-ml-md" align="middle" color="positive">
+              {{ show_lucene_value.ruleId }}
+            </q-badge>
+          </div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
 
+        <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
+          <q-item-section>
+            <template v-if="show_lucene_value && typeof show_lucene_value.luceneQuery !== 'undefined'">
+              <q-input
+                v-if="show_lucene_value.luceneQuery != null"
+                class="q-pb-lg"
+                v-model="show_lucene_value.luceneQuery"
+                type="textarea"
+                outlined
+                readonly
+              >
+                <template #append>
+                  <q-btn 
+                    flat 
+                    round 
+                    dense 
+                    icon="content_copy" 
+                    color="primary"
+                    @click="copyToClipboard(show_lucene_value.luceneQuery)"
+                  >
+                    <q-tooltip>Copy to clipboard</q-tooltip>
+                  </q-btn>
+                </template>
+              </q-input>
+              <div v-else class="text-center text-bold text-red q-pa-md" style="font-size: 30px;">
+                ไม่พบข้อมูล
+              </div>
+            </template>
+
+          </q-item-section>
+        </q-item>
+      </q-card>
+    </q-dialog>
 
     <!-- Edit Dialog -->
     <q-dialog v-model="edit_ingredient_detail_isOpen">
@@ -173,6 +227,8 @@ const pagination_menu = ref({ sortBy: 'desc', descending: false, page: 1, rowsPe
 const pagination_ingredient = { sortBy: 'desc', descending: false, page: 1, rowsPerPage: 10 }
 const loading = ref(true)
 const table_rows_menu = ref([])
+const show_lucene_value = ref(false)
+const show_lucene_value_isOpen = ref(false)
 const edit_ingredient_detail_isOpen = ref(false)
 const edit_ingredient_detail = ref({
   ruleName: '', ruleDefinition: '', refUrl: '', tags: '',
@@ -204,6 +260,24 @@ function getCurrentTimestamp() {
 }
 function clearAddTable() {
   add_ingredient_detail.value = { ...add_ingredient_detail.value, ruleName: '', ruleDefinition: '', refUrl: '', tags: '' }
+}
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text)
+    Notify.create({
+      type: 'positive',
+      message: 'คัดลอกข้อความสำเร็จ! (Copied to clipboard)',
+      position: 'top',
+      timeout: 2000
+    })
+  } catch (err) {
+    Notify.create({
+      type: 'negative',
+      message: 'ไม่สามารถคัดลอกข้อความได้ (Failed to copy)',
+      position: 'top',
+      timeout: 2000
+    })
+  }
 }
 function isRowSelected(row) {
   return selectedTable.value.includes(row.index)
@@ -254,6 +328,15 @@ async function onClick(fn_name, param = null) {
       }
       showEditor.value = !showEditor.value
       break
+    case 'getLucene':
+      if (!show_lucene_value_isOpen.value) {
+        // console.log(param)
+        show_lucene_value.value = await getLuceneById(param.ruleId)
+        console.log(show_lucene_value.value)
+      }
+      // show_lucene_value.value = !show_lucene_value.value
+      show_lucene_value_isOpen.value = !show_lucene_value_isOpen.value
+      break
   }
 }
 
@@ -265,6 +348,7 @@ async function loadMenu(data) {
     mockdata.forEach((row, i) => {
       selectedTable.value.push(false)
       row.index = i + 1 + (pagination_menu.value.page - 1) * pagination_menu.value.rowsPerPage
+      row.fabOpen = false
     })
     table_rows_menu.value = mockdata
   }
@@ -375,6 +459,20 @@ async function getRulesById(ruleId) {
       body: JSON.stringify({ ruleId })
     })
     return res.ruleDefinition
+  }
+  finally { Loading.hide() }
+}
+// Lucene คิวรี่
+async function getLuceneById(ruleId) {
+  Loading.show()
+  try {
+    const token = localStorage.getItem('accessToken')
+    const res = await $fetch('/api/hunting_rules/get_lucence_by_id', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ ruleId })
+    })
+    return res
   }
   finally { Loading.hide() }
 }
