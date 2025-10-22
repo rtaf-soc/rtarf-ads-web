@@ -352,14 +352,22 @@
 
                         <q-input
                             class="q-pb-lg"
-                            v-model="edit_ingredient_detail.refUrl"
+                            v-model="add_ingredient_detail.refUrl"
                             outlined
                             label="URL"
                         />
                         <q-input
-                            v-model="edit_ingredient_detail.tags"
+                            class="q-pb-lg"
+                            v-model="add_ingredient_detail.tags"
                             outlined
                             label="tags"
+                        />
+                        <q-checkbox
+                            v-model="add_ingredient_detail.isActive"
+                            :true-value="1"
+                            :false-value="0"
+                            label="Active Status"
+                            color="positive"
                         />
                     </q-item-section>
                 </q-item>
@@ -467,6 +475,7 @@ const add_ingredient_detail = ref({
     tags: "",
     ruleCreatedDate: "2024-10-12T09:24:30.125001Z",
     update_at: "2023-05-20T11:00:00:Z",
+    isActive: 0,
 });
 
 // — lifecycle: load on mount
@@ -492,6 +501,7 @@ function clearAddTable() {
         ruleDefinition: "",
         refUrl: "",
         tags: "",
+        isActive: 0,
     };
 }
 async function copyToClipboard(text) {
