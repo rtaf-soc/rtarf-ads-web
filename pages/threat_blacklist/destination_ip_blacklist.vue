@@ -1,10 +1,10 @@
 <template>
-  <ThreatBlacklistTable blacklistType=2 />
+    <ThreatBlacklistTable :blacklistType="2" />
 </template>
 
 <script setup>
-import ThreatBlacklistTable from '~/components/ThreatBlacklistTable.vue'
-definePageMeta({ middleware: 'auth' })
+import ThreatBlacklistTable from "~/components/ThreatBlacklistTable.vue";
+definePageMeta({ middleware: "auth" });
 </script>
 
 <style lang="sass">

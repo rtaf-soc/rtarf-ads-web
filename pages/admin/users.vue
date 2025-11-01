@@ -9,20 +9,24 @@
       <q-card-section class="q-pa-none q-ma-none" style="height: 100vh;">
         <div class="row">
           <div class="col-12 col-md-12 q-pa-none">
-            <q-table class="my-sticky-header-table" style="height: 95vh;" flat bordered title="เมนู"
-              :rows="table_rows_menu" :columns="table_columns_menu" row-key="id" :pagination="pagination_menu"
-              separator="cell" :loading="loading">
+            <q-table class="my-sticky-header-table" style="height: 95vh;" flat bordered title="User Management"
+              :rows="table_rows_menu" :columns="table_columns_menu" row-key="id" v-model:pagination="pagination_menu"
+              :rows-per-page-options="[5, 10, 15, 20, 30, 50, 0]" @request="loadNextData" separator="cell"
+              :loading="loading">
               <template v-slot:top-left>
-                <!-- <div class="text-h5 q-mr-md">Black list IP Address</div> -->
-                <q-input outlined dense debounce="300" placeholder="ค้นหา" v-model="filter_menu_table" bg-color="dark">
+                <q-input outlined dense debounce="300" placeholder="ค้นหา" v-model="filter_menu_table" bg-color="dark"
+                  @keyup.enter="onClick('tableSearch')">
                   <template v-slot:append>
                     <q-btn round dense flat icon="search" @click="onClick(`tableSearch`)" />
                   </template>
                 </q-input>
+                <q-badge class="q-ml-md text-bold q-pa-sm" align="middle" color="dark" style="font-size:20px;">
+                  ข้อมูลทั้งหมด : {{ pagination_menu.rowsNumber.toLocaleString('en-US') }}
+                </q-badge>
               </template>
               <template v-slot:top-right>
                 <q-btn class="q-mr-lg" icon="add" rounded color="green-7" @click="onClick(`addTable`)" />
-                <q-btn :disable="selectedTable <= 0" icon="delete" rounded color="negative"
+                <q-btn :disable="selectedTable.length === 0" icon="delete" rounded color="negative"
                   @click="onClick(`deleteSelectedTable`)" />
               </template>
 
@@ -45,7 +49,6 @@
                 <q-tr :props="props" class="cursor-pointer"
                   :class="(props.row.index % 2 === 0) ? 'bg-grey-10' : 'bg-grey-9'">
                   <q-td v-for="(col, colIndex) in props.cols" :key="col.name" :props="props">
-
                     <template v-if="col.name === 'id'">
                       <q-checkbox :model-value="isRowSelected(props.row)"
                         @update:model-value="val => toggleRowSelection(props.row, val)" />
@@ -63,7 +66,6 @@
                     <template v-else>
                       {{ props.row[col.field] }}
                     </template>
-
                   </q-td>
                 </q-tr>
               </template>
@@ -91,14 +93,21 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.username" outlined label="Username" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.userName" outlined label="User Name" />
+            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.userEmail" outlined label="User Email" />
 
-            <q-select class="q-pb-lg" outlined label="Roles" v-model="model" use-input use-chips multiple
-              new-value-mode="add-unique" emit-value map-options option-label="name" option-value="name"
-              :options="filterOptions" @new-value="createValue" @filter="filterFn" />
-
-            <q-input class="q-pb-lg" v-model="edit_ingredient_detail.description" outlined label="Description" />
-            <q-input v-model="edit_ingredient_detail.tags" outlined label="tags" />
+            <!-- Add roles checkboxes section -->
+            <div class="q-pb-lg q-pt-lg">
+              <div class="custom-outlined-container">
+                <div class="custom-outlined-label">User Role</div>
+                <div class="row q-col-gutter-sm q-pa-sm">
+                  <div v-for="role in globalRolesList" :key="role.roleId" class="col-6 q-mb-sm">
+                    <q-checkbox :label="role.roleName + ' (' + role.roleDescription + ')'" :val="role.roleName"
+                      v-model="selectedRoles" @update:model-value="updateRolesListFromSelected" dense />
+                  </div>
+                </div>
+              </div>
+            </div>
           </q-item-section>
         </q-item>
 
@@ -119,16 +128,21 @@
 
         <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px;">
           <q-item-section>
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.userName" outlined label="User Name" />
+            <q-input class="q-pb-lg" v-model="add_ingredient_detail.userEmail" outlined label="User Email" />
 
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.username" outlined label="Username" />
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.roles" outlined label="Roles" />
-
-            <q-select class="q-pb-lg" outlined label="Roles" v-model="model" use-input use-chips multiple
-              new-value-mode="add-unique" emit-value map-options option-label="name" option-value="name"
-              :options="filterOptions" @new-value="createValue" @filter="filterFn" />
-
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.description" outlined label="Description" />
-            <q-input class="q-pb-lg" v-model="add_ingredient_detail.tags" outlined label="tags" />
+            <!-- Replace existing roles section with this -->
+            <div class="q-pb-lg q-pt-lg">
+              <div class="custom-outlined-container">
+                <div class="custom-outlined-label">User Role</div>
+                <div class="row q-col-gutter-sm q-pa-sm">
+                  <div v-for="role in globalRolesList" :key="role.roleId" class="col-6 q-mb-sm">
+                    <q-checkbox :label="role.roleName + ' (' + role.roleDescription + ')'" :val="role.roleName"
+                      v-model="selectedRoles" @update:model-value="updateRolesListFromSelected" dense />
+                  </div>
+                </div>
+              </div>
+            </div>
           </q-item-section>
         </q-item>
 
@@ -148,17 +162,11 @@ import mock_roles from './mock_roles.json'
 
 
 const table_columns_menu = [
-
   { name: 'id', align: 'center', label: 'Action', field: 'index', headerStyle: 'width: 30px' },
-  { name: 'username', align: 'center', label: 'User', field: 'username', sortable: true, },
-  { name: 'roles', align: 'center', label: 'Roles', field: 'roles', sortable: true, },
-  { name: 'description', align: 'left', label: 'Description', field: 'description', sortable: true, },
-
-  { name: 'tags', align: 'left', label: 'tags', field: 'tags', sortable: true, },
-  // { name: 'blacklistType', align: 'center', label: 'type', field: 'blacklistType', sortable: true, },
-
-  // { name: 'createdDate', align: 'center', label: 'สร้างเมื่อ', field: 'createdDate', sortable: true, },
-
+  { name: 'userName', align: 'center', label: 'Username', field: 'userName', sortable: true, },
+  { name: 'userEmail', align: 'center', label: 'Email', field: 'userEmail', sortable: true, },
+  { name: 'rolesList', align: 'center', label: 'Role', field: 'rolesList', sortable: true, },
+  { name: 'createdDate', align: 'center', label: 'Created Date', field: 'createdDate', sortable: true, },
 ]
 // const role
 const monacoEditor = ref(null)
@@ -172,64 +180,34 @@ const filterOptions = ref(stringOptions)
 // const filterOptions = ref(mock_roles)
 const mock_data = [
   {
-    "username": "alice.wong",
-    "description": "Handles user onboarding and permissions management",
-    "roles": "User Management,Settings",
-    "tags": "management,admin"
+    "userName": "alice.wong",
+    "userEmail": "alice.wong@company.com",
+    "userRole": "User Management,Settings",
+    "createdDate": "2024-10-12T09:24:30.125001Z"
   },
   {
-    "username": "bob.smith",
-    "description": "Generates and reviews operational reports",
-    "roles": "Reporting Module,Data Import",
-    "tags": "analytics,reporting"
+    "userName": "bob.smith",
+    "userEmail": "bob.smith@company.com",
+    "userRole": "Reporting Module,Data Import",
+    "createdDate": "2024-10-12T09:24:30.125001Z"
   },
   {
-    "username": "carol.johnson",
-    "description": "Integrates external APIs and manages file operations",
-    "roles": "API Access,File Manager",
-    "tags": "integration,files"
+    "userName": "carol.johnson",
+    "userEmail": "carol.johnson@company.com",
+    "userRole": "API Access,File Manager",
+    "createdDate": "2024-10-12T09:24:30.125001Z"
   },
   {
-    "username": "david.lee",
-    "description": "Reviews audit logs and oversees compliance trails",
-    "roles": "Audit Logs,Audit Trail",
-    "tags": "security,compliance"
+    "userName": "david.lee",
+    "userEmail": "david.lee@company.com",
+    "userRole": "Audit Logs,Audit Trail",
+    "createdDate": "2024-10-12T09:24:30.125001Z"
   },
   {
-    "username": "eve.kim",
-    "description": "Manages billing processes and notification settings",
-    "roles": "Billing,Notification",
-    "tags": "finance,alerts"
-  },
-  {
-    "username": "frank.zhou",
-    "description": "Imports data and configures API endpoints",
-    "roles": "Data Import,API Access",
-    "tags": "data,api"
-  },
-  {
-    "username": "grace.patel",
-    "description": "Oversees user management and report generation",
-    "roles": "User Management,Reporting Module",
-    "tags": "user,report"
-  },
-  {
-    "username": "henry.nguyen",
-    "description": "Updates application settings and manages files",
-    "roles": "Settings,File Manager",
-    "tags": "configuration,storage"
-  },
-  {
-    "username": "irene.garcia",
-    "description": "Configures notifications and audits system changes",
-    "roles": "Notification,Audit Logs,Audit Trail",
-    "tags": "alerts,audit"
-  },
-  {
-    "username": "jack.roe",
-    "description": "Handles billing operations and user permissions",
-    "roles": "Billing,User Management",
-    "tags": "billing,admin"
+    "userName": "eve.kim",
+    "userEmail": "eve.kim@company.com",
+    "userRole": "Billing,Notification",
+    "createdDate": "2024-10-12T09:24:30.125001Z"
   }
 ]
 
@@ -243,12 +221,13 @@ const table_rows_menu = ref([])
 const table_rows_ingredients = ref([])
 const filter_menu_table = ref('')
 const filter_ingredient_table = ref('')
-const pagination_menu = {
+const pagination_menu = ref({
   sortBy: 'desc',
   descending: false,
   page: 1,
-  rowsPerPage: 10
-}
+  rowsPerPage: 10,
+  rowsNumber: 0
+})
 
 const pagination_ingredient = {
   sortBy: 'desc',
@@ -259,23 +238,18 @@ const pagination_ingredient = {
 const loading = ref(true)
 const edit_ingredient_detail_isOpen = ref(false)
 const edit_ingredient_detail = {
-  username: "",
-  description: "",
-  roles: "",
-  tags: "",
-  createdDate: "2024-10-12T09:24:30.125001Z",
-  update_at: "2023-05-20T11:00:00Z"
-
+  orgUserId: "",
+  userName: "",
+  userEmail: "",
+  rolesList: "",
+  createdDate: "2024-10-12T09:24:30.125001Z"
 }
 const add_ingredient_detail_isOpen = ref(false)
 const add_ingredient_detail = {
-  username: "",
-  description: "",
-  roles: "",
-  tags: "",
-  createdDate: "2024-10-12T09:24:30.125001Z",
-  update_at: "2023-05-20T11:00:00Z"
-
+  userName: "",
+  userEmail: "",
+  rolesList: "",
+  createdDate: "2024-10-12T09:24:30.125001Z"
 }
 
 // "blacklistId": "8d2b7f6c-49a9-43db-86fa-ff123c8e5e77",
@@ -286,6 +260,9 @@ const add_ingredient_detail = {
 //           "createdDate": "2024-10-12T09:24:30.125001Z"
 
 const selectedTable = ref([])
+const apiComponent = "OrganizationUser"
+const globalRolesList = ref([])
+const selectedRoles = ref([])
 // Loading.show()
 const model = ref(null)
 export default {
@@ -326,6 +303,9 @@ export default {
       selectedTable,
       add_ingredient_detail_isOpen,
       add_ingredient_detail,
+      apiComponent,
+      globalRolesList,
+      selectedRoles,
 
       editorOptions,
       monacoEditor,
@@ -402,13 +382,95 @@ export default {
     definePageMeta({
       middleware: 'auth'
     })
-    this.loadMenu();
+    this.loadData();
+    this.loadRoles();
   },
   // onMounted() {
   //   loadMenu()
   //   // Loading.hide()
   // },
   methods: {
+    async loadData() {
+      loading.value = true
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+
+        // Change to POST method with correct component name
+        let data = await $fetch('/api/apiClient', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          body: JSON.stringify({
+            offset: (this.pagination_menu.page - 1) * this.pagination_menu.rowsPerPage,
+            fromDate: "2025-05-05T17:56:35.528Z",
+            toDate: "2025-05-06T17:56:35.528Z",
+            limit: this.pagination_menu.rowsPerPage,
+            fullTextSearch: this.filter_menu_table,
+            apiComponent: this.apiComponent,
+            orgName: "default",
+            actionName: "GetUsers" // Changed to GetUsers
+          })
+        })
+
+        // Make sure we're mapping the received data properly
+        this.table_rows_menu = data.map((item, index) => ({
+          ...item,
+          index: ((this.pagination_menu.page - 1) * this.pagination_menu.rowsPerPage) + index + 1
+        }));
+
+        // Reset selection when data is loaded
+        this.selectedTable = [];
+
+        // Get total count
+        await this.loadCount();
+
+        loading.value = false;
+        console.log('Loaded users:', this.table_rows_menu);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        loading.value = false;
+
+        // Show blank table instead of mock data
+        this.table_rows_menu = [];
+        this.pagination_menu.rowsNumber = 0;
+
+        Notify.create({
+          message: 'Failed to load users from API: ' + (error.message || 'Unknown error'),
+          color: 'negative',
+          position: 'top'
+        });
+      }
+    },
+    async loadCount() {
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+
+        // Change to POST method with correct action
+        let countData = await $fetch('/api/apiClient', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          body: JSON.stringify({
+            apiComponent: this.apiComponent,
+            orgName: "default",
+            actionName: "GetUserCount", // Changed to GetUserCount
+            fullTextSearch: this.filter_menu_table
+          })
+        });
+
+        // Directly assign the count data without checking for totalCount property
+        this.pagination_menu.rowsNumber = countData || 0;
+        console.log('Total user count:', countData);
+      } catch (error) {
+        console.error('Error fetching user count:', error);
+        // Set count to 0 instead of using mock data length
+        this.pagination_menu.rowsNumber = 0;
+      }
+    },
     async loadMenu() {
       try {
         // const data = await fetchMenu();
@@ -460,36 +522,82 @@ export default {
     },
     clearAddTable() {
       this.add_ingredient_detail = {
-        username: "",
-        description: "",
-        roles: "",
-        tags: "",
-        createdDate: "2024-10-12T09:24:30.125001Z",
-        update_at: "2023-05-20T11:00:00Z"
+        userName: "",
+        userEmail: "",
+        rolesList: "",
+        createdDate: "2024-10-12T09:24:30.125001Z"
+      }
+    },
+    onDialogShow() {
+      this.clearAddTable();
+      // Initialize with empty selection when adding new
+      this.selectedRoles = [];
+    },
+    updateRolesListFromSelected() {
+      // Convert selectedRoles array to comma-separated string
+      if (this.add_ingredient_detail_isOpen) {
+        this.add_ingredient_detail.rolesList = this.selectedRoles.join(',')
+      } else if (this.edit_ingredient_detail_isOpen) {
+        this.edit_ingredient_detail.rolesList = this.selectedRoles.join(',')
+      }
+    },
+    initSelectedRolesFromList(rolesList) {
+      if (!rolesList) return []
+      // Split the comma-separated string into array
+      return rolesList.split(',')
+    },
+    async loadRoles() {
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        let data = await $fetch('/api/apiClient', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          body: JSON.stringify({
+            offset: 0,
+            fromDate: "2025-05-05T17:56:35.528Z",
+            toDate: "2025-05-06T17:56:35.528Z",
+            limit: 0,
+            fullTextSearch: this.filter_menu_table,
+            apiComponent: "Role",
+            orgName: "default",
+            actionName: "GetRoles"
+          })
+        })
+        this.globalRolesList = [...data]
+        console.log('Loaded roles:', data)
+      } catch (error) {
+        console.error('Error fetching role data:', error);
+        // Empty roles list instead of using mock data
+        this.globalRolesList = []
 
+        Notify.create({
+          message: 'Failed to load roles: ' + (error.message || 'Unknown error'),
+          color: 'negative',
+          position: 'top'
+        });
       }
     },
     isRowSelected(row) {
-      return selectedTable.value.includes(row.index)
+      return this.selectedTable.includes(row.index)
     },
-
 
     toggleRowSelection(row, isSelected) {
       if (isSelected) {
         // Add the row's unique index if it's not already in the array
-        if (!selectedTable.value.includes(row.index)) {
-          selectedTable.value.push(row.index)
+        if (!this.selectedTable.includes(row.index)) {
+          this.selectedTable.push(row.index)
         }
       } else {
         // Remove the row's index from the array
-        selectedTable.value = selectedTable.value.filter(id => id !== row.index)
+        this.selectedTable = this.selectedTable.filter(id => id !== row.index)
       }
     },
+    // This method is no longer used, replaced by deleteSelectedUsers
     deleteSelectedRows() {
-      // Filter out rows that have been selected
-      table_rows_menu.value = table_rows_menu.value.filter(row => !selectedTable.value.includes(row.index))
-      // Clear the selection after deletion
-      selectedTable.value = []
+      console.log("Using API-based deletion instead")
     },
 
     async copyToClipboard(textToCopy) {
@@ -511,48 +619,65 @@ export default {
       }
     },
 
-    onClick(fn_name, param = null) {
+    async onClick(fn_name, param = null) {
       switch (fn_name) {
         case 'tableSearch':
           if (this.filter_menu_table.trim().length > 0) {
-            console.log(`have search text ${this.filter_menu_table}`)
+            console.log(`searching for ${this.filter_menu_table}`)
           } else {
-            console.log(`no search test`)
+            console.log(`no search text`)
           }
-          // edit_ingredient_detail 
+          // Reset pagination to first page when searching
+          this.pagination_menu.page = 1
+          await this.loadData()
           break;
         case 'editIngredient':
           this.showEditor = false
           console.log(param);
-          this.edit_ingredient_detail = param;
-          this.edit_ingredient_detail_isOpen = true;
 
-          // edit_ingredient_detail 
+          if (param.orgUserId) {
+            try {
+              // Fetch detailed user data if needed
+              const userData = await this.getUserById(param.orgUserId);
+              if (userData) {
+                this.edit_ingredient_detail = userData;
+              } else {
+                this.edit_ingredient_detail = param;
+              }
+            } catch (error) {
+              console.error("Error fetching user details:", error);
+              this.edit_ingredient_detail = param;
+            }
+          } else {
+            this.edit_ingredient_detail = param;
+          }
+
+          // Initialize checkboxes based on existing rolesList
+          this.selectedRoles = this.initSelectedRolesFromList(this.edit_ingredient_detail.rolesList)
+          this.edit_ingredient_detail_isOpen = true;
           break;
         case 'saveEditIngredient':
           console.log('saveEditIngredient')
           console.log(this.edit_ingredient_detail)
-          this.fn_updateIngredient(this.edit_ingredient_detail.id, this.edit_ingredient_detail)
-          Notify.create({
-            position: "top",
-            type: 'positive',
-            message: 'บันทึกสำเร็จ'
-          });
+          await this.updateUser(this.edit_ingredient_detail.orgUserId, this.edit_ingredient_detail)
+          // Notify.create({
+          //   position: "top",
+          //   type: 'positive',
+          //   message: 'บันทึกสำเร็จ'
+          // });
           this.edit_ingredient_detail_isOpen = false;
           break;
         // const data = updateIngredient(this.edit_ingredient_detail.id, this.edit_ingredient_detail);
         case 'saveAddTable':
           this.add_ingredient_detail.createdDate = this.getCurrentTimestamp()
-          mock_data.push(this.add_ingredient_detail)
-          // console.log(mock_data)
-          this.loadMenu()
+          await this.createUser()
           this.clearAddTable()
           this.add_ingredient_detail_isOpen = false
           break;
 
         case 'deleteSelectedTable':
           console.log(`deleteTable`)
-          this.deleteSelectedRows()
+          await this.deleteSelectedUsers()
           break;
         case 'addTable':
           this.showEditor = false
@@ -562,10 +687,230 @@ export default {
           break;
       }
     },
-    async fn_updateIngredient(id, data) {
-      // const resData = await updateIngredient(id, data);
-      // console.log(resData)
+    async createUser() {
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        // Create proper payload for the user creation API
+        const payload = {
+          apiComponent: this.apiComponent,
+          orgName: "default",
+          orgCustomId: "default",
+          actionName: "AddUser",
+          apiMethod: "POST",  // Specify POST method explicitly
+          userName: this.add_ingredient_detail.userName,
+          userEmail: this.add_ingredient_detail.userEmail,
+          rolesList: this.add_ingredient_detail.rolesList,
+          userCreateDate: this.getCurrentTimestamp()
+        };
 
+        console.log("Creating user with payload:", payload);
+
+        const response = await $fetch('/api/apiClient', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          body: JSON.stringify(payload)
+        });
+
+        console.log("Create response:", response);
+
+        // Check the response status
+        if (response.status === 'OK') {
+          // Reload data to show the new user
+          await this.loadData();
+
+          Notify.create({
+            message: 'User created successfully',
+            color: 'positive',
+            position: 'top'
+          });
+
+          // Close the dialog
+          this.add_ingredient_detail_isOpen = false;
+        } else {
+          // Handle non-success status
+          throw new Error(response.description || 'Unknown error');
+        }
+      } catch (error) {
+        console.error('Error creating user:', error);
+        Notify.create({
+          message: 'Failed to create user: ' + (error.message || 'Unknown error'),
+          color: 'negative',
+          position: 'top'
+        });
+      }
+    },
+
+    async updateUser(orgUserId, userData) {
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        // Create proper payload for the user update API
+        const payload = {
+          apiComponent: this.apiComponent,
+          orgName: "default",
+          actionName: "UpdateUserById",
+          id: orgUserId,  // Required for path construction in apiClient
+          apiMethod: "POST",  // Specify POST method
+          userName: userData.userName,
+          userEmail: userData.userEmail,
+          rolesList: userData.rolesList
+        };
+
+        console.log("Updating user with payload:", payload);
+
+        const response = await $fetch('/api/apiClient', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          body: JSON.stringify(payload)
+        });
+
+        console.log("Update response:", response);
+
+        // Check the response status
+        if (response.status === 'OK') {
+          // Reload data to show updated user
+          await this.loadData();
+
+          Notify.create({
+            position: "top",
+            type: 'positive',
+            message: 'บันทึกสำเร็จ'
+          });
+        } else {
+          // Handle non-success status
+          throw new Error(response.description || 'Unknown error');
+        }
+      } catch (error) {
+        console.error('Error updating user:', error);
+        Notify.create({
+          message: 'Failed to update user: ' + (error.message || 'Unknown error'),
+          color: 'negative',
+          position: 'top'
+        });
+      }
+    },
+
+    async deleteUser(orgUserId) {
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+
+        console.log("Deleting user with orgUserId:", orgUserId);
+
+        // Use apiClient with correct parameters
+        const response = await $fetch('/api/apiClient', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+          },
+          body: JSON.stringify({
+            apiComponent: this.apiComponent,
+            orgName: "default",
+            actionName: "DeleteUserById",
+            id: orgUserId,
+            apiMethod: "DELETE"  // This tells apiClient to use DELETE method
+          })
+        });
+
+        console.log("Delete response:", response);
+
+        // Check the response status
+        if (response.status === 'OK') {
+          Notify.create({
+            message: 'User deleted successfully',
+            color: 'positive',
+            position: 'top'
+          });
+
+          // Reload data to update the table
+          await this.loadData();
+        } else {
+          // Handle non-success status
+          throw new Error(response.description || 'Unknown error');
+        }
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        Notify.create({
+          message: 'Failed to delete user: ' + (error.message || 'Unknown error'),
+          color: 'negative',
+          position: 'top'
+        });
+      }
+    },
+
+    async deleteSelectedUsers() {
+      try {
+        // Find the selected users
+        const selectedUsers = this.table_rows_menu.filter(row =>
+          this.selectedTable.includes(row.index)
+        )
+
+        if (selectedUsers.length === 0) {
+          Notify.create({
+            message: 'No users selected for deletion',
+            color: 'warning',
+            position: 'top'
+          })
+          return
+        }
+
+        let html = selectedUsers
+          .map(item => `${item.index}. Username : ${item.userName}, E-mail : ${item.userEmail} , Role : ${item.rolesList} `)
+          .join('<br/>')
+
+        // Delete each selected user
+        Dialog.create({
+          title: '<span class="text-red">ยืนยันการลบข้อมูลต่อไปนี้ !</span>',
+          message: `<span class="text-yellow">${html}</span>`,
+          html: true,
+          style: 'minWidth:600px',
+          ok: {
+            push: true,
+            color: 'primary'
+          },
+          cancel: {
+            push: true,
+            color: 'negative'
+          },
+          persistent: true
+        }).onOk(async () => {
+          for (const user of selectedUsers) {
+            await this.deleteUser(user.orgUserId)
+          }
+
+        }).onCancel(() => {
+          // console.log('>>>> Cancel')
+        }).onDismiss(() => {
+          // console.log('I am triggered on both OK and Cancel')
+        })
+
+        // Clear selection after deletion
+        this.selectedTable = []
+
+      } catch (error) {
+        console.error('Error deleting users:', error)
+        Notify.create({
+          message: 'Failed to delete some users: ' + (error.message || 'Unknown error'),
+          color: 'negative',
+          position: 'top'
+        })
+      }
+    },
+
+    async loadNextData(props) {
+      const { page, rowsPerPage, sortBy, descending } = props.pagination
+
+      this.pagination_menu.page = page
+      this.pagination_menu.rowsPerPage = rowsPerPage
+      this.pagination_menu.sortBy = sortBy
+      this.pagination_menu.descending = descending
+
+      await this.loadData()
     }
     // async handleAddMenu() {
     //   try {
@@ -613,4 +958,38 @@ export default {
   tbody
     /* height of all previous header rows */
     scroll-margin-top: 48px
+
+.custom-outlined-container
+  position: relative
+  border: 1px solid rgba(0, 0, 0, 0.24)
+  border-radius: 4px
+  padding-top: 8px
+  padding-bottom: 8px
+  min-height: 56px
+  background: transparent
+
+.custom-outlined-container:hover
+  border-color: #000
+
+.custom-outlined-label
+  position: absolute
+  top: -12px
+  left: 8px
+  padding: 0 4px
+  font-size: 20px
+  font-weight: 500
+  line-height: 1
+  color: rgba(0, 0, 0, 0.6)
+  background-color: var(--q-card-bg, white)
+
+/* Dark mode support */
+.body--dark .custom-outlined-container
+  border-color: rgba(255, 255, 255, 0.24)
+
+.body--dark .custom-outlined-container:hover
+  border-color: #fff
+
+.body--dark .custom-outlined-label
+  color: rgba(255, 255, 255, 0.7)
+  background-color: var(--q-dark, #1D1D1D)
 </style>

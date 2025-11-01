@@ -17,6 +17,11 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true },
 
+  // Development server configuration
+  devServer: {
+    port: process.env.PORT ? parseInt(process.env.PORT) : 3000
+  },
+
   modules: [
     "@nuxt/devtools",
     "nuxt-quasar-ui",

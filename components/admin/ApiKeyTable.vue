@@ -284,12 +284,11 @@ async function copyToClipboard(textToCopy) {
   }
 }
 
-function generateRandomPassword(length = 48) {
+function generateRandomPassword(length = 16) {
   const charset =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
     'abcdefghijklmnopqrstuvwxyz' +
-    '0123456789' +
-    '!@#$%^&*()_+[]{}<>?';
+    '0123456789';
   let password = '';
 
   // Use Web Crypto API if available (more secure)
