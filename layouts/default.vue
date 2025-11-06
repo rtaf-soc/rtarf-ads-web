@@ -126,47 +126,47 @@ const mitreAttackLink: MenuRedirectProps[] = [
 // New Cyber Kill Chain Link
 const cyberKillChainLink: MenuRedirectProps[] = [
   {
-    title: 'Reconnaissance',
+    title: 'Cyber Kill Chain',
     icon: 'search',
     link: "/cyber_kill_chain/reconnaissance",
 
   },
-  {
-    title: 'Weaponization',
-    icon: 'build',
-    link: "/cyber_kill_chain/weaponization",
-
-  },
-  {
-    title: 'Delivery',
-    icon: 'local_shipping',
-    link: "/cyber_kill_chain/delivery",
-
-  },
-  {
-    title: 'Exploitation',
-    icon: 'bug_report',
-    link: "/cyber_kill_chain/exploitation",
-
-  },
-  {
-    title: 'Installation',
-    icon: 'download',
-    link: "/cyber_kill_chain/installation",
-
-  },
-  {
-    title: 'Command and Control',
-    icon: 'dns',
-    link: "/cyber_kill_chain/command_control",
-
-  },
-  {
-    title: 'Actions on Objectives',
-    icon: 'flag',
-    link: "/cyber_kill_chain/actions_objectives",
-
-  },
+//  {
+//    title: 'Weaponization',
+//    icon: 'build',
+//    link: "/cyber_kill_chain/weaponization",
+//
+//  },
+//  {
+//    title: 'Delivery',
+//    icon: 'local_shipping',
+//    link: "/cyber_kill_chain/delivery",
+//
+//  },
+//  {
+//    title: 'Exploitation',
+//    icon: 'bug_report',
+//    link: "/cyber_kill_chain/exploitation",
+//
+//  },
+//  {
+//    title: 'Installation',
+//    icon: 'download',
+//    link: "/cyber_kill_chain/installation",
+//
+//  },
+//  {
+//    title: 'Command and Control',
+//    icon: 'dns',
+//    link: "/cyber_kill_chain/command_control",
+//
+//  },
+//  {
+//    title: 'Actions on Objectives',
+//    icon: 'flag',
+//    link: "/cyber_kill_chain/actions_objectives",
+//
+//  },
 ];
 
 // New ASEAN Cyber Operations Link
