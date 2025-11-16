@@ -134,7 +134,7 @@
                                                         )
                                                 "
                                             />
-                                            <q-chip
+                                            <!-- <q-chip
                                                 class="shadow-up-3 q-pr-sm"
                                                 clickable
                                                 rounded
@@ -155,7 +155,46 @@
                                                 >
                                                     {{ props.row.index }}
                                                 </div>
-                                            </q-chip>
+                                            </q-chip> -->
+                                            <q-fab
+                                                v-model="props.row.fabOpen"
+                                                label-position="top"
+                                                external-label
+                                                color="blue"
+                                                icon="keyboard_arrow_right"
+                                                direction="right"
+                                                padding="xs"
+                                            >
+                                                <q-fab-action
+                                                    padding="5px"
+                                                    external-label
+                                                    label-position="top"
+                                                    color="primary"
+                                                    @click="
+                                                        onClick(
+                                                            'editNode',
+                                                            props.row,
+                                                        )
+                                                    "
+                                                    icon="edit"
+                                                    label="แก้ไขข้อมูล"
+                                                />
+                                                <q-fab-action
+                                                    padding="5px"
+                                                    external-label
+                                                    label-position="top"
+                                                    color="orange"
+                                                    Ï
+                                                    @click="
+                                                        onClick(
+                                                            'settings',
+                                                            props.row,
+                                                        )
+                                                    "
+                                                    icon="settings"
+                                                    label="setting"
+                                                />
+                                            </q-fab>
                                         </template>
 
                                         <template
@@ -359,6 +398,242 @@
                 </q-card-actions>
             </q-card>
         </q-dialog>
+
+        <!-- Settings/Connections Dialog -->
+        <q-dialog
+            v-model="settings_dialog_isOpen"
+            persistent
+            @hide="clearSettingsDialog"
+        >
+            <q-card style="width: 1000px; max-width: 90vw">
+                <q-card-section class="row items-center q-pb-none">
+                    <div class="text-h6">
+                        Node Connection Settings
+                        <!-- <q-badge
+                            outline
+                            class="text-h6"
+                            align="middle"
+                            color="positive"
+                            >{{ settings_node_detail.id }}
+                        </q-badge> -->
+                    </div>
+
+                    <q-space />
+                    <q-btn icon="close" flat round dense v-close-popup />
+                </q-card-section>
+                <q-card-section>
+                    <div class="text-7">
+                        Source node id :
+                        <q-badge
+                            outline
+                            class="text-h7"
+                            align="middle"
+                            color="positive"
+                            >{{ settings_node_detail.id }}
+                        </q-badge>
+                    </div>
+                </q-card-section>
+                <q-card-section>
+                    <!-- Node Info (Read-only) -->
+                    <div class="row q-col-gutter-md q-mb-lg">
+                        <div class="col-6">
+                            <q-input
+                                v-model="settings_node_detail.name"
+                                outlined
+                                label="Node Name"
+                                readonly
+                            />
+                        </div>
+                        <div class="col-6">
+                            <q-input
+                                v-model="settings_node_detail.description"
+                                outlined
+                                label="Description"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                    <div class="row q-col-gutter-md q-mb-lg">
+                        <div class="col-6">
+                            <q-input
+                                v-model="settings_node_detail.layer"
+                                outlined
+                                label="Layer"
+                                readonly
+                            />
+                        </div>
+                        <div class="col-6">
+                            <q-input
+                                v-model="settings_node_detail.type"
+                                outlined
+                                label="Type"
+                                readonly
+                            />
+                        </div>
+                    </div>
+
+                    <q-separator class="q-my-md" />
+
+                    <!-- Two Column Layout for Connections -->
+                    <div class="row q-col-gutter-md" style="min-height: 400px">
+                        <!-- Left: Available Connectable Nodes -->
+                        <div class="col-5">
+                            <div
+                                class="text-subtitle1 text-weight-medium q-mb-sm"
+                            >
+                                Available Nodes
+                            </div>
+                            <q-card flat bordered style="height: 400px">
+                                <q-list separator>
+                                    <q-item
+                                        v-for="node in connectableNodes"
+                                        :key="node.id"
+                                        clickable
+                                        @click="selectConnectableNode(node)"
+                                        :active="
+                                            selectedConnectableNodes.some(
+                                                (n) => n.id === node.id,
+                                            )
+                                        "
+                                        active-class="bg-blue-1"
+                                    >
+                                        <q-item-section side>
+                                            <q-checkbox
+                                                :model-value="
+                                                    selectedConnectableNodes.some(
+                                                        (n) => n.id === node.id,
+                                                    )
+                                                "
+                                                @update:model-value="
+                                                    selectConnectableNode(node)
+                                                "
+                                            />
+                                        </q-item-section>
+                                        <q-item-section>
+                                            <q-item-label>{{
+                                                node.name
+                                            }}</q-item-label>
+                                            <q-item-label caption>
+                                                Type: {{ node.type }}
+                                            </q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item
+                                        v-if="connectableNodes.length === 0"
+                                    >
+                                        <q-item-section>
+                                            <q-item-label
+                                                class="text-grey-6 text-center"
+                                            >
+                                                No available nodes
+                                            </q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                </q-list>
+                            </q-card>
+                        </div>
+
+                        <!-- Middle: Action Buttons -->
+                        <div class="col-2 flex flex-center">
+                            <div class="column q-gutter-md">
+                                <q-btn
+                                    round
+                                    color="primary"
+                                    icon="arrow_forward"
+                                    size="md"
+                                    :disable="
+                                        selectedConnectableNodes.length === 0
+                                    "
+                                    @click="onClick('addConnection')"
+                                >
+                                    <q-tooltip>Add Connection</q-tooltip>
+                                </q-btn>
+                                <q-btn
+                                    round
+                                    color="negative"
+                                    icon="arrow_back"
+                                    size="md"
+                                    :disable="
+                                        selectedConnectedNodes.length === 0
+                                    "
+                                    @click="onClick('removeConnection')"
+                                >
+                                    <q-tooltip>Remove Connection</q-tooltip>
+                                </q-btn>
+                            </div>
+                        </div>
+
+                        <!-- Right: Connected Nodes -->
+                        <div class="col-5">
+                            <div
+                                class="text-subtitle1 text-weight-medium q-mb-sm"
+                            >
+                                Connected Nodes
+                            </div>
+                            <q-card flat bordered style="height: 400px">
+                                <q-list separator>
+                                    <q-item
+                                        v-for="node in connectedNodes"
+                                        :key="node.linkId || node.id"
+                                        clickable
+                                        @click="selectConnectedNode(node)"
+                                        :active="
+                                            selectedConnectedNodes.some(
+                                                (n) => n.linkId === node.linkId,
+                                            )
+                                        "
+                                        active-class="bg-orange-1"
+                                    >
+                                        <q-item-section side>
+                                            <q-checkbox
+                                                :model-value="
+                                                    selectedConnectedNodes.some(
+                                                        (n) =>
+                                                            n.linkId ===
+                                                            node.linkId,
+                                                    )
+                                                "
+                                                @update:model-value="
+                                                    selectConnectedNode(node)
+                                                "
+                                            />
+                                        </q-item-section>
+                                        <q-item-section>
+                                            <q-item-label>
+                                                {{
+                                                    node.destinationNodeName ||
+                                                    node.name
+                                                }}
+                                            </q-item-label>
+                                            <q-item-label caption>
+                                                Type:
+                                                {{
+                                                    node.destinationNodeType ||
+                                                    node.type
+                                                }}
+                                            </q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item v-if="connectedNodes.length === 0">
+                                        <q-item-section>
+                                            <q-item-label
+                                                class="text-grey-6 text-center"
+                                            >
+                                                No connections
+                                            </q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                </q-list>
+                            </q-card>
+                        </div>
+                    </div>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                    <q-btn label="Close" color="primary" v-close-popup />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
     </q-page>
 </template>
 
@@ -462,6 +737,20 @@ const nodeTypeOptions = ref([]);
 const selectedTable = ref([]);
 const apiComponent = "Node";
 
+// Settings/Connections Dialog State
+const settings_dialog_isOpen = ref(false);
+const settings_node_detail = ref({
+    id: "",
+    name: "",
+    description: "",
+    layer: "",
+    type: "",
+});
+const connectableNodes = ref([]);
+const connectedNodes = ref([]);
+const selectedConnectableNodes = ref([]);
+const selectedConnectedNodes = ref([]);
+
 export default {
     mounted() {
         console.log("mounted");
@@ -484,6 +773,12 @@ export default {
             add_node_detail_isOpen,
             add_node_detail,
             apiComponent,
+            settings_dialog_isOpen,
+            settings_node_detail,
+            connectableNodes,
+            connectedNodes,
+            selectedConnectableNodes,
+            selectedConnectedNodes,
         };
     },
 
@@ -632,6 +927,307 @@ export default {
             }
         },
 
+        // Settings Dialog Methods
+        selectConnectableNode(node) {
+            // Toggle multi-select
+            const index = this.selectedConnectableNodes.findIndex(
+                (n) => n.id === node.id,
+            );
+            if (index > -1) {
+                // Already selected, remove it
+                this.selectedConnectableNodes.splice(index, 1);
+            } else {
+                // Not selected, add it
+                this.selectedConnectableNodes.push(node);
+            }
+        },
+
+        selectConnectedNode(node) {
+            // Toggle multi-select
+            const index = this.selectedConnectedNodes.findIndex(
+                (n) => n.linkId === node.linkId,
+            );
+            if (index > -1) {
+                // Already selected, remove it
+                this.selectedConnectedNodes.splice(index, 1);
+            } else {
+                // Not selected, add it
+                this.selectedConnectedNodes.push(node);
+            }
+        },
+
+        clearSettingsDialog() {
+            // Clear all dialog state when closing
+            this.connectableNodes = [];
+            this.connectedNodes = [];
+            this.selectedConnectableNodes = [];
+            this.selectedConnectedNodes = [];
+            this.settings_node_detail = {
+                id: "",
+                name: "",
+                description: "",
+                layer: "",
+                type: "",
+            };
+        },
+
+        async fetchConnectableNodes(nodeId) {
+            try {
+                const accessToken = localStorage.getItem("accessToken");
+                const body = {
+                    apiComponent: "Node",
+                    orgName: "default",
+                    actionName: "GetConnectableNodes",
+                    apiMethod: "GET",
+                    nodeId: nodeId,
+                };
+
+                const response = await $fetch("/api/apiClient", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + accessToken,
+                    },
+                    body: JSON.stringify(body),
+                });
+
+                console.log("Connectable nodes response:", response);
+
+                // Response is directly an array
+                if (response && Array.isArray(response)) {
+                    // Filter out nodes that are already connected
+                    const connectedNodeIds = this.connectedNodes.map(
+                        (n) =>
+                            n.destinationNode ||
+                            n.DestinationNode ||
+                            n.destinationNodeId ||
+                            n.id,
+                    );
+                    console.log(
+                        "Connected node IDs to filter:",
+                        connectedNodeIds,
+                    );
+
+                    // Filter before assigning
+                    const filteredNodes = response.filter(
+                        (node) => !connectedNodeIds.includes(node.id),
+                    );
+
+                    console.log(
+                        "Available nodes after filtering:",
+                        filteredNodes,
+                    );
+
+                    this.connectableNodes = filteredNodes;
+                } else {
+                    this.connectableNodes = [];
+                }
+            } catch (error) {
+                console.error("Error fetching connectable nodes:", error);
+                this.$q.notify({
+                    position: "top",
+                    type: "negative",
+                    message: "Error loading connectable nodes: " + error,
+                });
+                this.connectableNodes = [];
+            }
+        },
+
+        async fetchConnectedNodes(nodeId) {
+            try {
+                this.$q.loading.show({
+                    message: "Loading connections...",
+                });
+
+                const accessToken = localStorage.getItem("accessToken");
+                const body = {
+                    apiComponent: "Node",
+                    orgName: "default",
+                    actionName: "GetNodeLinks",
+                    apiMethod: "GET",
+                    srcNodeId: nodeId,
+                };
+
+                const response = await $fetch("/api/apiClient", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + accessToken,
+                    },
+                    body: JSON.stringify(body),
+                });
+
+                console.log("Connected nodes response:", response);
+
+                // Response is directly an array
+                if (response && Array.isArray(response)) {
+                    // Map and store connected nodes with all necessary fields
+                    const mappedNodes = response.map((link) => ({
+                        ...link,
+                        linkId: link.id, // Store link ID for deletion
+                        destinationNodeName:
+                            link.destinationNodeName ||
+                            link.DestinationNodeName,
+                        destinationNodeType:
+                            link.destinationNodeType ||
+                            link.DestinationNodeType,
+                        destinationNodeId:
+                            link.destinationNode ||
+                            link.DestinationNode ||
+                            link.destinationNodeId,
+                        destinationNode:
+                            link.destinationNode ||
+                            link.DestinationNode ||
+                            link.destinationNodeId,
+                    }));
+
+                    console.log("Connected nodes mapped:", mappedNodes);
+                    this.connectedNodes = mappedNodes;
+                } else {
+                    this.connectedNodes = [];
+                }
+            } catch (error) {
+                console.error("Error fetching connected nodes:", error);
+                this.$q.notify({
+                    position: "top",
+                    type: "negative",
+                    message: "Error loading connected nodes: " + error,
+                });
+                this.connectedNodes = [];
+            } finally {
+                this.$q.loading.hide();
+            }
+        },
+
+        async addLink() {
+            if (this.selectedConnectableNodes.length === 0) {
+                return;
+            }
+
+            try {
+                this.$q.loading.show({
+                    message: `Adding ${this.selectedConnectableNodes.length} connection(s)...`,
+                });
+
+                const accessToken = localStorage.getItem("accessToken");
+
+                // Process all selected nodes in parallel
+                const promises = this.selectedConnectableNodes.map(
+                    async (selectedNode) => {
+                        const linkName = selectedNode.name;
+                        const linkDescription = `${this.settings_node_detail.name} connected to ${selectedNode.name}`;
+
+                        const body = {
+                            apiComponent: "Node",
+                            orgName: "default",
+                            actionName: "AddLink",
+                            apiMethod: "POST",
+                            srcNodeId: this.settings_node_detail.id,
+                            Name: linkName,
+                            Description: linkDescription,
+                            Tags: "",
+                            DestinationNode: selectedNode.id,
+                        };
+
+                        return await $fetch("/api/apiClient", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: "Bearer " + accessToken,
+                            },
+                            body: JSON.stringify(body),
+                        });
+                    },
+                );
+
+                const responses = await Promise.all(promises);
+                console.log("Add links responses:", responses);
+
+                this.$q.notify({
+                    position: "top",
+                    type: "positive",
+                    message: `${this.selectedConnectableNodes.length} connection(s) added successfully`,
+                });
+
+                // Clear selections
+                this.selectedConnectableNodes = [];
+
+                // Refresh both lists
+                await this.fetchConnectedNodes(this.settings_node_detail.id);
+                await this.fetchConnectableNodes(this.settings_node_detail.id);
+            } catch (error) {
+                console.error("Error adding links:", error);
+                this.$q.notify({
+                    position: "top",
+                    type: "negative",
+                    message: "Error adding connections: " + error,
+                });
+            } finally {
+                this.$q.loading.hide();
+            }
+        },
+
+        async removeLink() {
+            if (this.selectedConnectedNodes.length === 0) {
+                return;
+            }
+
+            try {
+                this.$q.loading.show({
+                    message: `Removing ${this.selectedConnectedNodes.length} connection(s)...`,
+                });
+
+                const accessToken = localStorage.getItem("accessToken");
+
+                // Process all selected nodes in parallel
+                const promises = this.selectedConnectedNodes.map(
+                    async (selectedNode) => {
+                        const body = {
+                            apiComponent: "Node",
+                            orgName: "default",
+                            actionName: "DeleteLinkById",
+                            apiMethod: "DELETE",
+                            linkId: selectedNode.linkId, // Use link ID, not node ID
+                        };
+
+                        return await $fetch("/api/apiClient", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: "Bearer " + accessToken,
+                            },
+                            body: JSON.stringify(body),
+                        });
+                    },
+                );
+
+                const responses = await Promise.all(promises);
+                console.log("Remove links responses:", responses);
+
+                this.$q.notify({
+                    position: "top",
+                    type: "positive",
+                    message: `${this.selectedConnectedNodes.length} connection(s) removed successfully`,
+                });
+
+                // Clear selections
+                this.selectedConnectedNodes = [];
+
+                // Refresh both lists
+                await this.fetchConnectedNodes(this.settings_node_detail.id);
+                await this.fetchConnectableNodes(this.settings_node_detail.id);
+            } catch (error) {
+                console.error("Error removing links:", error);
+                this.$q.notify({
+                    position: "top",
+                    type: "negative",
+                    message: "Error removing connections: " + error,
+                });
+            } finally {
+                this.$q.loading.hide();
+            }
+        },
+
         isRowSelected(row) {
             return this.selectedTable.includes(row.index);
         },
@@ -691,6 +1287,30 @@ export default {
                         });
                     } finally {
                         this.$q.loading.hide();
+                    }
+                    break;
+                case "settings":
+                    console.log("Opening settings for node:", param);
+                    this.settings_node_detail = {
+                        id: param.id,
+                        name: param.name,
+                        description: param.description,
+                        layer: param.layer,
+                        type: param.type,
+                    };
+                    this.settings_dialog_isOpen = true;
+                    // Fetch connected nodes first, then filter available nodes
+                    await this.fetchConnectedNodes(param.id);
+                    await this.fetchConnectableNodes(param.id);
+                    break;
+                case "addConnection":
+                    if (this.selectedConnectableNodes.length > 0) {
+                        await this.addLink();
+                    }
+                    break;
+                case "removeConnection":
+                    if (this.selectedConnectedNodes.length > 0) {
+                        await this.removeLink();
                     }
                     break;
                 default:

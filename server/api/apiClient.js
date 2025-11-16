@@ -28,7 +28,17 @@ export default defineEventHandler(async (event) => {
     let apiPath =
       config.apiPath +
       `/api/${data.apiComponent}/org/${data.orgName}/action/${data.actionName}`;
-    if (
+
+    // Handle specific actions with path parameters
+    if (data.actionName === "GetConnectableNodes" && data.nodeId) {
+      apiPath = apiPath + `/${data.nodeId}`;
+    } else if (data.actionName === "GetNodeLinks" && data.srcNodeId) {
+      apiPath = apiPath + `/${data.srcNodeId}`;
+    } else if (data.actionName === "AddLink" && data.srcNodeId) {
+      apiPath = apiPath + `/${data.srcNodeId}`;
+    } else if (data.actionName === "DeleteLinkById" && data.linkId) {
+      apiPath = apiPath + `/${data.linkId}`;
+    } else if (
       data.apiMethod === "DELETE" ||
       data.actionName.toLowerCase().includes("update")
     ) {
