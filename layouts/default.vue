@@ -1,33 +1,35 @@
 <script setup lang="ts">
 // import { ref } from 'vue';
 // import type { EssentialLinkProps } from '../components/EssentialLink.vue';
-import { ref, nextTick } from 'vue';
-import { useAuthStore } from '~/stores/auth'
-import { useTitleStore } from '~/stores/title'
+import { ref, nextTick } from "vue";
+import { useAuthStore } from "~/stores/auth";
+import { useTitleStore } from "~/stores/title";
 import { type MenuRedirectProps } from "../components/MenuRedirect.vue";
 // import Dashboard from '~/pages/dashboard.vue.old';
-const router = useRouter()
-const { public: { tool } } = useRuntimeConfig();
+const router = useRouter();
+const {
+    public: { tool },
+} = useRuntimeConfig();
 // console.log(tool)
-const auth = useAuthStore()
-const title = useTitleStore()
+const auth = useAuthStore();
+const title = useTitleStore();
 
-const fab_user_menu = ref(false)
-const menuInsetLevel = 0.3
+const fab_user_menu = ref(false);
+const menuInsetLevel = 0.3;
 
 const hotelLink: MenuRedirectProps[] = [
-  {
-    title: 'Source IP Address',
-    // caption: 'จัดหา',
-    icon: 'table_chart',
-    link: "/source"
-  },
-  {
-    title: 'Destination IP Address',
-    // caption: 'จัดหา',
-    icon: 'table_chart',
-    link: "/destination"
-  },
+    {
+        title: "Source IP Address",
+        // caption: 'จัดหา',
+        icon: "table_chart",
+        link: "/source",
+    },
+    {
+        title: "Destination IP Address",
+        // caption: 'จัดหา',
+        icon: "table_chart",
+        link: "/destination",
+    },
 ];
 
 // const webviewLink: MenuRedirectProps[] = [
@@ -46,64 +48,60 @@ const hotelLink: MenuRedirectProps[] = [
 // ];
 
 const ThreatBlacklistLink: MenuRedirectProps[] = [
-
-  {
-    title: 'Source IP Blacklist',
-    icon: 'source',
-    link: "/threat_blacklist/source_ip_blacklist",
-  },
-  {
-    title: 'Destination IP Blacklist',
-    icon: 'location_on',
-    link: "/threat_blacklist/destination_ip_blacklist",
-  },
-  {
-    title: 'Domain Blacklist',
-    icon: 'domain_disabled',
-    link: "/threat_blacklist/domain_blacklist",
-  },
-  {
-    title: 'SHA256 Blacklist',
-    icon: 'no_encryption',
-    link: "/threat_blacklist/sha256_blacklist",
-  },
+    {
+        title: "Source IP Blacklist",
+        icon: "source",
+        link: "/threat_blacklist/source_ip_blacklist",
+    },
+    {
+        title: "Destination IP Blacklist",
+        icon: "location_on",
+        link: "/threat_blacklist/destination_ip_blacklist",
+    },
+    {
+        title: "Domain Blacklist",
+        icon: "domain_disabled",
+        link: "/threat_blacklist/domain_blacklist",
+    },
+    {
+        title: "SHA256 Blacklist",
+        icon: "no_encryption",
+        link: "/threat_blacklist/sha256_blacklist",
+    },
 ];
 
-
 const ThreatHuntingLink: MenuRedirectProps[] = [
-
-  {
-    title: 'Threat Hunting',
-    // caption: 'จัดหา',
-    icon: 'policy',
-    link: "/threat_hunting",
-    inset: 0.0
-  },
+    {
+        title: "Threat Hunting",
+        // caption: 'จัดหา',
+        icon: "policy",
+        link: "/threat_hunting",
+        inset: 0.0,
+    },
 ];
 
 const overviewLink: MenuRedirectProps[] = [
-
-  {
-    title: 'Overview',
-    // caption: 'จัดหา',
-    icon: 'settings_overscan',
-    link: "/overview",
-    inset: 0.0
-  },
+    {
+        title: "Overview",
+        // caption: 'จัดหา',
+        icon: "settings_overscan",
+        link: "/overview",
+        inset: 0.0,
+    },
 ];
 
 const zabbixLink: MenuRedirectProps[] = [
-
-  {
-    title: 'Enterprise Network Visibility',
-    // caption: 'จัดหา',
-    icon: "monitor_heart",
-    link: "/zabbix",
-    inset: 0.0
-  },
+    {
+        title: "Enterprise Network Visibility",
+        // caption: 'จัดหา',
+        icon: "monitor_heart",
+        link: "/zabbix",
+        inset: 0.0,
+    },
 ];
 
 const commanderLink: MenuRedirectProps[] = [
+<<<<<<< HEAD
 
   {
     title: 'CyCop',
@@ -112,185 +110,185 @@ const commanderLink: MenuRedirectProps[] = [
     link: "/commander/main",
     inset: 0.0
   },
+=======
+    {
+        title: "Commander",
+        // caption: 'จัดหา',
+        icon: "keyboard_command_key",
+        link: "/commander/main",
+        inset: 0.0,
+    },
+>>>>>>> 11c11a37f3249b3141f6b5b07124bba1e473b151
 ];
 
 // New MITRE ATT&CK Link
 const mitreAttackLink: MenuRedirectProps[] = [
-  {
-    title: 'MITRE ATT&CK',
-    icon: 'security',
-    link: "/mitre_attack/main",
-  },
+    {
+        title: "MITRE ATT&CK",
+        icon: "security",
+        link: "/mitre_attack/main",
+    },
 ];
 
 // New Cyber Kill Chain Link
 const cyberKillChainLink: MenuRedirectProps[] = [
-  {
-    title: 'Cyber Kill Chain',
-    icon: 'search',
-    link: "/cyber_kill_chain/reconnaissance",
-
-  },
-//  {
-//    title: 'Weaponization',
-//    icon: 'build',
-//    link: "/cyber_kill_chain/weaponization",
-//
-//  },
-//  {
-//    title: 'Delivery',
-//    icon: 'local_shipping',
-//    link: "/cyber_kill_chain/delivery",
-//
-//  },
-//  {
-//    title: 'Exploitation',
-//    icon: 'bug_report',
-//    link: "/cyber_kill_chain/exploitation",
-//
-//  },
-//  {
-//    title: 'Installation',
-//    icon: 'download',
-//    link: "/cyber_kill_chain/installation",
-//
-//  },
-//  {
-//    title: 'Command and Control',
-//    icon: 'dns',
-//    link: "/cyber_kill_chain/command_control",
-//
-//  },
-//  {
-//    title: 'Actions on Objectives',
-//    icon: 'flag',
-//    link: "/cyber_kill_chain/actions_objectives",
-//
-//  },
+    {
+        title: "Cyber Kill Chain",
+        icon: "search",
+        link: "/cyber_kill_chain/reconnaissance",
+    },
+    //  {
+    //    title: 'Weaponization',
+    //    icon: 'build',
+    //    link: "/cyber_kill_chain/weaponization",
+    //
+    //  },
+    //  {
+    //    title: 'Delivery',
+    //    icon: 'local_shipping',
+    //    link: "/cyber_kill_chain/delivery",
+    //
+    //  },
+    //  {
+    //    title: 'Exploitation',
+    //    icon: 'bug_report',
+    //    link: "/cyber_kill_chain/exploitation",
+    //
+    //  },
+    //  {
+    //    title: 'Installation',
+    //    icon: 'download',
+    //    link: "/cyber_kill_chain/installation",
+    //
+    //  },
+    //  {
+    //    title: 'Command and Control',
+    //    icon: 'dns',
+    //    link: "/cyber_kill_chain/command_control",
+    //
+    //  },
+    //  {
+    //    title: 'Actions on Objectives',
+    //    icon: 'flag',
+    //    link: "/cyber_kill_chain/actions_objectives",
+    //
+    //  },
 ];
 
 // New ASEAN Cyber Operations Link
 const aseanCyberOpsLink: MenuRedirectProps[] = [
-  {
-    title: 'Cambodia',
-    icon: 'public',
-    link: "/asean_cyber_operations/cambodia",
-
-  },
-  {
-    title: 'Myanmar',
-    icon: 'public',
-    link: "/asean_cyber_operations/myanmar",
-
-  },
-  {
-    title: 'Malaysia',
-    icon: 'public',
-    link: "/asean_cyber_operations/malaysia",
-
-  },
-  {
-    title: 'Laos',
-    icon: 'public',
-    link: "/asean_cyber_operations/laos",
-
-  },
-  {
-    title: 'Vietnam',
-    icon: 'public',
-    link: "/asean_cyber_operations/vietnam",
-
-  },
-  {
-    title: 'China',
-    icon: 'public',
-    link: "/asean_cyber_operations/china",
-
-  },
-  {
-    title: 'North Korea',
-    icon: 'public',
-    link: "/asean_cyber_operations/north_korea",
-
-  },
+    {
+        title: "Cambodia",
+        icon: "public",
+        link: "/asean_cyber_operations/cambodia",
+    },
+    {
+        title: "Myanmar",
+        icon: "public",
+        link: "/asean_cyber_operations/myanmar",
+    },
+    {
+        title: "Malaysia",
+        icon: "public",
+        link: "/asean_cyber_operations/malaysia",
+    },
+    {
+        title: "Laos",
+        icon: "public",
+        link: "/asean_cyber_operations/laos",
+    },
+    {
+        title: "Vietnam",
+        icon: "public",
+        link: "/asean_cyber_operations/vietnam",
+    },
+    {
+        title: "China",
+        icon: "public",
+        link: "/asean_cyber_operations/china",
+    },
+    {
+        title: "North Korea",
+        icon: "public",
+        link: "/asean_cyber_operations/north_korea",
+    },
 ];
 
 const dashboardLink: MenuRedirectProps[] = [
+    // {
+    //   title: 'MIST Summary',
+    //   // caption: 'จัดหา',
+    //   icon: 'dashboard',
+    //   link: "/dashboard/mist_summary",
+    // },
+    // {
+    //   title: 'Event Summary',
+    //   // caption: 'จัดหา',
+    //   icon: 'dashboard',
+    //   link: "/dashboard/event_summary",
+    // },
+    {
+        title: "Overview",
+        // caption: 'จัดหา',
+        icon: "dashboard",
 
-  // {
-  //   title: 'MIST Summary',
-  //   // caption: 'จัดหา',
-  //   icon: 'dashboard',
-  //   link: "/dashboard/mist_summary",
-  // },
-  // {
-  //   title: 'Event Summary',
-  //   // caption: 'จัดหา',
-  //   icon: 'dashboard',
-  //   link: "/dashboard/event_summary",
-  // },
-  {
-    title: 'Overview',
-    // caption: 'จัดหา',
-    icon: 'dashboard',
-
-    // TODO : change the link name accordingly
-    link: "/dashboard/zeek_event_summary",
-  },
-  {
-    title: 'Endpoint Activity & Threats',
-    // caption: 'จัดหา',
-    icon: 'dashboard',
-    link: "/dashboard/blacklist_summary",
-  },
-  {
-    title: 'Network Traffic & Anomaly',
-    // caption: 'จัดหา',
-    icon: 'dashboard',
-    link: "/dashboard/crowdstrie_summary",
-  },
-  {
-    title: 'User & Identity Behavior',
-    // caption: 'จัดหา',
-    icon: 'dashboard',
-    link: "/dashboard/ioc_summary",
-  },
-  {
-    title: 'Alert & Threat Hunting',
-    // caption: 'จัดหา',
-    icon: 'dashboard',
-    link: "/dashboard/zeek_summary_suricata",
-  },
-  {
-    title: 'Incident Response',
-    // caption: 'จัดหา',
-    icon: 'dashboard',
-    link: "/dashboard/zeek_summary_intel",
-  },
-  {
-    title: 'Malware & IOC Correlation',
-    // caption: 'จัดหา',
-    icon: 'dashboard',
-    link: "/dashboard/zeek_summary_http",
-  },
-  {
-    title: 'Lateral Movement Detection',
-    // caption: 'จัดหา',
-    icon: 'dashboard',
-    link: "/dashboard/zeek_summary_files",
-  },
-  {
-    title: 'Command & Scripting Activity',
-    // caption: 'จัดหา',
-    icon: 'dashboard',
-    link: "/dashboard/zeek_summary_ssl",
-  },
-  {
-    title: 'Threat Intelligence',
-    // caption: 'จัดหา',
-    icon: 'dashboard',
-    link: "/dashboard/zeek_summary_dns",
-  },
+        // TODO : change the link name accordingly
+        link: "/dashboard/zeek_event_summary",
+    },
+    {
+        title: "Endpoint Activity & Threats",
+        // caption: 'จัดหา',
+        icon: "dashboard",
+        link: "/dashboard/blacklist_summary",
+    },
+    {
+        title: "Network Traffic & Anomaly",
+        // caption: 'จัดหา',
+        icon: "dashboard",
+        link: "/dashboard/crowdstrie_summary",
+    },
+    {
+        title: "User & Identity Behavior",
+        // caption: 'จัดหา',
+        icon: "dashboard",
+        link: "/dashboard/ioc_summary",
+    },
+    {
+        title: "Alert & Threat Hunting",
+        // caption: 'จัดหา',
+        icon: "dashboard",
+        link: "/dashboard/zeek_summary_suricata",
+    },
+    {
+        title: "Incident Response",
+        // caption: 'จัดหา',
+        icon: "dashboard",
+        link: "/dashboard/zeek_summary_intel",
+    },
+    {
+        title: "Malware & IOC Correlation",
+        // caption: 'จัดหา',
+        icon: "dashboard",
+        link: "/dashboard/zeek_summary_http",
+    },
+    {
+        title: "Lateral Movement Detection",
+        // caption: 'จัดหา',
+        icon: "dashboard",
+        link: "/dashboard/zeek_summary_files",
+    },
+    {
+        title: "Command & Scripting Activity",
+        // caption: 'จัดหา',
+        icon: "dashboard",
+        link: "/dashboard/zeek_summary_ssl",
+    },
+    {
+        title: "Threat Intelligence",
+        // caption: 'จัดหา',
+        icon: "dashboard",
+        link: "/dashboard/zeek_summary_dns",
+    },
 ];
 // const SigmaYaraRulesLink: MenuRedirectProps[] = [
 
@@ -304,408 +302,535 @@ const dashboardLink: MenuRedirectProps[] = [
 // ];
 
 const DetectionRulesLink: MenuRedirectProps[] = [
-
-  {
-    title: 'Sigma Rules',
-    // caption: 'จัดหา',
-    icon: 'gavel',
-    link: "/detection_rules/sigma_rules",
-  },
-  {
-    title: 'Yara Rules',
-    // caption: 'จัดหา',
-    icon: 'gavel',
-    link: "/detection_rules/yara_rules",
-  },
-  {
-    title: 'Suricata rules',
-    // caption: 'จัดหา',
-    icon: 'gavel',
-    link: "/detection_rules/suricata_rules",
-  },
+    {
+        title: "Sigma Rules",
+        // caption: 'จัดหา',
+        icon: "gavel",
+        link: "/detection_rules/sigma_rules",
+    },
+    {
+        title: "Yara Rules",
+        // caption: 'จัดหา',
+        icon: "gavel",
+        link: "/detection_rules/yara_rules",
+    },
+    {
+        title: "Suricata rules",
+        // caption: 'จัดหา',
+        icon: "gavel",
+        link: "/detection_rules/suricata_rules",
+    },
 ];
 
 const IPMappingLink: MenuRedirectProps[] = [
-
-  {
-    title: 'IP Mapping',
-    // caption: 'จัดหา',
-    icon: 'hub',
-    link: "/ip_mapping",
-    inset: 0.0
-  },
+    {
+        title: "IP Mapping",
+        // caption: 'จัดหา',
+        icon: "hub",
+        link: "/ip_mapping",
+        inset: 0.0,
+    },
 ];
 
 const ThreatIntelligenceLink: MenuRedirectProps[] = [
-
-  {
-    title: 'Threat Intelligence',
-    // caption: 'จัดหา',
-    icon: "psychology",
-    link: "/threat_intelligence",
-    inset: 0.0
-  },
+    {
+        title: "Threat Intelligence",
+        // caption: 'จัดหา',
+        icon: "psychology",
+        link: "/threat_intelligence",
+        inset: 0.0,
+    },
 ];
 
-
 const geoIpLink: MenuRedirectProps[] = [
-
-  {
-    title: 'GeoIP',
-    // caption: 'จัดหา',
-    icon: 'my_location',
-    link: "/geo_ip_attack",
-    inset: 0.0
-  },
+    {
+        title: "GeoIP",
+        // caption: 'จัดหา',
+        icon: "my_location",
+        link: "/geo_ip_attack",
+        inset: 0.0,
+    },
 ];
 
 const deviceUptimeLink: MenuRedirectProps[] = [
-
-  {
-    title: 'Device Uptime',
-    // caption: 'จัดหา',
-    icon: 'troubleshoot',
-    link: "/numa_status",
-    inset: 0.0
-  },
+    {
+        title: "Device Uptime",
+        // caption: 'จัดหา',
+        icon: "troubleshoot",
+        link: "/numa_status",
+        inset: 0.0,
+    },
 ];
 
 const deviceCVELink: MenuRedirectProps[] = [
-
-  {
-    title: 'Device CVE',
-    // caption: 'จัดหา',
-    icon: 'privacy_tip',
-    link: "/device_cve",
-    inset: 0.0
-  },
+    {
+        title: "Device CVE",
+        // caption: 'จัดหา',
+        icon: "privacy_tip",
+        link: "/device_cve",
+        inset: 0.0,
+    },
 ];
 
 const toolsLink: MenuRedirectProps[] = [
+    {
+        title: "Kibana",
+        icon: "open_in_new",
+        // link: '/tools/kibana',
+        link: tool.url01,
+        openNewTab: true,
+    },
+    {
+        title: "Kafka",
+        // caption: 'จัดหา',
+        icon: "open_in_new",
+        // link: "/tools/kafka",
+        link: tool.url02,
+        openNewTab: true,
+    },
+    {
+        title: "Metalog #1",
+        // caption: 'จัดหา',
+        icon: "open_in_new",
+        // link: "/tools/metalog_1",
+        link: tool.url031,
+        openNewTab: true,
+    },
+    {
+        title: "Metalog #2",
+        // caption: 'จัดหา',
+        icon: "open_in_new",
+        // link: "/tools/metalog_2",
+        link: tool.url032,
+        openNewTab: true,
+    },
+    {
+        title: "Metalog #3",
+        // caption: 'จัดหา',
+        icon: "open_in_new",
+        // link: "/tools/metalog_3",
+        link: tool.url033,
+        openNewTab: true,
+    },
 
-  {
-    title: 'Kibana',
-    icon: 'open_in_new',
-    // link: '/tools/kibana',
-    link: tool.url01,
-    openNewTab: true
-  },
-  {
-    title: 'Kafka',
-    // caption: 'จัดหา',
-    icon: 'open_in_new',
-    // link: "/tools/kafka",
-    link: tool.url02,
-    openNewTab: true
-  },
-  {
-    title: 'Metalog #1',
-    // caption: 'จัดหา',
-    icon: 'open_in_new',
-    // link: "/tools/metalog_1",
-    link: tool.url031,
-    openNewTab: true
-  },
-  {
-    title: 'Metalog #2',
-    // caption: 'จัดหา',
-    icon: 'open_in_new',
-    // link: "/tools/metalog_2",
-    link: tool.url032,
-    openNewTab: true
-  },
-  {
-    title: 'Metalog #3',
-    // caption: 'จัดหา',
-    icon: 'open_in_new',
-    // link: "/tools/metalog_3",
-    link: tool.url033,
-    openNewTab: true
-  },
-
-  {
-    title: 'Net Approve #1',
-    // caption: 'จัดหา',
-    icon: 'open_in_new',
-    // link: "/tools/net_approve_1",
-    link: tool.url041,
-    openNewTab: true
-  },
-  {
-    title: 'Net Approve #2',
-    // caption: 'จัดหา',
-    icon: 'open_in_new',
-    // link: "/tools/net_approve_2",
-    link: tool.url042,
-    openNewTab: true
-  },
-  {
-    title: 'Net Approve #3',
-    // caption: 'จัดหา',
-    icon: 'open_in_new',
-    // link: "/tools/net_approve_3",
-    link: tool.url043,
-    openNewTab: true
-  },
-  {
-    title: 'Net Approve #4',
-    // caption: 'จัดหา',
-    icon: 'open_in_new',
-    // link: "/tools/net_approve_4",
-    link: tool.url044,
-    openNewTab: true
-  },
-  {
-    title: 'GeoIP',
-    // caption: 'จัดหา',
-    icon: 'open_in_new',
-    // link: "/tools/geo_ip",
-    link: tool.url05,
-    openNewTab: true
-  },
-  {
-    title: 'Superset',
-    // caption: 'จัดหา',
-    icon: 'open_in_new',
-    // link: "/tools/superset",
-    link: tool.url06,
-    openNewTab: true
-  },
-  {
-    title: 'Loki',
-    // caption: 'จัดหา',
-    icon: 'open_in_new',
-    // link: "/tools/loki",
-    link: tool.url07,
-    openNewTab: true
-  },
-  {
-    title: 'Prometheus',
-    // caption: 'จัดหา',
-    icon: 'open_in_new',
-    // link: "/tools/prometheus",
-    link: tool.url08,
-    openNewTab: true
-  },
+    {
+        title: "Net Approve #1",
+        // caption: 'จัดหา',
+        icon: "open_in_new",
+        // link: "/tools/net_approve_1",
+        link: tool.url041,
+        openNewTab: true,
+    },
+    {
+        title: "Net Approve #2",
+        // caption: 'จัดหา',
+        icon: "open_in_new",
+        // link: "/tools/net_approve_2",
+        link: tool.url042,
+        openNewTab: true,
+    },
+    {
+        title: "Net Approve #3",
+        // caption: 'จัดหา',
+        icon: "open_in_new",
+        // link: "/tools/net_approve_3",
+        link: tool.url043,
+        openNewTab: true,
+    },
+    {
+        title: "Net Approve #4",
+        // caption: 'จัดหา',
+        icon: "open_in_new",
+        // link: "/tools/net_approve_4",
+        link: tool.url044,
+        openNewTab: true,
+    },
+    {
+        title: "GeoIP",
+        // caption: 'จัดหา',
+        icon: "open_in_new",
+        // link: "/tools/geo_ip",
+        link: tool.url05,
+        openNewTab: true,
+    },
+    {
+        title: "Superset",
+        // caption: 'จัดหา',
+        icon: "open_in_new",
+        // link: "/tools/superset",
+        link: tool.url06,
+        openNewTab: true,
+    },
+    {
+        title: "Loki",
+        // caption: 'จัดหา',
+        icon: "open_in_new",
+        // link: "/tools/loki",
+        link: tool.url07,
+        openNewTab: true,
+    },
+    {
+        title: "Prometheus",
+        // caption: 'จัดหา',
+        icon: "open_in_new",
+        // link: "/tools/prometheus",
+        link: tool.url08,
+        openNewTab: true,
+    },
 ];
 
-
 const miscellaneousLink: MenuRedirectProps[] = [
-
-  {
-    title: 'Note',
-    icon: 'edit_note',
-    link: "/miscellaneous/note"
-  },
-
+    {
+        title: "Note",
+        icon: "edit_note",
+        link: "/miscellaneous/note",
+    },
+    {
+        title: "Nodes and Links",
+        icon: "polyline",
+        link: "/miscellaneous/nodes_and_links",
+    },
 ];
 
 const adminLink: MenuRedirectProps[] = [
+    {
+        title: "System Variable",
+        // caption: 'จัดหา',
+        icon: "tune",
+        link: "/admin/system_variable",
+    },
+    {
+        title: "Users",
+        // caption: 'จัดหา',
+        icon: "group",
+        link: "/admin/users",
+    },
+    // {
+    //   title: 'Roles',
 
-  {
-    title: 'System Variable',
-    // caption: 'จัดหา',
-    icon: 'tune',
-    link: "/admin/system_variable"
-  },
-  {
-    title: 'Users',
-    // caption: 'จัดหา',
-    icon: 'group',
-    link: "/admin/users"
-  },
-  // {
-  //   title: 'Roles',
-
-  //   icon: 'manage_accounts',
-  //   link: "/admin/roles"
-  // },
-  {
-    title: 'API Keys',
-    icon: 'vpn_key',
-    link: "/admin/api_keys"
-  },
+    //   icon: 'manage_accounts',
+    //   link: "/admin/roles"
+    // },
+    {
+        title: "API Keys",
+        icon: "vpn_key",
+        link: "/admin/api_keys",
+    },
 ];
 
-
-const leftDrawerOpen = ref(false)
-const initUsername = ref(false)
-const username = ref('NaN')
+const leftDrawerOpen = ref(false);
+const initUsername = ref(false);
+const username = ref("NaN");
 const selectedDriver = ref(null);
-const drivers = ref([])
-
+const drivers = ref([]);
 
 function toggleLeftDrawer() {
-  // console.log(leftDrawerOpen.value)
-  leftDrawerOpen.value = !leftDrawerOpen.value
+    // console.log(leftDrawerOpen.value)
+    leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 function handleLogout() {
-  auth.logout()
+    auth.logout();
 
-  title.setTitle('Login')
-  router.push('/login')
+    title.setTitle("Login");
+    router.push("/login");
 }
-
 </script>
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn v-if="auth.isAuthenticated" flat dense round icon="menu" :glossy="false" @click="toggleLeftDrawer" />
+    <q-layout view="lHh Lpr lFf">
+        <q-header elevated>
+            <q-toolbar>
+                <q-btn
+                    v-if="auth.isAuthenticated"
+                    flat
+                    dense
+                    round
+                    icon="menu"
+                    :glossy="false"
+                    @click="toggleLeftDrawer"
+                />
 
-        <!-- <q-toolbar-title>
+                <!-- <q-toolbar-title>
           Military Rule Detection Joint Sharing
         </q-toolbar-title> -->
 
-        <q-toolbar-title>
-          {{ title.title }}
-        </q-toolbar-title>
+                <q-toolbar-title>
+                    {{ title.title }}
+                </q-toolbar-title>
 
-        <!-- <q-btn v-if="auth.isAuthenticated" dense label="Logout" color="negative" @click="handleLogout" /> -->
-        <div>
-          <q-fab v-if="auth.isAuthenticated" v-model="fab_user_menu" vertical-actions-align="left" dense color="dark"
-            icon="person" direction="down" padding="xs">
-            <!-- <q-fab-action class="q-ma-lg" color="primary" @click="handleLogout" icon="logout" /> -->
+                <!-- <q-btn v-if="auth.isAuthenticated" dense label="Logout" color="negative" @click="handleLogout" /> -->
+                <div>
+                    <q-fab
+                        v-if="auth.isAuthenticated"
+                        v-model="fab_user_menu"
+                        vertical-actions-align="left"
+                        dense
+                        color="dark"
+                        icon="person"
+                        direction="down"
+                        padding="xs"
+                    >
+                        <!-- <q-fab-action class="q-ma-lg" color="primary" @click="handleLogout" icon="logout" /> -->
 
-            <q-btn v-if="auth.isAuthenticated" dense icon="logout" color="negative" @click="handleLogout" />
-          </q-fab>
-        </div>
-      </q-toolbar>
-    </q-header>
+                        <q-btn
+                            v-if="auth.isAuthenticated"
+                            dense
+                            icon="logout"
+                            color="negative"
+                            @click="handleLogout"
+                        />
+                    </q-fab>
+                </div>
+            </q-toolbar>
+        </q-header>
 
-    <q-drawer :breakpoint="500" v-model="leftDrawerOpen" show-if-above bordered v-if="auth.isAuthenticated">
-      <q-list>
-        <!-- <q-item-label header> Menu </q-item-label> -->
-        <q-item-label header class="flex flex-col items-center justify-center">
-          <img src="/assets/icon.svg" alt="Menu Icon" width="43" height="41" />
+        <q-drawer
+            :breakpoint="500"
+            v-model="leftDrawerOpen"
+            show-if-above
+            bordered
+            v-if="auth.isAuthenticated"
+        >
+            <q-list>
+                <!-- <q-item-label header> Menu </q-item-label> -->
+                <q-item-label
+                    header
+                    class="flex flex-col items-center justify-center"
+                >
+                    <img
+                        src="/assets/icon.svg"
+                        alt="Menu Icon"
+                        width="43"
+                        height="41"
+                    />
 
-          <img src="/assets/icon-word.svg" alt="Menu Icon" width="89" height="24" />
+                    <img
+                        src="/assets/icon-word.svg"
+                        alt="Menu Icon"
+                        width="89"
+                        height="24"
+                    />
+                </q-item-label>
 
-        </q-item-label>
+                <q-card>
+                    <MenuRedirect
+                        v-for="link in overviewLink"
+                        :key="link.title"
+                        v-bind="link"
+                    />
+                </q-card>
+                <q-card>
+                    <MenuRedirect
+                        v-for="link in commanderLink"
+                        :key="link.title"
+                        v-bind="link"
+                    />
+                </q-card>
 
-        <q-card>
-          <MenuRedirect v-for="link in overviewLink" :key="link.title" v-bind="link" />
-        </q-card>
-        <q-card>
-          <MenuRedirect v-for="link in commanderLink" :key="link.title" v-bind="link" />
-        </q-card>
+                <!-- New menu items underneath Commander -->
 
-        <!-- New menu items underneath Commander -->
+                <q-expansion-item
+                    expand-separator
+                    icon="security"
+                    label="MITRE ATT&CK"
+                >
+                    <q-card>
+                        <MenuRedirect
+                            v-for="link in mitreAttackLink"
+                            :key="link.title"
+                            v-bind="link"
+                        />
+                    </q-card>
+                </q-expansion-item>
 
-        <q-expansion-item expand-separator icon="security" label="MITRE ATT&CK">
-          <q-card>
-            <MenuRedirect v-for="link in mitreAttackLink" :key="link.title" v-bind="link" />
-          </q-card>
-        </q-expansion-item>
+                <q-expansion-item
+                    expand-separator
+                    icon="timeline"
+                    label="Cyber Kill Chain"
+                >
+                    <q-card>
+                        <MenuRedirect
+                            v-for="link in cyberKillChainLink"
+                            :key="link.title"
+                            v-bind="link"
+                        />
+                    </q-card>
+                </q-expansion-item>
 
+                <q-expansion-item
+                    expand-separator
+                    icon="language"
+                    label="ASEAN Cyber Operations"
+                >
+                    <q-card>
+                        <MenuRedirect
+                            v-for="link in aseanCyberOpsLink"
+                            :key="link.title"
+                            v-bind="link"
+                        />
+                    </q-card>
+                </q-expansion-item>
 
-        <q-expansion-item expand-separator icon="timeline" label="Cyber Kill Chain">
-          <q-card>
-            <MenuRedirect v-for="link in cyberKillChainLink" :key="link.title" v-bind="link" />
-          </q-card>
-        </q-expansion-item>
+                <q-card>
+                    <MenuRedirect
+                        v-for="link in zabbixLink"
+                        :key="link.title"
+                        v-bind="link"
+                    />
+                </q-card>
 
-        <q-expansion-item expand-separator icon="language" label="ASEAN Cyber Operations">
-          <q-card>
-            <MenuRedirect v-for="link in aseanCyberOpsLink" :key="link.title" v-bind="link" />
-          </q-card>
-        </q-expansion-item>
-
-
-        <q-card>
-          <MenuRedirect v-for="link in zabbixLink" :key="link.title" v-bind="link" />
-        </q-card>
-
-        <!-- <q-card>
+                <!-- <q-card>
           <MenuRedirect v-for="link in ThreatHuntingLink" :key="link.title" v-bind="link" />
         </q-card> -->
 
-        <q-expansion-item expand-separator icon="dashboard" label="Dashboard">
-          <q-card>
-            <MenuRedirect v-for="link in dashboardLink" :key="link.title" v-bind="link" />
-          </q-card>
-        </q-expansion-item>
+                <q-expansion-item
+                    expand-separator
+                    icon="dashboard"
+                    label="Dashboard"
+                >
+                    <q-card>
+                        <MenuRedirect
+                            v-for="link in dashboardLink"
+                            :key="link.title"
+                            v-bind="link"
+                        />
+                    </q-card>
+                </q-expansion-item>
 
-        <q-expansion-item expand-separator icon="app_blocking" label="Threat Blacklist">
-          <q-card>
-            <MenuRedirect v-for="link in ThreatBlacklistLink" :key="link.title" v-bind="link" />
-          </q-card>
-        </q-expansion-item>
+                <q-expansion-item
+                    expand-separator
+                    icon="app_blocking"
+                    label="Threat Blacklist"
+                >
+                    <q-card>
+                        <MenuRedirect
+                            v-for="link in ThreatBlacklistLink"
+                            :key="link.title"
+                            v-bind="link"
+                        />
+                    </q-card>
+                </q-expansion-item>
 
-        <!-- <q-expansion-item expand-separator icon="radar" label="Detection Rules"> -->
-        <q-expansion-item expand-separator icon="radar" label="Threat Hunting">
-          <q-card>
-            <MenuRedirect v-for="link in DetectionRulesLink" :key="link.title" v-bind="link" />
-          </q-card>
-        </q-expansion-item>
+                <!-- <q-expansion-item expand-separator icon="radar" label="Detection Rules"> -->
+                <q-expansion-item
+                    expand-separator
+                    icon="radar"
+                    label="Threat Hunting"
+                >
+                    <q-card>
+                        <MenuRedirect
+                            v-for="link in DetectionRulesLink"
+                            :key="link.title"
+                            v-bind="link"
+                        />
+                    </q-card>
+                </q-expansion-item>
 
-        <q-card>
-          <MenuRedirect v-for="link in IPMappingLink" :key="link.title" v-bind="link" />
-        </q-card>
+                <q-card>
+                    <MenuRedirect
+                        v-for="link in IPMappingLink"
+                        :key="link.title"
+                        v-bind="link"
+                    />
+                </q-card>
 
-        <q-card>
-          <MenuRedirect v-for="link in ThreatIntelligenceLink" :key="link.title" v-bind="link" />
-        </q-card>
+                <q-card>
+                    <MenuRedirect
+                        v-for="link in ThreatIntelligenceLink"
+                        :key="link.title"
+                        v-bind="link"
+                    />
+                </q-card>
 
-        <q-card>
-          <MenuRedirect v-for="link in geoIpLink" :key="link.title" v-bind="link" />
-        </q-card>
+                <q-card>
+                    <MenuRedirect
+                        v-for="link in geoIpLink"
+                        :key="link.title"
+                        v-bind="link"
+                    />
+                </q-card>
 
-        <q-card>
-          <MenuRedirect v-for="link in deviceUptimeLink" :key="link.title" v-bind="link" />
-        </q-card>
+                <q-card>
+                    <MenuRedirect
+                        v-for="link in deviceUptimeLink"
+                        :key="link.title"
+                        v-bind="link"
+                    />
+                </q-card>
 
-        <q-card>
-          <MenuRedirect v-for="link in deviceCVELink" :key="link.title" v-bind="link" />
-        </q-card>
+                <q-card>
+                    <MenuRedirect
+                        v-for="link in deviceCVELink"
+                        :key="link.title"
+                        v-bind="link"
+                    />
+                </q-card>
 
-        <q-expansion-item expand-separator icon="construction" label="Tools">
-          <q-card>
-            <MenuRedirect v-for="link in toolsLink" :key="link.title" v-bind="link" />
-          </q-card>
-        </q-expansion-item>
+                <q-expansion-item
+                    expand-separator
+                    icon="construction"
+                    label="Tools"
+                >
+                    <q-card>
+                        <MenuRedirect
+                            v-for="link in toolsLink"
+                            :key="link.title"
+                            v-bind="link"
+                        />
+                    </q-card>
+                </q-expansion-item>
 
-        <q-expansion-item expand-separator icon="miscellaneous_services" label="Miscellaneous">
-          <q-card>
-            <MenuRedirect v-for="link in miscellaneousLink" :key="link.title" v-bind="link" />
-          </q-card>
-        </q-expansion-item>
+                <q-expansion-item
+                    expand-separator
+                    icon="miscellaneous_services"
+                    label="Miscellaneous"
+                >
+                    <q-card>
+                        <MenuRedirect
+                            v-for="link in miscellaneousLink"
+                            :key="link.title"
+                            v-bind="link"
+                        />
+                    </q-card>
+                </q-expansion-item>
 
-        <q-expansion-item expand-separator icon="admin_panel_settings" label="Admin">
-          <q-card>
-            <MenuRedirect v-for="link in adminLink" :key="link.title" v-bind="link" />
-          </q-card>
-        </q-expansion-item>
+                <q-expansion-item
+                    expand-separator
+                    icon="admin_panel_settings"
+                    label="Admin"
+                >
+                    <q-card>
+                        <MenuRedirect
+                            v-for="link in adminLink"
+                            :key="link.title"
+                            v-bind="link"
+                        />
+                    </q-card>
+                </q-expansion-item>
 
-
-        <!-- <q-expansion-item expand-separator icon="visibility" caption="รายการตรวจจับ">
+                <!-- <q-expansion-item expand-separator icon="visibility" caption="รายการตรวจจับ">
           <q-card>
             <MenuRedirect v-for=" link in hotelLink " :key="link.title" v-bind="link" />
           </q-card>
         </q-expansion-item> -->
 
-        <!-- <q-expansion-item expand-separator icon="visibility" caption="ระบบงานทั่วไป">
+                <!-- <q-expansion-item expand-separator icon="visibility" caption="ระบบงานทั่วไป">
           <q-card>
             <MenuRedirect v-for=" link in webviewLink " :key="link.title" v-bind="link" />
           </q-card>
         </q-expansion-item> -->
+            </q-list>
+        </q-drawer>
 
+        <q-page-container>
+            <!-- <NuxtPage /> -->
 
-      </q-list>
-    </q-drawer>
-
-    <q-page-container>
-
-      <!-- <NuxtPage /> -->
-
-      <div class="layout-wrapper">
-        <div class="background-overlay"></div>
-        <NuxtPage />
-      </div>
-    </q-page-container>
-  </q-layout>
+            <div class="layout-wrapper">
+                <div class="background-overlay"></div>
+                <NuxtPage />
+            </div>
+        </q-page-container>
+    </q-layout>
 </template>
-
 
 <style scoped lang="sass">
 .layout-wrapper
