@@ -106,7 +106,7 @@ const zabbixLink: MenuRedirectProps[] = [
 const commanderLink: MenuRedirectProps[] = [
 
   {
-    title: 'Commander',
+    title: 'CyCop',
     // caption: 'จัดหา',
     icon: 'keyboard_command_key',
     link: "/commander/main",
