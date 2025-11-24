@@ -101,7 +101,6 @@ const zabbixLink: MenuRedirectProps[] = [
 ];
 
 const commanderLink: MenuRedirectProps[] = [
-<<<<<<< HEAD
 
   {
     title: 'CyCop',
@@ -110,15 +109,6 @@ const commanderLink: MenuRedirectProps[] = [
     link: "/commander/main",
     inset: 0.0
   },
-=======
-    {
-        title: "Commander",
-        // caption: 'จัดหา',
-        icon: "keyboard_command_key",
-        link: "/commander/main",
-        inset: 0.0,
-    },
->>>>>>> 11c11a37f3249b3141f6b5b07124bba1e473b151
 ];
 
 // New MITRE ATT&CK Link
