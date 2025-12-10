@@ -53,6 +53,14 @@
             <template #top-right>
                 <q-btn
                     class="q-mr-lg"
+                    label="Discover"
+                    icon="data_exploration"
+                    rounded
+                    color="indigo"
+                    @click="onClick('openDiscovery')"
+                />
+                <q-btn
+                    class="q-mr-lg"
                     icon="add"
                     rounded
                     color="green-7"
@@ -154,7 +162,7 @@
                             </q-fab>
                         </template>
 
-                        <template v-else-if="col.name === 'ruleCreatedDate'">
+                        <template v-else-if="col.name === 'createdDate'">
                             {{ convertTimestamp(props.row.ruleCreatedDate) }}
                         </template>
 
@@ -405,6 +413,7 @@ definePageMeta({ middleware: "auth" });
 
 // — state & config (exactly as before)
 const auth = useAuthStore();
+const config = useRuntimeConfig();
 const table_columns_menu = [
     {
         name: "id",
@@ -432,6 +441,13 @@ const table_columns_menu = [
         align: "left",
         label: "tags",
         field: "tags",
+        sortable: true,
+    },
+    {
+        name: "createdDate",
+        align: "center",
+        label: "Created Date",
+        field: "ruleCreatedDate",
         sortable: true,
     },
 ];
@@ -582,6 +598,11 @@ async function onClick(fn_name, param = null) {
             }
             // show_lucene_value.value = !show_lucene_value.value
             show_lucene_value_isOpen.value = !show_lucene_value_isOpen.value;
+            break;
+
+        case "openDiscovery":
+            const discoveryUrl = config.public.tool.url01 + "app/discover";
+            window.open(discoveryUrl, "_blank");
             break;
     }
 }

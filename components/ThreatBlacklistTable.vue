@@ -134,8 +134,8 @@
                             </q-chip>
                         </template>
 
-                        <template v-else-if="col.name === 'ruleCreatedDate'">
-                            {{ convertTimestamp(props.row.ruleCreatedDate) }}
+                        <template v-else-if="col.name === 'createdDate'">
+                            {{ convertTimestamp(props.row.createdDate) }}
                         </template>
 
                         <template v-else>
@@ -291,7 +291,7 @@ const table_columns_menu = computed(() => [
     {
         name: "createdDate",
         align: "center",
-        label: "สร้างเมื่อ",
+        label: "Created Date",
         field: "createdDate",
         sortable: true,
     },
