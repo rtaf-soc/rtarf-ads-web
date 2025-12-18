@@ -192,7 +192,7 @@
                 </q-card-section>
 
                 <q-item class="q-pl-lg q-pr-lg" style="min-height: 200px">
-                    <q-item-section>
+                    <q-item-section class="q-pb-none">
                         <template
                             v-if="
                                 show_lucene_value &&
@@ -202,7 +202,7 @@
                         >
                             <q-input
                                 v-if="show_lucene_value.luceneQuery != null"
-                                class="q-pb-lg"
+                                class="q-pb-none"
                                 v-model="show_lucene_value.luceneQuery"
                                 type="textarea"
                                 outlined
@@ -234,6 +234,16 @@
                             </div>
                         </template>
                     </q-item-section>
+                </q-item>
+                <q-item>
+                    <q-btn
+                        class="q-mt-none q-pt-none"
+                        label="Discover"
+                        icon="data_exploration"
+                        rounded
+                        color="indigo"
+                        @click="onClick('openDiscoveryLucene')"
+                    />
                 </q-item>
             </q-card>
         </q-dialog>
