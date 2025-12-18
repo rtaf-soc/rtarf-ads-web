@@ -527,11 +527,13 @@ function buildKibanaDiscoverURL(luceneQuery) {
     // URL encode the Lucene query
     const encodedQuery = encodeURIComponent(luceneQuery);
 
-    // Build the Kibana Discover URL with default parameters
-    // User can customize time range, index, etc. as needed
+    // Get Kibana index ID from runtime config
+    const kibanaIndexId = config.public.kibana.indexId;
+
+    // Build the Kibana Discover URL with all parameters matching the example
     const baseParams = {
         _g: "(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-24h%2Fh,to:now))",
-        _a: `(columns:!(),filters:!(),interval:auto,query:(language:lucene,query:'${encodedQuery}'),sort:!(!('@timestamp',desc)))`,
+        _a: `(columns:!(),filters:!(),index:${kibanaIndexId},interval:auto,query:(language:lucene,query:'${encodedQuery}'),sort:!(!('@timestamp',desc)))`,
     };
 
     const queryString = `?_g=${baseParams._g}&_a=${baseParams._a}`;
