@@ -242,7 +242,7 @@
                         icon="data_exploration"
                         rounded
                         color="indigo"
-                        @click="onClick('openDiscoveryLucene')"
+                        @click="onClick('openDiscoverLucene')"
                     />
                 </q-item>
             </q-card>
@@ -409,7 +409,7 @@
 import { ref, onMounted } from "vue";
 import moment from "moment";
 import { useAuthStore } from "~/stores/auth";
-import { Dialog, Notify, Loading } from "quasar";
+import { Dialog, Notify, Loading, useQuasar } from "quasar";
 import { definePageMeta } from "#imports";
 
 // 1️⃣ declare prop to make this reusable
@@ -424,6 +424,7 @@ definePageMeta({ middleware: "auth" });
 // — state & config (exactly as before)
 const auth = useAuthStore();
 const config = useRuntimeConfig();
+const $q = useQuasar();
 const table_columns_menu = [
     {
         name: "id",
@@ -520,6 +521,23 @@ function getCurrentTimestamp() {
     const ms = now.format("SSS");
     return now.format("YYYY-MM-DDTHH:mm:ss.") + ms + "000Z";
 }
+function buildKibanaDiscoverURL(luceneQuery) {
+    if (!luceneQuery) return null;
+
+    // URL encode the Lucene query
+    const encodedQuery = encodeURIComponent(luceneQuery);
+
+    // Build the Kibana Discover URL with default parameters
+    // User can customize time range, index, etc. as needed
+    const baseParams = {
+        _g: "(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-24h%2Fh,to:now))",
+        _a: `(columns:!(),filters:!(),interval:auto,query:(language:lucene,query:'${encodedQuery}'),sort:!(!('@timestamp',desc)))`,
+    };
+
+    const queryString = `?_g=${baseParams._g}&_a=${baseParams._a}`;
+    return `app/discover#/${queryString}`;
+}
+
 function clearAddTable() {
     add_ingredient_detail.value = {
         ...add_ingredient_detail.value,
@@ -613,6 +631,35 @@ async function onClick(fn_name, param = null) {
         case "openDiscovery":
             const discoveryUrl = config.public.tool.url01 + "app/discover";
             window.open(discoveryUrl, "_blank");
+            break;
+
+        case "openDiscoverLucene":
+            if (
+                show_lucene_value.value &&
+                show_lucene_value.value.luceneQuery
+            ) {
+                const kibanaPath = buildKibanaDiscoverURL(
+                    show_lucene_value.value.luceneQuery,
+                );
+                if (kibanaPath) {
+                    const fullUrl = config.public.tool.url01 + kibanaPath;
+                    window.open(fullUrl, "_blank");
+                } else {
+                    $q.notify({
+                        type: "warning",
+                        message: "ไม่พบ Lucene query",
+                        position: "top",
+                        timeout: 2000,
+                    });
+                }
+            } else {
+                $q.notify({
+                    type: "warning",
+                    message: "กรุณาดึงข้อมูล Lucene ก่อน",
+                    position: "top",
+                    timeout: 2000,
+                });
+            }
             break;
     }
 }
