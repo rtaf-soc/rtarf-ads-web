@@ -29,12 +29,14 @@ export default defineNuxtConfig({
     // '@nuxtjs/auth-next'
     // '@nuxtjs/dotenv'
     "@pinia/nuxt",
-    "nuxt-monaco-editor",
+    // "nuxt-monaco-editor",
   ],
-  monaco: {
-    // Optional: List additional languages you want to support
-    languages: ["yaml", "javascript", "typescript"],
+  vite: {
+    optimizeDeps: {
+      exclude: ['monaco-editor'] 
+    }
   },
+  
 
   // router: {
   //   middleware: 'auth'
