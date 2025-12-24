@@ -1,5 +1,6 @@
 // import { defineNuxtPlugin } from '#app'
 
+
 // export default defineNuxtPlugin(() => {
 //   // Ensure this plugin runs only on the client.
 //   if (process.client) {

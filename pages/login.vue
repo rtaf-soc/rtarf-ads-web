@@ -1,62 +1,165 @@
 <template>
-    <q-page class="flex flex-center">
-        <q-card class="q-pa-md" style="width: 450px;">
+    <q-page class="flex flex-center overflow-hidden window-height" style="background: radial-gradient(circle at center, #1a202c 0%, #000000 100%); position: relative;">
 
+        <div class="fixed-full flex flex-center" style="z-index: 0; pointer-events: none;">
+            <q-img 
+                src="/background.png" 
+                style="width: 50%; max-width: 650px; opacity: 0.4;" 
+            >
+                <template v-slot:error>
+                    <q-img src="/favicon.ico" style="width: 50%; opacity: 0.2;" />
+                </template>
+            </q-img>
+        </div>
 
-            <!-- <div class="col-4">
-                <q-img src="/favicon.ico" :ratio="1" />
-            </div> -->
+        <div 
+            class="column items-center q-pa-md animate-fade-in" 
+            style="z-index: 1; width: 100%; max-width: 900px;" 
+        >
+            
+            <q-card class="stealth-card full-width row q-pa-none shadow-20">
+                
+                <div class="accent-bar"></div>
 
-            <q-card-section>
-                <div class="text-h6">เข้าสู่ระบบ</div>
-            </q-card-section>
+                <q-card-section 
+                    class="col-12 col-md-5 q-pa-xl flex flex-center left-panel relative-position overflow-hidden" 
+                    style="min-height: 450px;"
+                >
+                    <div class="absolute-full" style="background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%); pointer-events: none;"></div>
+                    
+                    <div class="text-left full-width relative-position column justify-between full-height" style="z-index: 2;">
+                        
+                        <div>
+                            <div class="q-mb-lg">
+                                <q-img src="/images/rtarf-logo.png" style="width: 70px; height: 70px;" fit="contain" />
+                            </div>
 
+                            <div class="text-h4 text-weight-bold text-white q-mb-sm" style="line-height: 1.2; letter-spacing: 0.5px;">
+                                CYBER<br>DEFENSE<br>PORTAL
+                            </div>
+                            
+                            <div class="text-subtitle1 text-green-13">
+                                (1st Operations Division)
+                            </div>
+                            
+                            <q-separator color="green-13" class="q-my-md" style="width: 50px; opacity: 0.5;" />
+                        </div>
 
-            <q-card-section>
-                <q-form @submit="onSubmit">
-                    <q-input filled v-model="username" label="Username" type="text" required />
-                    <q-input filled v-model="password" label="Password" type="password" required />
-                    <div class="q-mt-md">
-                        <q-btn type="submit" label="ยืนยัน" color="primary" />
+                        <div>
+                             <div class="q-mb-sm row items-center">
+                                <span class="text-grey-5 text-caption q-mr-xs">System Status: </span>
+                                <span class="text-green-13 text-weight-bold text-caption">● Online</span>
+                             </div>
+                             <div class="text-caption text-weight-bold text-grey-5" style="letter-spacing: 1px;">
+                                AUTHORIZED USE ONLY
+                            </div>
+                        </div>
+
                     </div>
-                </q-form>
-            </q-card-section>
-        </q-card>
+                </q-card-section>
+
+                <q-card-section 
+                    class="col-12 col-md-7 q-pa-xl right-panel column justify-center" 
+                    style="min-height: 450px;"
+                >
+
+                    <div class="q-mb-sm text-center">
+                        <q-img 
+                            src="/Spore.png" 
+                            style="width: 60px; filter: drop-shadow(0 0 5px rgba(0, 230, 42, 0.4));" 
+                            fit="contain" 
+                        />
+                    </div>
+
+                    <div class="text-h5 text-white q-mb-lg text-weight-bold text-center">Sign in</div>
+                    
+                    <q-form @submit="onSubmit" class="q-gutter-y-lg">
+                        
+                        <q-input 
+                            v-model="username" 
+                            label="Username" 
+                            dark outlined color="green-13" label-color="grey-5"
+                            class="modern-input" required
+                        >
+                            <template v-slot:prepend><q-icon name="person_outline" size="xs" color="grey-6" /></template>
+                        </q-input>
+
+                        <q-input 
+                            v-model="password" 
+                            label="Password" 
+                            type="password" 
+                            dark outlined color="green-13" label-color="grey-5"
+                            class="modern-input" required
+                        >
+                            <template v-slot:prepend><q-icon name="lock_outline" size="xs" color="grey-6" /></template>
+                        </q-input>
+
+                        <div>
+                            <q-checkbox 
+                                v-model="rememberMe" 
+                                label="Remember this device" 
+                                dark color="green-10" size="sm" dense class="text-grey-5"
+                            />
+                        </div>
+
+                        <div class="q-mt-lg">
+                            <q-btn 
+                                type="submit" 
+                                label="Sign in" 
+                                class="full-width modern-btn" 
+                                size="lg" unelevated
+                            />
+                        </div>
+                    </q-form>
+                    
+                    <div class="q-mt-auto text-center q-pt-xl">
+                         <div class="text-subtitle2 text-weight-bold text-grey-6 q-mb-xs" style="letter-spacing: 2px;">
+                            NEVER GIVE UP
+                         </div>
+                         <div class="text-caption text-grey-7" style="font-size: 0.65rem;">
+                            Privacy Policy | Terms of Service
+                         </div>
+                         <div class="text-caption text-grey-8" style="font-size: 0.6rem; font-family: monospace;">
+                            v2.1.0 • UTC+7
+                         </div>
+                    </div>
+
+                </q-card-section>
+
+            </q-card>
+        </div>
     </q-page>
 </template>
 
 <script setup>
-// (Keep your original imports and comments if any)
 import { ref , onMounted } from 'vue'
 import { useAuthStore } from '~/stores/auth'
 import { useTitleStore } from '~/stores/title'
 import { useRouter } from 'vue-router'
-// Preserve your original variable names and comments
-const username = ref('') // your username input
-const password = ref('') // your password input
-const error = ref(null)  // to display login errors
+import { Notify, Loading } from 'quasar'
+
+const username = ref('') 
+const password = ref('') 
+const rememberMe = ref(false) 
+const error = ref(null)  
 const auth = useAuthStore()
 const router = useRouter()
 const title = useTitleStore()
+
 onMounted(() => {
-    // Loading.hide()
     if (auth.isAuthenticated) {
         title.setTitle('Overview')
-        router.push('/overview')  // Redirect to the main page if token is valid
-    }else{
-              
+        router.push('/overview')  
+    } else {
         title.setTitle('Login')
     }
-
 })
+
 const onSubmit = async (event) => {
-    event.preventDefault();
+    if(event) event.preventDefault();
     error.value = null
     try {
-        // Loading.show()
-        // Updated login logic: call the auth store's login action which now uses Keycloak API (/api/login)
         await auth.login(username.value, password.value)
-        // After successful login, navigate to your intended page (e.g., home)
         Notify.create({
             position: "top",
             type: 'positive',
@@ -65,8 +168,6 @@ const onSubmit = async (event) => {
         title.setTitle('Overview')
         router.push('/overview')
     } catch (err) {
-        // Preserve your original error handling
-        // error.value = err.message || 'Login failed'
         Notify.create({
             position: "top",
             type: 'negative',
@@ -78,12 +179,68 @@ const onSubmit = async (event) => {
 };
 </script>
 
-
 <style scoped>
-.flex-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+.window-height {
+    min-height: 100vh;
+    height: 100vh; 
+}
+
+/* Card หลัก */
+.stealth-card {
+    background: transparent; 
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    backdrop-filter: blur(10px); 
+}
+
+/* แถบสี Accent: สีเขียว */
+.accent-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, #00e62ae8, #00c853); 
+    z-index: 5;
+}
+
+.left-panel { background: rgba(22, 27, 34, 0.75); }
+.right-panel { background: rgba(0, 0, 0, 0.7); }
+
+/* Input Style */
+.modern-input :deep(.q-field__control) {
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Button Customization: สีเขียว */
+.modern-btn {
+    background: linear-gradient(90deg, #00e62ae8 0%, #00c853 100%); 
+    color: #000;
+    font-weight: bold;
+    border-radius: 8px;
+    text-transform: none;
+    font-size: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.modern-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3); 
+}
+
+@media (max-width: 800px) {
+    .stealth-card { flex-direction: column; }
+    .left-panel, .right-panel { padding: 30px; min-height: auto !important; } 
+    .accent-bar { width: 100%; height: 4px; bottom: auto; }
+    .left-panel { padding-top: 40px; }
+}
+
+.animate-fade-in {
+    animation: fadeIn 1s ease-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); } 
 }
 </style>
