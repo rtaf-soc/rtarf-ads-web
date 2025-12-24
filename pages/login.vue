@@ -23,7 +23,7 @@
 
                 <q-card-section 
                     class="col-12 col-md-5 q-pa-xl flex flex-center left-panel relative-position overflow-hidden" 
-                    style="min-height: 500px;"
+                    style="min-height: 450px;"
                 >
                     <div class="absolute-full" style="background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%); pointer-events: none;"></div>
                     
@@ -37,10 +37,12 @@
                             <div class="text-h4 text-weight-bold text-white q-mb-sm" style="line-height: 1.2; letter-spacing: 0.5px;">
                                 CYBER<br>DEFENSE<br>PORTAL
                             </div>
-                            <div class="text-subtitle1 text-cyan-13">
+                            
+                            <div class="text-subtitle1 text-green-13">
                                 (1st Operations Division)
                             </div>
-                            <q-separator color="cyan-13" class="q-my-md" style="width: 50px; opacity: 0.5;" />
+                            
+                            <q-separator color="green-13" class="q-my-md" style="width: 50px; opacity: 0.5;" />
                         </div>
 
                         <div>
@@ -58,16 +60,25 @@
 
                 <q-card-section 
                     class="col-12 col-md-7 q-pa-xl right-panel column justify-center" 
-                    style="min-height: 500px;"
+                    style="min-height: 450px;"
                 >
-                    <div class="text-h5 text-white q-mb-lg text-weight-bold">Sign in</div>
+
+                    <div class="q-mb-sm text-center">
+                        <q-img 
+                            src="/Spore.png" 
+                            style="width: 60px; filter: drop-shadow(0 0 5px rgba(0, 230, 42, 0.4));" 
+                            fit="contain" 
+                        />
+                    </div>
+
+                    <div class="text-h5 text-white q-mb-lg text-weight-bold text-center">Sign in</div>
                     
                     <q-form @submit="onSubmit" class="q-gutter-y-lg">
                         
                         <q-input 
                             v-model="username" 
                             label="Username" 
-                            dark outlined color="cyan-13" label-color="grey-5"
+                            dark outlined color="green-13" label-color="grey-5"
                             class="modern-input" required
                         >
                             <template v-slot:prepend><q-icon name="person_outline" size="xs" color="grey-6" /></template>
@@ -77,7 +88,7 @@
                             v-model="password" 
                             label="Password" 
                             type="password" 
-                            dark outlined color="cyan-13" label-color="grey-5"
+                            dark outlined color="green-13" label-color="grey-5"
                             class="modern-input" required
                         >
                             <template v-slot:prepend><q-icon name="lock_outline" size="xs" color="grey-6" /></template>
@@ -87,7 +98,7 @@
                             <q-checkbox 
                                 v-model="rememberMe" 
                                 label="Remember this device" 
-                                dark color="cyan-13" size="sm" dense class="text-grey-5"
+                                dark color="green-10" size="sm" dense class="text-grey-5"
                             />
                         </div>
 
@@ -184,12 +195,12 @@ const onSubmit = async (event) => {
     backdrop-filter: blur(10px); 
 }
 
-/* แถบสี Accent */
+/* แถบสี Accent: สีเขียว */
 .accent-bar {
     position: absolute;
     left: 0; top: 0; bottom: 0;
     width: 4px;
-    background: linear-gradient(to bottom, #00e5ff, #006064);
+    background: linear-gradient(to bottom, #00e62ae8, #00c853); 
     z-index: 5;
 }
 
@@ -203,9 +214,9 @@ const onSubmit = async (event) => {
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Button Customization */
+/* Button Customization: สีเขียว */
 .modern-btn {
-    background: linear-gradient(90deg, #00e5ff 0%, #00acc1 100%);
+    background: linear-gradient(90deg, #00e62ae8 0%, #00c853 100%); 
     color: #000;
     font-weight: bold;
     border-radius: 8px;
@@ -215,7 +226,7 @@ const onSubmit = async (event) => {
 }
 .modern-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3); 
 }
 
 @media (max-width: 800px) {
