@@ -29,7 +29,7 @@ export default defineNuxtConfig({
     // '@nuxtjs/auth-next'
     // '@nuxtjs/dotenv'
     "@pinia/nuxt",
-    // "nuxt-monaco-editor",
+    "nuxt-monaco-editor",
   ],
   vite: {
     optimizeDeps: {
